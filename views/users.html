@@ -1,0 +1,15 @@
+<html>
+<head>
+  <title>Users</title>
+</head>
+
+<body>
+  <h3>users</h3>
+  <ul>
+    {{#each users}}
+    <li><a href="/users/{{this._id}}">{{this.email}}, {{this.admin}}</a></li>
+    {{/each}}
+  </ul>
+</body>
+
+</html>

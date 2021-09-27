@@ -1,0 +1,26 @@
+{
+  "name": "katie",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "sass public/index.scss public/index.css && node index.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@hapi/cookie": "^11.0.2",
+    "@hapi/file": "^2.0.0",
+    "@hapi/hapi": "^20.1.5",
+    "@hapi/inert": "^6.0.4",
+    "@hapi/vision": "^6.1.0",
+    "bcrypt": "^5.0.1",
+    "handlebars": "^4.7.7",
+    "hapi-mongodb": "^10.0.1",
+    "joi": "^17.4.2",
+    "markdown-it": "^12.2.0",
+    "moment": "^2.29.1",
+    "socket.io": "^4.2.0",
+    "throttle": "^1.0.3"
+  }
+}

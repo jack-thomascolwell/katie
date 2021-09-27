@@ -1,0 +1,14 @@
+<h3>New Radio Entry</h3>
+{{#if error}}
+  <p class="error">{{error}}</p>
+{{/if}}
+<form method="post" id="archiveForm" enctype="multipart/form-data">
+  <label>title: <input type="text" name="title" value="{{radioArchive.title}}" /></label>
+  <label>blurb: <textarea type="text" name="blurb">{{radioArchive.blurb}}</textarea></label>
+  <label>artist: <input type="text" name="artist" value="{{radioArchive.artist}}" /></label>
+  <label>author: <input type="text" name="author" value="{{radioArchive.author}}" /></label>
+  <label>published: <input type="date" name="published" value="{{radioArchive.published}}" /></label>
+  <label>song: <input type="file" name="song" /></label>
+  <label>art: <input type="file" name="art" /></label>
+  <input type="submit" value="New">
+</form>

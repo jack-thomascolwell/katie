@@ -1,0 +1,45 @@
+<script src="/public/index.js" type="text/javascript" defer></script>
+
+<div id="landing">
+  <img id="header" src="/public/header.png" />
+  <!--<h1>CatScratch</h1>
+      <div class="logo"></div>
+      <h1>Magazine</h1>-->
+
+  <div class="img">
+    <video class="img" autoplay muted disablepictureinpicture loop playsinline preload>
+      <source src="/public/logoVid.mp4" type="video/mp4">
+      Your browser does not support the video tag.
+    </video>
+  </div>
+
+  <a href="/public/about.html" id="submit">submit</a>
+  <!--<svg class="img" viewBox="-45 -45 90 90">
+    <circle cx="-30" cy="0" />
+    <circle cx="30" cy="0" />
+  </svg>-->
+  <nav>
+    <a href="/articles">Articles</a>
+    <a href="/radio">Radio</a>
+    <a href="/zine">Zine</a>
+    <a href="/about">About</a>
+  </nav>
+</div>
+{{> navHidden }}
+<div id="content">
+  <a href="/articles/{{featuredArticle._id}}" class="article featured">
+    <div class="img" style="--background-src:url(/articles/{{featuredArticle._id}}/images/cover)"></div>
+    <h2>{{featuredArticle.title}}</h2>
+    <h4 class="byline"><span class="author">{{featuredArticle.author}}</span><span class="date">{{date featuredArticle.published}}</span></h4>
+    <p>{{featuredArticle.abstract}}</p>
+  </a>
+
+  {{#each articles}}
+    <a href="/articles/{{this._id}}" class="article">
+      <img src="/articles/{{this._id}}/images/cover" />
+      <h2>UNDERSCORES</h2>
+      <h4 class="byline"><span class="author">{{this.author}}</span><span class="date">{{date this.published}}</span></h4>
+      <p>{{this.abstract}}</p>
+    </a>
+  {{/each}}
+</div>

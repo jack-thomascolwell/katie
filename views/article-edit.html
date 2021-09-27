@@ -1,0 +1,14 @@
+<h3>Edit article</h3>
+{{#if error}}
+  <p class="error">{{error}}</p>
+{{/if}}
+<form method="post" id="articleForm" enctype="multipart/form-data">
+  <label>title: <input type="text" name="title" value="{{article.title}}" /></label>
+  <label>body: <textarea type="text" name="body">{{article.body}}</textarea></label>
+  <label>abstract: <input type="text" name="abstract" value="{{article.abstract}}" /></label>
+  <label>author: <input type="text" name="author" value="{{article.author}}" /></label>
+  <label>published: <input type="date" name="published" value="{{article.published}}" /></label>
+  <label>cover: <input type="file" name="cover" /></label>
+  <label>images: <input type="file" name="images" multiple /></label>
+  <input type="submit" value="Edit">
+</form>

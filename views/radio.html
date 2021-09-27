@@ -1,0 +1,66 @@
+{{> navSticky }}
+<div id="content">
+  <div id="radio" class="paused">
+    <img src="/radioArchive/art/{{songData._id}}" />
+    <i class="play fas fa-volume-mute"></i>
+    <h2 class="title">{{songData.title}}</h2>
+    <h3 class="artist">{{songData.artist}}</h3>
+    <h4 class="byline"><span class="author">{{songData.author}}</span><span class="date">{{date songData.published}}</span></h4>
+    <p class="blurb">{{songData.blurb}}</p>
+    <audio class="radioAudio" src="stream" muted autoplay></audio>
+  </div>
+  <div id="archiveButton">
+    Welcome&nbsp;to&nbsp;the&nbsp;underground; you’re&nbsp;listening&nbsp;to&nbsp;CatScratch&nbsp;radio! For&nbsp;archived&nbsp;songs,&nbsp;please&nbsp;click&nbsp;<a href="/radioArchive">here</a>
+  </div>
+</div>
+<script src="https://cdn.socket.io/socket.io-3.0.5.min.js" type="text/javascript"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js" integrity="sha512-qTXRIMyZIFb8iQcfjXWCO8+M5Tbc38Qi5WzdPOYZHIlZpzBHG3L3by84BBBOiRGiEb7KKtAOAs5qYdUiZiQNNQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script type="text/javascript">
+  document.body.classList.add('radio');
+
+  let radio = document.getElementById('radio');
+  let img = radio.getElementsByTagName('img')[0];
+  let audio = radio.getElementsByTagName('audio')[0];
+  let play = radio.getElementsByClassName('play')[0];
+  let startTime = new Date();
+
+  function muteUnmute() {
+    if (audio.paused) {
+      audio.play();
+      audio.currentTime = ((new Date()) - startTime) / 1000;
+    }
+    if (radio.classList.contains('paused')) { //was muted
+      audio.muted = false;
+      img.parentElement.classList.remove('paused');
+      play.classList.remove('fa-volume-mute');
+      play.classList.add('fa-volume-up');
+    } else { //was playing
+      audio.muted = true;
+      img.parentElement.classList.add('paused');
+      play.classList.add('fa-volume-mute');
+      play.classList.remove('fa-volume-up');
+    }
+  }
+  img.addEventListener('click', muteUnmute);
+  play.addEventListener('click', muteUnmute);
+
+  const socket = io({
+    path: '/streamMeta'
+  });
+
+  const title = radio.getElementsByClassName('title')[0];
+  const artist = radio.getElementsByClassName('artist')[0];
+  const author = radio.getElementsByClassName('author')[0];
+  const date = radio.getElementsByClassName('date')[0];
+  const blurb = radio.getElementsByClassName('blurb')[0]
+
+  socket.on('newSong', function(songData) {
+    title.innerText = songData.title;
+    artist.innerText = songData.artist;
+    author.innerText = songData.author;
+    const date = new Date(songData.date);
+    date.innerText = moment(date).format("MMM D, YYYY");
+    blurb.innerText = songData.blurb;
+    img.setAttribute('src', `/songArt/${songData.art}`);
+  });
+</script>
