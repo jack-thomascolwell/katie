@@ -208,6 +208,15 @@ const start = async function() {
     }
   }, {
     method: 'GET',
+    path: '/about',
+    handler: async function(request, h) {
+      return h.view('about');
+    },
+    options: {
+      auth: false
+    }
+  }, {
+    method: 'GET',
     path: '/radio',
     handler: async function(request, h) {
       const currentSongData = queue.songData();
