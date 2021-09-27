@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "sass public/index.scss public/index.css && node index.js"
+    "sass": "sass public/index.scss public/index.css",
+    "start": "node index.js"
   },
   "author": "",
   "license": "ISC",
