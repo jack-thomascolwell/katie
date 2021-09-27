@@ -90,7 +90,7 @@ const start = async function() {
 
   const server = Hapi.server({
     port: config.server.port,
-    host: config.server.host
+    //host: config.server.host
   });
 
   const io = require("socket.io")(server.listener, {
