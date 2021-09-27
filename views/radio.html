@@ -58,9 +58,9 @@
     title.innerText = songData.title;
     artist.innerText = songData.artist;
     author.innerText = songData.author;
-    const date = new Date(songData.date);
+    const date = new Date(songData.published);
     date.innerText = moment(date).format("MMM D, YYYY");
     blurb.innerText = songData.blurb;
-    img.setAttribute('src', `/songArt/${songData.art}`);
+    img.setAttribute('src', `/radioArchive/art/${songData._id}`);
   });
 </script>
