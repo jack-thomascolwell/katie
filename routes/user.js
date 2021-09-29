@@ -123,7 +123,7 @@ module.exports = [{
         value
       } = schema.validate(payload);
 
-      if (error) return h.view('user-new', {
+      if (error) return h.view('register', {
         error: error,
         user: payload
       });
@@ -132,7 +132,7 @@ module.exports = [{
         email: payload.email,
       }).toArray();
 
-      if (existingUsers.length > 0) return h.view('user-new', {
+      if (existingUsers.length > 0) return h.view('register', {
         error: 'User with email already exists',
         user: payload
       });
