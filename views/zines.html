@@ -4,14 +4,14 @@
     <div class="noContent">No zines yet, check back soon!</div>
   {{/unless}}
   {{#each zines}}
-    <div class="zineCover" data-src="/zine/pdf/{{this._id}}">
+    <a href="/zine/{{this._id}}" class="zineCover" data-src="/zine/pdf/{{this._id}}">
       <div class="metadata">
         <span class="issue">Issue {{this.issue}}</span>
         <span class="published">{{date this.published}}</span>
       </div>
       {{#if ../admin}}<i class="delete fas fa-trash" data-id="{{this._id}}"></i>{{/if}}
       <canvas></canvas>
-    </div>
+    </a>
   {{/each}}
 </div>
 
