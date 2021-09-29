@@ -255,9 +255,8 @@ const start = async function() {
 
       const schema = Joi.object({
         _id: Joi.any().forbidden(),
-        issue: Joi.number().required(),
-        published: Joi.date().required(),
-        pdf: Joi.any().required(),
+        email: Joi.string().required(),
+        password: Joi.string().required(),
       });
 
       const {
