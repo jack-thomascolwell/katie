@@ -33,7 +33,7 @@ module.exports = [{
 
     return h.view('radioArchive', {
       songData: radioArchive,
-      admin: (request.auth.isAuthenticated || (request.auth.credentials.admin === true))
+      admin: (request.auth.isAuthenticated && (request.auth.credentials.admin === true))
     });
   },
   options: {
@@ -232,6 +232,7 @@ module.exports = [{
   method: 'DELETE',
   path: '/radioArchive/{id}',
   handler: async (request, h) => {
+    console.log('deleting')
     // auth
     if (!request.auth.isAuthenticated || (request.auth.credentials.admin !== true))
       return h.redirect('/');
@@ -254,6 +255,7 @@ module.exports = [{
     const status = await request.mongo.db.collection('radio').deleteOne({
       _id: new request.mongo.ObjectID(id)
     });
+    console.log(status);
     return status.acknowledged;
   },
   options: {

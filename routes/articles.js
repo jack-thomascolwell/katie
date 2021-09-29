@@ -30,11 +30,14 @@ module.exports = [{
       _id: -1
     }).toArray();
     return h.view('articles', {
-      articles: articles
+      articles: articles,
+      admin: (request.auth.isAuthenticated && (request.auth.credentials.admin === true))
     });
   },
   options: {
-    auth: false
+    auth: {
+      mode: 'try'
+    }
   }
 }, {
   method: 'GET',
@@ -55,7 +58,7 @@ module.exports = [{
     if (!article) return h.redirect('/articles');
     return h.view('article', {
       article: article,
-      admin: (request.auth.isAuthenticated || (request.auth.credentials.admin === true))
+      admin: (request.auth.isAuthenticated && (request.auth.credentials.admin === true))
     });
   },
   options: {
@@ -209,7 +212,9 @@ module.exports = [{
       if (payload.cover) {
         console.log("UPDATING COVER")
         const oldCover = article.cover;
-        const oldCoverDoc = await bucket.find({ _id: oldCover });
+        const oldCoverDoc = await bucket.find({
+          _id: oldCover
+        });
         if (oldCover && oldCover[0]) await bucket.delete(oldCover);
         const newCover = (payload.cover.pipe(bucket.openUploadStream('cover', {
           chunkSizeBytes: 1048576,
@@ -224,7 +229,9 @@ module.exports = [{
         console.log("UPDATING IMAGES")
         const oldImages = article.images;
         oldImages.forEach(async image => {
-          const imageDoc = await bucket.find({ _id: image });
+          const imageDoc = await bucket.find({
+            _id: image
+          });
           if (imageDoc && imageDoc[0]) await bucket.delete(image);
         });
         const newImages = payload.images.map(image => (image.pipe(bucket.openUploadStream(image.hapi.filename, {
@@ -242,7 +249,9 @@ module.exports = [{
     console.log(articleUpdate);
     const status = await request.mongo.db.collection('articles').updateOne({
       _id: new request.mongo.ObjectID(id)
-    }, { $set: articleUpdate });
+    }, {
+      $set: articleUpdate
+    });
     console.log(status);
     if (status.acknowledged === true) return h.redirect(`/articles/${id}`);
     return status.acknowledged;

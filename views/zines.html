@@ -1,0 +1,64 @@
+{{> navSticky }}
+<div id="content">
+  {{#unless zines}}
+    <div class="noContent">No zines yet, check back soon!</div>
+  {{/unless}}
+  {{#each zines}}
+    <div class="zineCover" data-src="/zine/pdf/{{this._id}}">
+      <div class="metadata">
+        <span class="issue">Issue {{this.issue}}</span>
+        <span class="published">{{date this.published}}</span>
+      </div>
+      {{#if ../admin}}<i class="delete fas fa-trash" data-id="{{this._id}}"></i>{{/if}}
+      <canvas></canvas>
+    </div>
+  {{/each}}
+</div>
+
+<script src="//mozilla.github.io/pdf.js/build/pdf.js"></script>
+
+<script type="text/javascript">
+  let deleteLinks = Array.from(document.getElementsByClassName('delete'));
+  deleteLinks.forEach(link => {
+    link.addEventListener('click', () => {
+      if (!confirm("Delete this zine?")) return;
+      const id = link.dataset["id"];
+      const req = new XMLHttpRequest();
+      req.onreadystatechange = function() {
+        if (req.readyState === XMLHttpRequest.DONE) location.reload();
+      };
+      req.open("DELETE", `/zine/${id}`, true);
+      req.send();
+    });
+  });
+
+  const pdfjsLib = window['pdfjs-dist/build/pdf'];
+
+  pdfjsLib.GlobalWorkerOptions.workerSrc = '//mozilla.github.io/pdf.js/build/pdf.worker.js';
+  pdfjsLib.disableAutoFetch = true
+
+  function renderPageToCanvas(pdfDoc, page, canvas) {
+    pdfDoc.getPage(page).then(page => {
+      let viewport = page.getViewport({
+        scale: 1
+      });
+      canvas.height = viewport.height;
+      canvas.width = viewport.width;
+
+      page.render({
+        canvasContext: canvas.getContext('2d'),
+        viewport: viewport
+      });
+    });
+  }
+
+  const covers = Array.from(document.getElementsByClassName('zineCover'));
+  covers.forEach(cover => {
+    const url = cover.dataset['src'];
+    const canvas = cover.getElementsByTagName('canvas')[0];
+
+    pdfjsLib.getDocument(url).promise.then(pdfDoc => {
+      renderPageToCanvas(pdfDoc, 1, canvas);
+    });
+  });
+</script>

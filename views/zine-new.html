@@ -1,0 +1,10 @@
+<h3>New Zine</h3>
+{{#if error}}
+  <p class="error">{{error}}</p>
+{{/if}}
+<form method="post" id="zineForm" enctype="multipart/form-data">
+  <label>Issue: <input type="number" name="issue" value="{{zine.issue}}" /></label>
+  <label>Published: <input type="date" name="published" value="{{zine.published}}" /></label>
+  <label>pdf: <input type="file" name="pdf" /></label>
+  <input type="submit" value="New">
+</form>

@@ -181,6 +181,7 @@ const start = async function() {
   server.route(require('./routes/user.js'));
   server.route(require('./routes/articles.js'));
   server.route(require('./routes/radioArchive.js'));
+  server.route(require('./routes/zine.js'));
 
   server.route([{
     method: 'GET',

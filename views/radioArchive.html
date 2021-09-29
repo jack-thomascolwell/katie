@@ -2,6 +2,9 @@
 <div id="content">
   <h1 id="radioArchiveHeader">Radio Archive</h1>
   <p id="radioArchiveSubtitle">Listen and read at your own pace. This archive contains every song and blurb ever in rotation on cat scratch radio.</p>
+  {{#unless songData}}
+    <div class="noContent">No radio entries yet, check back soon!</div>
+  {{/unless}}
   {{#each songData}}
     <div class="radioArchive paused">
       <img src="/radioArchive/art/{{this._id}}" />

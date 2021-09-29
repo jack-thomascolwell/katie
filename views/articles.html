@@ -1,6 +1,9 @@
 {{> navSticky }}
 
 <div id="content">
+  {{#unless articles}}
+    <div class="noContent">No articles yet, check back soon!</div>
+  {{/unless}}
   {{#each articles }}
   <a href="/articles/{{this._id}}" class="article">
     <img src="/articles/{{this._id}}/images/cover" />
@@ -19,14 +22,15 @@
   <script type="text/javascript">
     let deleteLinks = Array.from(document.getElementsByClassName('delete'));
     deleteLinks.forEach(link => {
-      link.addEventListener('click', () => {
-        if (!confirm("Delete this radio entry?")) return;
+      link.addEventListener('click', e => {
+        e.stopPropogation();
+        if (!confirm("Delete this article?")) return;
         const id = link.dataset["id"];
         const req = new XMLHttpRequest();
         req.onreadystatechange = function() {
           if (req.readyState === XMLHttpRequest.DONE) location.reload();
         };
-        req.open("DELETE", `/radioArchive/${id}`, true);
+        req.open("DELETE", `/articles/${id}`, true);
         req.send();
       });
     });

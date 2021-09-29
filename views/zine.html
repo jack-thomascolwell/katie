@@ -1,0 +1,70 @@
+{{> navSticky }}
+
+<div id="content" data-src="/zine/pdf/{{zine._id}}">
+</div>
+
+<script src="//mozilla.github.io/pdf.js/build/pdf.js"></script>
+
+<script type="text/javascript">
+  const pdfjsLib = window['pdfjs-dist/build/pdf'];
+
+  pdfjsLib.GlobalWorkerOptions.workerSrc = '//mozilla.github.io/pdf.js/build/pdf.worker.js';
+
+  let pdfDoc = null;
+
+  function renderPageToCanvas(page, canvas) {
+    pdfDoc.getPage(page).then(page => {
+      let viewport = page.getViewport({
+        scale: 1
+      });
+      canvas.height = viewport.height;
+      canvas.width = viewport.width;
+
+      page.render({
+        canvasContext: canvas.getContext('2d'),
+        viewport: viewport
+      });
+    });
+  }
+
+  function createCanvas(page) {
+    const canvas = document.createElement('canvas');
+    canvas.classList.add('zinePage');
+    const pageMarker = document.createElement('div');
+    pageMarker.classList.add('pageMarker');
+    pageMarker.innerHTML = page;
+    return [canvas, pageMarker];
+  }
+
+  const wrapper = document.getElementById('content');
+  const url = wrapper.dataset['src'];
+  pdfjsLib.getDocument(url).promise.then(pdfDoc_ => {
+    pdfDoc = pdfDoc_;
+    const { numPages } = pdfDoc;
+
+    const coverWrapper = document.createElement('div');
+    coverWrapper.classList.add('zine');
+    const [cover, coverMarker] = createCanvas(1);
+    cover.classList.add('cover');
+    coverWrapper.appendChild(cover);
+    renderPageToCanvas(1, cover);
+    wrapper.appendChild(coverWrapper);
+    for (let i=2; i<=numPages; i+=2) {
+      const div = document.createElement('div');
+      div.classList.add('zine');
+      const [left, leftMarker] = createCanvas(i);
+      renderPageToCanvas(i, left);
+      div.appendChild(left);
+      div.appendChild(leftMarker);
+
+      if (i+1 <= numPages) {
+        const [right, rightMarker] = createCanvas(i+1);
+        renderPageToCanvas(i+1, right)
+        div.appendChild(right);
+        div.appendChild(rightMarker);
+      }
+
+      wrapper.appendChild(div);
+    }
+  });
+</script>
