@@ -1,15 +1,78 @@
-<html>
-<head>
-  <title>Users</title>
-</head>
+{{> navSticky }}
+<div id="content">
+  {{#each users}}
+    <div class="user">
+      <a class="email" href="mailto://{{this.email}}">{{this.email}}</a>
+      <span class="admin">Admin: {{#if this.admin}}
+          <i class="removeAdmin far fa-check-square" data-email="{{this.email}}" data-id="{{this._id}}"></i>
+        {{else}}
+          <i class="makeAdmin far fa-square" data-email="{{this.email}}" data-id="{{this._id}}"></i>
+        {{/if}}
+      </span>
+      <i class="delete fas fa-trash" data-email="{{this.email}}" data-id="{{this._id}}"></i>
+    </div>
+  {{/each}}
+  <div class="user">
+    <a class="email" href="mailto://{{self.email}}">{{self.email}}</a>
+    <span class="admin">Admin: {{#if self.admin}}
+        <i class="removeAdmin far disabled fa-check-square"></i>
+      {{else}}
+        <i class="makeAdmin far disabled fa-square"></i>
+      {{/if}}
+    </span>
+    <i class="delete disabled fas fa-trash"></i>
+  </div>
+</div>
 
-<body>
-  <h3>users</h3>
-  <ul>
-    {{#each users}}
-    <li><a href="/users/{{this._id}}">{{this.email}}, {{this.admin}}</a></li>
-    {{/each}}
-  </ul>
-</body>
+<script type="text/javascript">
+  let deleteLinks = Array.from(document.getElementsByClassName('delete')).filter(link => !link.classList.contains('disabled'))
+  deleteLinks.forEach(link => {
+    link.addEventListener('click', e => {
+      e.preventDefault();
+      if (!confirm(`Delete ${link.dataset['email']}?`)) return;
+      const id = link.dataset["id"];
+      const req = new XMLHttpRequest();
+      req.onreadystatechange = function() {
+        if (req.readyState === XMLHttpRequest.DONE) location.reload();
+      };
+      req.open("DELETE", `/users/${id}`, true);
+      req.send();
+    });
+  });
 
-</html>
+  let makeAdminLinks = Array.from(document.getElementsByClassName('makeAdmin')).filter(link => !link.classList.contains('disabled'));
+  makeAdminLinks.forEach(link => {
+    link.addEventListener('click', e => {
+      e.preventDefault();
+
+      const {id, email} = link.dataset;
+      if (!confirm(`Give admin privileges to ${email}?`)) return;
+
+      const xhttp = new XMLHttpRequest();
+      xhttp.open("PUT", `/users/${id}`);
+      xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+      xhttp.onreadystatechange = function() {
+        if (xhttp.readyState === XMLHttpRequest.DONE) location.reload();
+      };
+      xhttp.send("admin=true");
+    });
+  });
+
+  let removeAdminLinks = Array.from(document.getElementsByClassName('removeAdmin')).filter(link => !link.classList.contains('disabled'));
+  removeAdminLinks.forEach(link => {
+    link.addEventListener('click', e => {
+      e.preventDefault();
+
+      const {id, email} = link.dataset;
+      if (!confirm(`Remove admin privileges from ${email}?`)) return;
+
+      const xhttp = new XMLHttpRequest();
+      xhttp.open("PUT", `/users/${id}`);
+      xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+      xhttp.onreadystatechange = function() {
+        if (xhttp.readyState === XMLHttpRequest.DONE) location.reload();
+      };
+      xhttp.send("admin=false");
+    });
+  });
+</script>

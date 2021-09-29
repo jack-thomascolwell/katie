@@ -23,7 +23,7 @@
     let deleteLinks = Array.from(document.getElementsByClassName('delete'));
     deleteLinks.forEach(link => {
       link.addEventListener('click', e => {
-        e.stopPropogation();
+        e.preventDefault();
         if (!confirm("Delete this article?")) return;
         const id = link.dataset["id"];
         const req = new XMLHttpRequest();

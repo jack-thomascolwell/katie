@@ -1,19 +1,13 @@
-<html>
-
-<head>
-  <title>{{user.email}}</title>
-</head>
-
-<body>
-  <h3>{{user.email}}</h3>
-  <p>Is admin: {{user.admin}}</p>
-  {{#if user.admin}}
-    <button id="adminRemove">Remove Admin</button>
-  {{else}}
-    <button id="admin">Make Admin</button>
-  {{/if}}
-  <button id="delete">Delete</button>
-  <a href="/users">Back</a>
+<div id="content">
+  <div id="user">
+    <div class="email">{{user.email}}</div>
+    <div class="admin">Admin {{#if user.admin}}
+        <i id="adminRemove" class="far fa-check-square"></i>
+      {{else}}
+        <i id="admin" class="far fa-square"></i>
+      {{/if}}
+    </div>
+  </div>
   <script>
     let adminButton = document.getElementById('admin');
     if (adminButton) {
@@ -22,14 +16,6 @@
         xhttp.open("PUT", "/users/{{user._id}}");
         xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
         xhttp.send("admin=true");
-      });
-    }
-    let deleteButton = document.getElementById('delete');
-    if (deleteButton) {
-      deleteButton.addEventListener('click', e => {
-        const xhttp = new XMLHttpRequest();
-        xhttp.open("DELETE", "/users/{{user._id}}");
-        xhttp.send();
       });
     }
     let adminButtonRemove = document.getElementById('adminRemove');
@@ -42,6 +28,4 @@
       });
     }
   </script>
-</body>
-
-</html>
+</div>

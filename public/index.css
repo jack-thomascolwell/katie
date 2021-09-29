@@ -935,5 +935,46 @@ body.radio #footer {
   background-color: #090000;
   opacity: 0.75;
 }
+.user {
+  width: calc(90% - 40px);
+  background-color: #B8BECB;
+  color: #090000;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: baseline;
+  font-size: 1.25rem;
+  padding: 10px 20px;
+  margin-top: 20px;
+  z-index: 2;
+}
+.user:last-child {
+  margin-bottom: 20px;
+}
+.user .admin {
+  margin-left: auto;
+  margin-right: 1ex;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+}
+.user .admin i {
+  margin-left: 1ex;
+  cursor: pointer;
+}
+.user .admin i.disabled {
+  cursor: auto;
+}
+.user .admin i.disabled:hover {
+  color: #090000;
+}
+.user .admin i:hover {
+  color: #F15989;
+}
+.user .delete.disabled {
+  visibility: hidden;
+  cursor: auto;
+}
 
 /*# sourceMappingURL=index.css.map */

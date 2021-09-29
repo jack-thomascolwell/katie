@@ -8,7 +8,7 @@ const Throttle = require('throttle');
 const Stream = require('stream');
 
 function shuffle(array) {
-  return array//.sort(() => Math.random() - 0.5);
+  return array //.sort(() => Math.random() - 0.5);
 }
 
 class StreamQueue {
@@ -30,8 +30,8 @@ class StreamQueue {
       sink.write(chunk);
   }
   _getBitRate(song) {
-    const bitRate = 320048//ffprobeSync(`${__dirname}/songs/${song}`).format.bit_rate;
-    return bitRate//parseInt(bitRate);
+    const bitRate = 320048 //ffprobeSync(`${__dirname}/songs/${song}`).format.bit_rate;
+    return bitRate //parseInt(bitRate);
   }
   async _getSongs() {
     const radio = await this._mongo.db.collection('radio').find({}, {
@@ -72,7 +72,7 @@ class StreamQueue {
 
     const bucket = new this._mongo.lib.GridFSBucket(this._mongo.db);
 
-    const readable = bucket.openDownloadStream(this._currentSong.song);// Fs.createReadStream(`${__dirname}/songs/${this._currentSong.song}`);
+    const readable = bucket.openDownloadStream(this._currentSong.song); // Fs.createReadStream(`${__dirname}/songs/${this._currentSong.song}`);
     const throttleTransformable = new Throttle(bitRate / 8);
     throttleTransformable.on('data', (chunk) => this._broadcast(chunk)).on('end', () => this._playLoop());
 
@@ -249,10 +249,31 @@ const start = async function() {
     handler: async (request, h) => {
       if (request.auth.isAuthenticated)
         return h.redirect('/');
+
+      let payload = request.payload;
+      if (payload.email) payload.email = payload.email.toLowerCase();
+
+      const schema = Joi.object({
+        _id: Joi.any().forbidden(),
+        issue: Joi.number().required(),
+        published: Joi.date().required(),
+        pdf: Joi.any().required(),
+      });
+
+      const {
+        error,
+        value
+      } = schema.validate(payload);
+
+      if (error) return h.view('login', {
+        email: payload.email
+      });
+
       const {
         email,
         password
-      } = request.payload;
+      } = payload;
+
       const account = await request.mongo.db.collection('users').findOne({
         email: email
       });
