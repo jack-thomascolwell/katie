@@ -1,11 +1,11 @@
-<div id="content">
-  <h3>Please Register</h3>
-  {{#if error}}
-    <p class="error">{{error}}</p>
-  {{/if}}
-  <form method="post" action="/register">
-    <label>Email: <input type="text" name="email" value="{{email}}"></label><br />
-    <label>Password: <input type="password" name="password"></label><br />
-    <input type="submit" value="Login">
-  </form>
-</div>
+{{> navSticky }}
+
+<h3>Please Register</h3>
+{{#if error}}
+  <p class="error">{{error}}</p>
+{{/if}}
+<form method="post" action="/register">
+  <label>Email: <input type="text" name="email" value="{{email}}"></label><br />
+  <label>Password: <input type="password" name="password"></label><br />
+  <input type="submit" value="Login">
+</form>
