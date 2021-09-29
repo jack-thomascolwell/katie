@@ -1,23 +1,15 @@
-<h3>Please Register</h3>
-{{#if error}}
-  <p class="error">{{error}}</p>
-{{/if}}
-<form method="post" action="/register">
-  <label>Email: <input type="text" name="email" value="{{email}}"></label><br />
-  <label>Password: <input type="password" name="password"></label><br />
-  <label>Repeat Password: <input type="password" name="repeat_password"></label><br />
-  <input type="submit" value="Register">
-</form>
+{{> navSticky }}
 
-<h3>New article</h3>
+<div id="content">
 
-<form method="post" id="articleForm" enctype="multipart/form-data">
-  <label>title: <input type="text" name="title" value="{{article.title}}" /></label>
-  <label>body: <textarea type="text" name="body">{{article.body}}</textarea></label>
-  <label>abstract: <input type="text" name="abstract" value="{{article.abstract}}" /></label>
-  <label>author: <input type="text" name="author" value="{{article.author}}" /></label>
-  <label>published: <input type="date" name="published" value="{{article.published}}" /></label>
-  <label>cover: <input type="file" name="cover" /></label>
-  <label>images: <input type="file" name="images" multiple /></label>
-  <input type="submit" value="New">
-</form>
+  <h3>Please Register</h3>
+  {{#if error}}
+    <p class="error">{{error}}</p>
+  {{/if}}
+  <form method="post" action="/register">
+    <label>Email: <input type="text" name="email" value="{{email}}"></label><br />
+    <label>Password: <input type="password" name="password"></label><br />
+    <label>Repeat Password: <input type="password" name="repeat_password"></label><br />
+    <input type="submit" value="Register">
+  </form>
+</div>
