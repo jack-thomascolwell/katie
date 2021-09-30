@@ -1,7 +1,9 @@
-<h3>New Zine</h3>
-{{#if error}}
-  <p class="error">{{error}}</p>
-{{/if}}
+<div class="titleBlock">
+  <div class="heading">New Zine</div>
+  {{#if error}}
+    <p>{{error}}</p>
+  {{/if}}
+</div>
 <form method="post" id="zineForm" enctype="multipart/form-data">
   <label>Issue: <input type="number" name="issue" value="{{zine.issue}}" /></label>
   <label>Published: <input type="date" name="published" value="{{zine.published}}" /></label>

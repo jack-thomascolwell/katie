@@ -1,7 +1,9 @@
-<h3>New Radio Entry</h3>
-{{#if error}}
-  <p class="error">{{error}}</p>
-{{/if}}
+<div class="titleBlock">
+  <div class="heading">New Song</div>
+  {{#if error}}
+    <p>{{error}}</p>
+  {{/if}}
+</div>
 <form method="post" id="archiveForm" enctype="multipart/form-data">
   <label>title: <input type="text" name="title" value="{{radioArchive.title}}" /></label>
   <label>blurb: <textarea type="text" name="blurb">{{radioArchive.blurb}}</textarea></label>

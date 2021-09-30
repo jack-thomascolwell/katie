@@ -1,38 +1,9 @@
-{{> navSticky }}
+{{#unless articles}}
+  <div class="titleBlock">No articles yet, check back soon!</div>
+{{/unless}}
+{{#each articles}}
+  {{> articleCover data=this admin=../admin }}
+{{/each}}
 
-<div id="content">
-  {{#unless articles}}
-    <div class="noContent">No articles yet, check back soon!</div>
-  {{/unless}}
-  {{#each articles }}
-  <a href="/articles/{{this._id}}" class="article">
-    <img src="/articles/{{this._id}}/images/cover" />
-    <h2>{{this.title}}</h2>
-    <h4 class="byline"><span class="author">{{this.title}}</span><span class="date">{{date this.published}}</span>{{#if ../admin}}<i class="delete fas fa-trash" data-id="{{this._id}}"></i>{{/if}}</h4>
-    <p>{{this.abstract}}</p>
-  </a>
-  {{/each}}
 
-  <div id="pagination">
-    <i id="prevPage" class="fas fa-chevron-left"></i>
-    <div id="currentPage">001</div>
-    <i id="nextPage" class="fas fa-chevron-right"></i>
-  </div>
-
-  <script type="text/javascript">
-    let deleteLinks = Array.from(document.getElementsByClassName('delete'));
-    deleteLinks.forEach(link => {
-      link.addEventListener('click', e => {
-        e.preventDefault();
-        if (!confirm("Delete this article?")) return;
-        const id = link.dataset["id"];
-        const req = new XMLHttpRequest();
-        req.onreadystatechange = function() {
-          if (req.readyState === XMLHttpRequest.DONE) location.reload();
-        };
-        req.open("DELETE", `/articles/${id}`, true);
-        req.send();
-      });
-    });
-  </script>
-</div>
+{{> pagination }}

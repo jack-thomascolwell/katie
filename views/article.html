@@ -1,20 +1,4 @@
-<html>
-<head>
-  <title>{{article.title}}</title>
-</head>
-
-<body>
-  {{> navSticky }}
-
-  <div id="content">
-    <div id="article">
-      <h2>{{ article.title }}</h2>
-      {{{ markdown article.body article._id }}}
-    </div>
-    {{#if admin}}
-    <a id="articleEdit" href="/articles/{{article._id}}/edit">Edit</a>
-    {{/if}}
-  </div>
-</body>
-
-</html>
+<div class="article textBlock">
+  <div class="heading">{{ article.title }}</div>
+  {{{ markdown article.body article._id }}}
+</div>

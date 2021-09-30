@@ -1,28 +1,51 @@
-$green: #475B59;
-$black: #090000;
-$white: #B8BECB;
-$pink: #F15989;
-$yellow: #DFD525;
-
-html {
-  font-size: 87.5%;
+$black: #181b20;
+$darkGreen: #84cc99;
+$lightGreen: #b2ffce;
+$pink: #ff78b0;
+$yellow: #fff20d;
+$white: #d6c5cc;
+$gray: #495350;
+@font-face {
+  font-family: neuropol;
+  src: url("/public/neuropol.ttf");
 }
-/*14px*/
-body {
-  font-family: sans-serif;
+@font-face {
+  font-family: akaju;
+  src: url("/public/Akaju_Thin.otf");
+}
+$neuropol: neuropol sans-serif;
+$akaju: neuropol sans-serif;
+@mixin textBody {
+  font-family: akaju;
   font-weight: 400;
-  line-height: 1.75;
-  color: $white;
-  overscroll-behavior: none;
-  background-color: $black;
-  width: 100vw;
-  //min-height: 200vh;
+  line-height: 1.25;
+}
+@mixin textTitle {
+  font-family: neuropol;
+  font-weight: 400;
+  line-height: 1.25;
+}
+@mixin flexCentered {
   display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
+  justify-content: center;
   align-items: center;
-  flex-wrap: nowrap;
-
+}
+@mixin textSmall {
+  font-size: 0.75rem;
+}
+@mixin textNormal {
+  font-size: 1rem;
+}
+@mixin textBig {
+  font-size: 1.333rem;
+}
+@mixin textBigger {
+  font-size: 1.777rem;
+}
+@mixin textBiggest {
+  font-size: 2.369rem;
+}
+@mixin hideScrollbar {
   &::-webkit-scrollbar {
     display: none;
   }
@@ -30,8 +53,8 @@ body {
   scrollbar-width: none;
 }
 
-p {
-  margin-bottom: 1rem;
+html {
+  font-size: 87.5%;
 }
 
 em {
@@ -42,113 +65,104 @@ strong {
   font-weight: bold;
 }
 
-h1,
-h2,
-h3,
-h4,
-h5 {
-  //margin: 3rem 0 1.38rem;
-  font-family: 'Poppins', sans-serif;
-  font-weight: 400;
-  //line-height: 1.3;
-}
-
-h1 {
-  margin-top: 0;
-  font-size: 3.052rem;
-}
-
-h2 {
-  font-size: 2.441rem;
-}
-
-h3 {
-  font-size: 1.953rem;
-}
-
-h4 {
-  font-size: 1.563rem;
-}
-
-h5 {
-  font-size: 1.25rem;
-}
-
-.text_small,
 small {
-  font-size: 0.8rem;
+  @include textSmall;
 }
 
 a {
-  color: $black;
+  color: $lightGreen;
   text-decoration: none;
   cursor: pointer;
 
   &:hover {
-    color: $yellow;
+    color: $pink;
   }
+}
+
+.delete {
+  cursor: pointer;
+  z-index: 2;
+  color: $darkGreen;
+  text-shadow: 1px 1px $lightGreen;
+  @include textBig;
+
+  &:hover {
+    color: $pink;
+  }
+}
+
+body {
+  @include textBody;
+  @include textNormal;
+  color: $darkGreen;
+  overscroll-behavior: none;
+  background-color: $black;
+  width: 100vw;
+  height: 100vh;
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: auto 1fr auto;
+  grid-template-areas: 'nav' 'content' 'footer';
+
+  &.landing {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    flex-wrap: nowrap;
+
+    #content {
+      overflow-y: auto;
+    }
+
+    #nav {
+      position: fixed;
+      transition: transform 0.25s ease-out;
+
+      &.hidden {
+        transform: translateY(-100%);
+      }
+    }
+  }
+  @include hideScrollbar;
 }
 
 #landing {
   width: 100vw;
   height: 100vh;
+  min-height: 100vh;
+  z-index: 1;
   background-color: $black;
-  color: $white;
   display: grid;
   grid-template-columns: 1fr;
-  grid-template-rows: 30vh 1fr 3rem;
+  grid-template-rows: 30vh 1fr auto;
+  grid-template-areas: 'header' 'submit' 'nav';
   border-bottom: 1px solid $black;
 
   #header {
     z-index: 1;
-    grid-column: 1;
-    grid-row: 1;
-    //background-color: $black;
+    grid-area: header;
     aspect-ratio: auto;
     height: 100%;
     margin-left: auto;
     margin-right: auto;
-    /*background-color: $green;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-around;
-    align-items: center;
-    flex-wrap: nowrap;
-    font-variant: small-caps;
-    text-shadow: 1px 1px $black;
-    overflow: visible;
-
-    h1 {
-      font-size: 5.052rem;
-      margin: 0;
-      width: auto;
-      width: 35%;
-      text-align: right;
-
-      &:last-child {
-        text-align: left;
-      }
-    }
-
-    .logo {
-      width: 20vw;
-      margin-top: -2vh;
-      align-self: flex-start;
-      background-image: url("logo.png");
-      background-size: cover;
-      background-repeat: no-repeat;
-      aspect-ratio: 1;
-    }*/
   }
 
   #submit {
-    grid-column: 1;
-    grid-row: 2;
+    grid-area: submit;
     margin: auto;
-    font-size: 4rem;
+    @include textTitle;
+    @include textBiggest;
+    color: $black;
+    text-shadow: 1px 1px $darkGreen;
+    z-index: 3;
+
+    &:hover {
+      color: $pink;
+    }
   }
 
-  .img {
+  #video {
     grid-column: 1;
     grid-row: 1 /span 3;
     width: 100%;
@@ -156,10 +170,7 @@ a {
     overflow: hidden;
     aspect-ratio: auto;
     background: $black;
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
+    @include flexCentered;
 
     video {
       min-width: 100%;
@@ -168,55 +179,38 @@ a {
       height: auto;
       object-fit: cover;
     }
-    /*circle {
-      animation: 3s ease-in-out 0s infinite alternate svgDemo;
-      stroke: $yellow;
-      stroke-width: 1;
-
-      &:first-child {
-        animation-direction: alternate-reverse;
-        stroke: $pink;
-      }
-    }*/
   }
 
   nav {
     z-index: 2;
-    height: 100%;
-    grid-column: 1;
-    grid-row: 3;
+    grid-area: nav;
+    width: 100%;
     display: flex;
     flex-direction: row;
     justify-content: space-around;
-    width: 100%;
     align-items: flex-end;
     flex-wrap: nowrap;
 
     a {
-      height: 100%;
-      font-size: 1.5rem;
       display: block;
-      color: $white;
-      width: calc(15vw - 10px - 2 * (1ex + 5px)); //FIXME
+      width: 15vw;
+      height: 3rem;
+      padding-left: calc(1ex + 5px);
+      padding-right: calc(1ex + 5px);
+      @include flexCentered;
+      @include textTitle;
+      @include textBig;
+      color: $lightGreen;
+      background-color: $darkGreen;
       text-shadow: 1px 1px $black;
-      background-color: $green;
+      background-color: $black;
       text-align: center;
       font-variant: small-caps;
       letter-spacing: 2px;
-      padding-left: calc(1ex + 5px);
-      padding-right: calc(1ex + 5px);
       transition: padding 0.25s ease-out, transform 0.25s ease-out;
-      //border-top-left-radius: 5px;
-      //border-top-right-radius: 5px;
+
       &.active,
       &:hover {
-        /*&:nth-child(2n) {
-          color: $pink;
-        }
-
-        &:nth-child(2n+1) {
-          color: $yellow;
-        }*/
         color: $pink;
         padding-bottom: 5px;
       }
@@ -229,30 +223,22 @@ a {
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  width: calc(100vw - 20px);
+  grid-area: nav;
+  box-sizing: border-box;
+  width: 100%;
   height: 4.8rem;
-  padding-left: 10px;
-  padding-right: 10px;
-  position: fixed;
-  top: 0;
-  z-index: 1;
-  background: $black;
-  color: $white;
-  transition: transform 0.25s ease-out;
+  padding-left: 5vw;
+  padding-right: 5vw;
   z-index: 4;
-  border-bottom: 4px solid $green;
-
-  &.sticky {
-    position: sticky;
-  }
-
-  &.hidden {
-    transform: translateY(-100%);
-  }
+  background: $black;
+  color: $darkGreen;
+  border-bottom: 4px solid $gray;
 
   .logo {
-    height: calc(100% - 10px);
-    cursor: pointer;
+    box-sizing: border-box;
+    height: 100%;
+    padding-top: 5px;
+    padding-bottom: 5px;
 
     img {
       height: 100%;
@@ -269,57 +255,37 @@ a {
     height: 100%;
 
     a {
-      font-size: 2rem;
-      font-variant: small-caps;
-      color: $white;
-      text-shadow: 1px 1px $green;
-      text-align: center;
+      box-sizing: border-box;
       padding-left: calc(1ex + 5px);
       padding-right: calc(1ex + 5px);
-      display: flex;
-      flex-direction: row;
-      justify-content: center;
-      align-items: center;
+      @include textTitle;
+      @include textBig;
+      color: $lightGreen;
+      background-color: $black;
+      text-shadow: 1px 1px $black;
+      font-variant: small-caps;
+      letter-spacing: 2px;
+      text-align: center;
+      @include flexCentered;
 
       &.active,
       &:hover {
-        background-color: mix($black, $green, 80%);
         color: $pink;
-        /*&:nth-child(2n) {
-          color: $pink;
-        }
-
-        &:nth-child(2n+1) {
-          color: $yellow;
-        }*/
+        background-color: $gray;
       }
     }
   }
-  /*.title {
-    grid-column: 2;
-    grid-row: 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: flex-start;
-    flex-wrap: nowrap;
-
-    h1 {
-      font-size: 1.563rem;
-      font-variant: small-caps;
-      letter-spacing: 2px;
-      color: $white;
-      text-shadow: 1px 1px $green;
-      margin: 0;
-    }
-  }*/
 }
 
 #content {
+  grid-area: content;
+  overflow-y: scroll;
+  @include hideScrollbar;
+  min-height: 100%;
   display: flex;
   flex-direction: column;
   flex-wrap: nowrap;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
   background-image: url("background.jpg");
   background-attachment: fixed;
@@ -331,75 +297,88 @@ a {
 
   &::after {
     content: "";
-    position: absolute;
+    position: fixed;
     top: 0;
     left: calc(5% - 10px);
     right: calc(5% - 10px);
     bottom: 0;
-    background-color: $black;
+    background-color: fade-out($black, 0.1);
     z-index: 0;
   }
 
-  .article {
-    cursor: pointer;
+  .articleCover {
     overflow: hidden;
     z-index: 1;
+    box-sizing: border-box;
     width: 90%;
     height: 160px;
-    margin-top: 20px;
-    background-color: $white;
-    color: $black;
+    min-height: 160px;
+    margin-bottom: 20px;
+
+    &:first-child {
+      margin-top: 20px;
+    }
+    background-color: $black;
+    color: $darkGreen;
     display: grid;
-    grid-template-columns: 320px 1fr 10px;
-    grid-template-rows: 1fr auto auto auto 1fr;
-    grid-column-gap: 20px;
-    grid-row-gap: 5px;
+    grid-template-columns: 320px 1fr;
+    grid-template-rows: 1fr auto 1fr;
+    grid-template-areas: 'image .' 'image text' 'image .';
 
-    .byline {
-      grid-column: 2;
-      grid-row: 3;
+    .content {
+      grid-area: text;
+      box-sizing: border-box;
+      width: 100%;
       display: flex;
-      flex-direction: row;
+      flex-direction: column;
       justify-content: flex-start;
-      align-items: baseline;
-      flex-wrap: nowrap;
-      font-size: 1.15rem;
-      font-weight: lighter;
-      text-transform: capitalize;
-      line-height: 1;
+      align-items: stretch;
+      overflow-y: scroll;
+      @include hideScrollbar;
+      padding: 10px 30px 10px 20px;
 
-      .date::before {
-        content: ", ";
+      .title {
+        @include textTitle;
+        @include textBig;
+        letter-spacing: 1px;
+        text-shadow: 1px 1px green;
+        text-transform: uppercase;
+        margin-bottom: 10px;
+
+        .delete {
+          float: right;
+        }
+      }
+
+      .byline {
+        @include textBody;
+        @include textSmall;
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-start;
+        align-items: baseline;
+        flex-wrap: nowrap;
+        text-transform: capitalize;
+
+        .date::before {
+          content: ", ";
+        }
+      }
+
+      .abstract {
+        @include textBody;
+        @include textNormal;
+        text-align: justify;
       }
     }
 
     img {
-      max-width: 100%;
-      max-height: 160px;
+      grid-area: image;
       width: 100%;
-      height: 160px;
-      grid-column: 1;
-      grid-row: 1 /span 5;
+      height: 100%;
       object-fit: cover;
       object-position: center;
-    }
-
-    h2 {
-      grid-column: 2;
-      grid-row: 2;
-      font-size: 1.5rem;
-      text-shadow: 1px 1px $green;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      margin: 0;
-    }
-
-    p {
-      grid-column: 2;
-      grid-row: 4;
-      font-size: 1rem;
-      margin: 0;
-      text-align: justify;
+      overflow: hidden;
     }
 
     &.featured {
@@ -407,131 +386,439 @@ a {
       margin-top: 0;
       max-height: 80vh;
       height: 80vh;
-      grid-template-columns: 5vw 1fr 5vw;
-      grid-template-rows: 1fr auto auto auto 0; // FIXME adjust size of bottom bar
+      grid-template-columns: 1fr;
+      grid-template-rows: 1fr auto;
+      grid-template-areas: 'image' 'text';
       background-color: $black;
-      color: $white;
 
-      .img {
-        grid-column: 1 /span 3;
-        grid-row: 1;
-        height: 100%;
-        width: 100%;
-        background-image: var(--background-src);
-        background-size: cover;
-        background-position: center;
+      .content {
+        padding: 10px 20px;
       }
+    }
+  }
 
-      h2 {
-        grid-column: 2;
-        grid-row: 2;
+  .textBlock {
+    margin-bottom: 20px;
+
+    &:first-child {
+      margin-top: 20px;
+    }
+    box-sizing: border-box;
+    width: 90%;
+    padding: 10px 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: stretch;
+    background-color: $black;
+    color: $darkGreen;
+    z-index: 2;
+
+    .heading {
+      margin-bottom: 5px;
+      padding-bottom: 5px;
+      border-bottom: 2px solid $gray;
+      font-variant: small-caps;
+      @include textTitle;
+      @include textBigger;
+      text-align: center;
+    }
+
+    p {
+      @include textBody;
+      @include textNormal;
+      text-align: justify;
+      margin-bottom: 5px;
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+  }
+
+  .titleBlock {
+    margin-bottom: 20px;
+
+    &:first-child {
+      margin-top: 20px;
+    }
+    box-sizing: border-box;
+    width: 90%;
+    padding: 10px 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: stretch;
+    background-color: $black;
+    color: $darkGreen;
+    z-index: 2;
+
+    .heading {
+      margin-bottom: 5px;
+      padding-bottom: 5px;
+      border-bottom: 2px solid $gray;
+      font-variant: small-caps;
+      @include textTitle;
+      @include textBiggest;
+      text-align: center;
+    }
+
+    p {
+      @include textBody;
+      @include textBig;
+      text-align: center;
+    }
+  }
+
+  .button {
+    @include textTitle;
+    @include textBiggest;
+    color: $darkGreen;
+    text-shadow: 1px 1px $lightGreen;
+    z-index: 3;
+    cursor: pointer;
+    margin-bottom: 20px;
+    text-align: center;
+
+    &:hover {
+      color: $pink;
+    }
+  }
+
+  .pagination {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    margin-top: auto;
+    margin-bottom: 20px;
+    z-index: 2;
+    color: $darkGreen;
+    text-shadow: 1px 1px $lightGreen;
+    @include textTitle;
+    @include textBig;
+
+    .current,
+    .next,
+    .prev {
+      text-align: center;
+      padding-left: 5px;
+      padding-right: 5px;
+    }
+
+    .next,
+    .prev {
+      cursor: pointer;
+
+      &:active,
+      &:hover {
+        color: $pink;
+      }
+    }
+  }
+
+  .radio {
+    overflow: hidden;
+    z-index: 1;
+    box-sizing: border-box;
+    width: 90%;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    display: grid;
+    grid-template-columns: 160px 1fr;
+    grid-template-rows: 1fr auto 1fr;
+    grid-template-areas: 'image .' 'image text' 'image .';
+    height: 160px;
+    min-height: 160px;
+
+    &#radio {
+      grid-template-columns: 300px 1fr;
+      height: 300px;
+      min-height: 300px;
+
+      ~ .textBlock {
+        display: block;
+        @include textBig;
+        text-align: center;
+      }
+    }
+    background-color: $black;
+    color: $darkGreen;
+
+    .content {
+      grid-area: text;
+      box-sizing: border-box;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: stretch;
+      overflow-y: scroll;
+      @include hideScrollbar;
+      padding: 10px 30px 10px 20px;
+
+      .titleLine {
+        @include textTitle;
+        @include textBig;
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-start;
+        align-items: baseline;
+        flex-wrap: nowrap;
+
+        .title {
+          letter-spacing: 1px;
+          text-shadow: 1px 1px $lightGreen;
+          text-transform: uppercase;
+        }
+
+        .artist {
+          text-transform: capitalize;
+
+          &::before {
+            content: "by";
+            margin-left: 1ex;
+            margin-right: 1ex;
+          }
+        }
+        margin-bottom: 10px;
+
+        .delete {
+          margin-left: auto;
+        }
       }
 
       .byline {
-        grid-column: 2;
-        grid-row: 3;
+        @include textBody;
+        @include textSmall;
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-start;
+        align-items: baseline;
+        flex-wrap: nowrap;
+        text-transform: capitalize;
+
+        .date::before {
+          content: ", ";
+        }
       }
 
-      p {
-        grid-column: 2;
-        grid-row: 4;
+      .blurb {
+        @include textBody;
+        @include textNormal;
+        text-align: justify;
       }
     }
+
+    &.paused {
+      img {
+        filter: blur(2px) grayscale(50%);
+      }
+    }
+
+    img:hover ~ .play {
+      color: $pink;
+    }
+
+    .play {
+      aspect-ratio: 1;
+      grid-area: image;
+      @include textBiggest;
+      background-color: $black;
+      box-sizing: border-box;
+      width: 3ex;
+      height: 3ex;
+      border-radius: 25%;
+      color: $darkGreen;
+      text-shadow: 1px 1px $lightGreen;
+      z-index: 3;
+      cursor: pointer;
+      text-align: center;
+      @include flexCentered;
+      margin: auto;
+
+      &:hover {
+        color: $pink;
+      }
+    }
+
+    img {
+      grid-area: image;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+      overflow: hidden;
+      cursor: pointer;
+    }
+  }
+
+  &.radio {
+    justify-content: space-around;
+  }
+
+  .article {
+    img {
+      width: 100%;
+      aspect-ratio: 4;
+      object-fit: cover;
+      object-position: center;
+      overflow: hidden;
+    }
+  }
+
+  .zineCover {
+    max-width: 90%;
+    z-index: 2;
+    display: grid;
+    grid-template-rows: auto 1fr;
+    grid-template-columns: auto 1fr;
+
+    margin-bottom: 20px;
+    &:first-child {
+      margin-top: 20px;
+    }
+
+    canvas {
+      grid-column: 1 /span 2;
+      grid-row: 1 /span 2;
+      width: 100%;
+      //height: 100%;
+      object-fit: cover;
+      overflow: hidden;
+    }
+
+    .delete {
+      z-index: 3;
+      grid-column: 1 /span 2;
+      grid-row: 1 /span 2;
+      margin-left: auto;
+      margin-right: auto;
+      margin-right: 5px;
+      margin-top: 5px;
+    }
+
+    .content {
+      z-index: 3;
+      grid-column: 1;
+      grid-row: 1;
+      display: flex;
+      flex-direction: column;
+      flex-wrap: nowrap;
+      justify-content: flex-start;
+      align-items: flex-start;
+      padding: 5px;
+
+      @include textNormal;
+      @include textBody;
+
+      color: $darkGreen;
+      background-color: $black;
+    }
+  }
+
+  .zine {
+    z-index: 2;
+    margin-bottom: 20px;
+    &:first-child {
+      margin-top: 20px;
+    }
+    width: 90%;
+
+    display: grid;
+    grid-template-rows: auto;
+    grid-template-columns: 1fr 1fr;
+    grid-template-areas: 'left right';
+
+    .zinePage {
+      width: 100%;
+      grid-row: 1;
+
+      &:first-of-type {
+        grid-area: left !important;
+      }
+
+      &:last-of-type {
+        grid-area: right;
+      }
+
+      &.cover {
+        grid-area: right !important;
+      }
+    }
+
+    .pageMarker {
+      grid-row: 1;
+      margin-top: auto;
+      padding-left: 5px;
+      padding-right: 5px;
+      aspect-ratio: 1;
+      background: $black;
+      color: $darkGreen;
+      @include textBody;
+      @include textSmall;
+      @include flexCentered;
+      z-index: 3;
+
+      &:first-of-type {
+        grid-area: left !important;
+        margin-left: 0 !important;
+        margin-right: auto !important;
+      }
+
+      &:last-of-type {
+        grid-area: right;
+        margin-left: auto;
+        margin-right: 0;
+      }
+    }
+  }
+
+  form {
+    width: 90%;
+    z-index: 2;
+    background-color: $black;
+    color: $darkGreen;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    align-items: flex-start;
   }
 }
 
 #footer {
-  display: flex;
-  width: calc(100vw - 10vw);
+  grid-area: footer;
+  z-index: 2;
+  box-sizing: border-box;
+  width: 100%;
   padding-left: 5vw;
   padding-right: 5vw;
+  display: flex;
   flex-direction: row;
   align-items: baseline;
   justify-content: space-between;
   flex-wrap: nowrap;
   background-color: $black;
-  color: $white;
+  color: $darkGreen;
   padding-top: 5px;
   padding-bottom: 5px;
-
-  .copywrite {
-    margin: 0;
-  }
+  @include textBody;
+  @include textSmall;
 
   .socials {
     display: flex;
     flex-direction: row;
     justify-content: space-around;
-    font-size: 1.75rem;
-    color: $white;
-    text-shadow: 1px 1px $green;
+    @include textBig;
+    text-shadow: 1px 1px $black;
 
     a {
-      color: $white !important;
       margin-left: 5px;
       margin-right: 5px;
-
-      &:hover {
-        color: $pink !important;
-        /*
-        &:nth-child(2n) {
-          color: $pink !important;
-        }
-
-        &:nth-child(2n+1) {
-          color: $yellow !important;
-        }*/
-      }
     }
   }
 }
-
-#pagination {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: nowrap;
-  justify-content: space-around;
-  align-items: center;
-  color: $green;
-  text-shadow: 1px 1px fade-out($green, 0.5);
-  margin-top: 20px;
-  margin-bottom: 20px;
-  font-size: 1.3rem;
-  z-index: 2;
-
-  #currentPage {
-    cursor: default;
-    text-align: center;
-    padding-left: 4px;
-    padding-right: 4px;
-  }
-
-  #prevPage {
-    cursor: pointer;
-    text-align: center;
-    padding-left: 4px;
-    padding-right: 4px;
-
-    &:hover {
-      color: $pink;
-      text-shadow: 1px 1px fade-out($pink, 0.5);
-    }
-  }
-
-  #nextPage {
-    cursor: pointer;
-    text-align: center;
-    padding-left: 4px;
-    padding-right: 4px;
-
-    &:hover {
-      color: $pink;
-      text-shadow: 1px 1px fade-out($pink, 0.5);
-    }
-  }
-}
-
-body.radio {
+/*body.radio {
   display: grid;
   grid-template-columns: 1fr;
   grid-template-rows: auto 1fr auto;
@@ -579,15 +866,15 @@ body.radio {
 }
 
 #radioArchiveHeader {
-  color: $green;
-  text-shadow: 1px 1px fade-out($green, 0.5);
+  color: green;
+  text-shadow: 1px 1px fade-out(green, 0.5);
   z-index: 2;
   margin-bottom: 0;
   margin-top: 20px;
 }
 
 #radioArchiveSubtitle {
-  color: $green;
+  color: green;
   width: 80%;
   z-index: 2;
   font-size: 1rem;
@@ -597,7 +884,7 @@ body.radio {
 .delete {
   cursor: pointer;
   z-index: 4;
-  color: $green;
+  color: green;
   text-shadow: 1px 1px $black;
   margin-left: 1ex;
 
@@ -638,7 +925,7 @@ body.radio {
     grid-row: 2;
     margin: 0;
     font-size: 1.5rem;
-    text-shadow: 1px 1px $green;
+    text-shadow: 1px 1px green;
     letter-spacing: 1px;
     text-transform: uppercase;
     line-height: 1;
@@ -717,8 +1004,8 @@ body.radio {
     background-color: $black;
     font-size: 1.5rem;
     text-align: center;
-    color: $green;
-    text-shadow: 1px 1px fade-out($green, 0.5);
+    color: green;
+    text-shadow: 1px 1px fade-out(green, 0.5);
     height: 3ex;
     width: 3ex;
     z-index: 4;
@@ -754,7 +1041,7 @@ body.radio {
     grid-row: 2;
     margin: 0;
     font-size: 1.5rem;
-    text-shadow: 1px 1px $green;
+    text-shadow: 1px 1px green;
     letter-spacing: 1px;
     text-transform: uppercase;
     line-height: 1;
@@ -804,53 +1091,6 @@ body.radio {
   }
 }
 
-#about,
-#submissionGuidelines {
-  margin-bottom: 20px;
-  width: 90%;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: stretch;
-  background-color: $white;
-  color: $black;
-  z-index: 2;
-
-  h2 {
-    margin: 0;
-    padding: 10px;
-    background-color: $green;
-    font-variant: small-caps;
-    text-align: center;
-    margin-bottom: 5px;
-  }
-
-  p {
-    text-align: justify;
-    margin-bottom: 5px;
-    padding-left: 10px;
-    padding-right: 10px;
-  }
-}
-
-#about {
-  margin-top: 20px;
-}
-
-#submit {
-  color: $white;
-  text-shadow: 1px 1px $green;
-  font-size: 3rem;
-  text-align: center;
-  z-index: 2;
-  margin-bottom: 20px;
-  cursor: pointer;
-
-  &:hover {
-    color: $pink;
-  }
-}
-
 #article {
   margin-top: 20px;
   margin-bottom: 20px;
@@ -867,7 +1107,7 @@ body.radio {
     background-position: center;
     background-size: cover;
     margin: 10px;
-    box-shadow: 1px 1px $green;
+    box-shadow: 1px 1px green;
 
     &:nth-of-type(2n) {
       float: right;
@@ -884,7 +1124,7 @@ body.radio {
     width: calc(100% - 20px);
     margin: 0;
     padding: 10px;
-    background-color: $green;
+    background-color: green;
     font-variant: small-caps;
     text-align: center;
     margin-bottom: 5px;
@@ -906,7 +1146,7 @@ body.radio {
 
 #articleEdit {
   color: $white;
-  text-shadow: 1px 1px $green;
+  text-shadow: 1px 1px green;
   font-size: 2.5rem;
   text-align: center;
   z-index: 2;
@@ -1083,4 +1323,4 @@ body.radio {
     visibility: hidden;
     cursor: auto;
   }
-}
+}*/

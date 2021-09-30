@@ -1,0 +1,8 @@
+<a href="/articles/{{this.data._id}}" class="articleCover">
+  <img src="/articles/{{this.data._id}}/images/cover" />
+  <div class="content">
+    <p class="title">{{this.data.title}}{{#if this.admin}}<i class="delete fas fa-trash" data-confirm="Delete {{this.data.title}}" data-url="/articles/{{this.data._id}}"></i>{{/if}}</p>
+    <p class="byline"><span class="author">{{this.data.author}}</span><span class="date">{{date this.data.published}}</span></p>
+    <p class="abstract">{{../admin}}{{this.data.abstract}}</p>
+  </div>
+</a>

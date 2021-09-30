@@ -1,43 +1,17 @@
-{{> navSticky }}
-<div id="content">
-  <h1 id="radioArchiveHeader">Radio Archive</h1>
-  <p id="radioArchiveSubtitle">Listen and read at your own pace. This archive contains every song and blurb ever in rotation on cat scratch radio.</p>
-  {{#unless songData}}
-    <div class="noContent">No radio entries yet, check back soon!</div>
-  {{/unless}}
-  {{#each songData}}
-    <div class="radioArchive paused">
-      <img src="/radioArchive/art/{{this._id}}" />
-      <h2 class="title">{{this.title}}</h2>
-      <h3 class="artist">{{this.artist}}{{#if ../admin}}<i class="delete fas fa-trash" data-id="{{this._id}}"></i>{{/if}}</h3>
-      <h4 class="byline"><span class="author">{{this.author}}</span><span class="date">{{date this.date}}</span></h4>
-      <p class="blurb">{{this.blurb}}</p>
-      <audio class="radioAudio" src="/radioArchive/stream/{{this._id}}" autoplay></audio>
-    </div>
-  {{/each}}
-
-  <div id="pagination">
-    <i id="prevPage" class="fas fa-chevron-left"></i>
-    <div id="currentPage">001</div>
-    <i id="nextPage" class="fas fa-chevron-right"></i>
-  </div>
+<div class="titleBlock">
+  <div class="heading">Radio Archive</div>
+  <p>Listen and read at your own pace. This archive contains every song and blurb ever in rotation on cat scratch radio.</p>
 </div>
+{{#unless songData}}
+  <div class="titleBlock">No radio entries yet, check back soon!</div>
+{{/unless}}
+{{#each songData}}
+  {{> radioCover data=this admin=../admin}}
+{{/each}}
+
+{{> pagination}}
 
 <script type="text/javascript">
-  let deleteLinks = Array.from(document.getElementsByClassName('delete'));
-  deleteLinks.forEach(link => {
-    link.addEventListener('click', () => {
-      if (!confirm("Delete this radio entry?")) return;
-      const id = link.dataset["id"];
-      const req = new XMLHttpRequest();
-      req.onreadystatechange = function() {
-        if (req.readyState === XMLHttpRequest.DONE) location.reload();
-      };
-      req.open("DELETE", `/radioArchive/${id}`, true);
-      req.send();
-    });
-  });
-
   let targets = Array.from(document.getElementsByClassName('radioAudio')).map(e => [e, e.parentElement.getElementsByTagName('img')[0]]);
   targets.forEach(([audio, img], i) => {
     async function restartAudio(elem) {
@@ -62,6 +36,7 @@
     }
 
     img.addEventListener('click', playPause);
+    console.log(playPause);
     restartAudio(audio);
   });
 </script>

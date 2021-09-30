@@ -1,14 +1,16 @@
-<h3>New article</h3>
-{{#if error}}
-  <p class="error">{{error}}</p>
-{{/if}}
-<form method="post" id="articleForm" enctype="multipart/form-data">
-  <label>title: <input type="text" name="title" value="{{article.title}}" /></label>
-  <label>body: <textarea type="text" name="body">{{article.body}}</textarea></label>
-  <label>abstract: <input type="text" name="abstract" value="{{article.abstract}}" /></label>
-  <label>author: <input type="text" name="author" value="{{article.author}}" /></label>
-  <label>published: <input type="date" name="published" value="{{article.published}}" /></label>
-  <label>cover: <input type="file" name="cover" /></label>
-  <label>images: <input type="file" name="images" multiple /></label>
+<div class="titleBlock">
+  <div class="heading">New article</div>
+  {{#if error}}
+    <p>{{error}}</p>
+  {{/if}}
+</div>
+<form method="post" enctype="multipart/form-data">
+  <label class="textLabel">title: <input type="text" name="title" value="{{article.title}}" /></label>
+  <label class="textAreaLabel">body: <textarea type="text" name="body">{{article.body}}</textarea></label>
+  <label class="textAreaLabel">abstract: <input type="text" name="abstract" value="{{article.abstract}}" /></label>
+  <label class="textLabel">author: <input type="text" name="author" value="{{article.author}}" /></label>
+  <label class="dateLabel">published: <input type="date" name="published" value="{{article.published}}" /></label>
+  <label class="fileLabel">cover: <input type="file" name="cover" /></label>
+  <label class="fileLabel">images: <input type="file" name="images" multiple /></label>
   <input type="submit" value="New">
 </form>

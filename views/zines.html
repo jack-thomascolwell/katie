@@ -1,37 +1,20 @@
-{{> navSticky }}
-<div id="content">
-  {{#unless zines}}
-    <div class="noContent">No zines yet, check back soon!</div>
-  {{/unless}}
-  {{#each zines}}
-    <a href="/zine/{{this._id}}" class="zineCover" data-src="/zine/pdf/{{this._id}}">
-      <div class="metadata">
-        <span class="issue">Issue {{this.issue}}</span>
-        <span class="published">{{date this.published}}</span>
-      </div>
-      {{#if ../admin}}<i class="delete fas fa-trash" data-id="{{this._id}}"></i>{{/if}}
-      <canvas></canvas>
-    </a>
-  {{/each}}
-</div>
+{{#unless zines}}
+  <div class="titleBlock">No zines yet, check back soon!</div>
+{{/unless}}
+{{#each zines}}
+  <a href="/zine/{{this._id}}" class="zineCover" data-src="/zine/pdf/{{this._id}}">
+    <div class="content">
+      <span class="issue">Issue {{this.issue}}</span>
+      <span class="published">{{date this.published}}</span>
+    </div>
+    {{#if ../admin}}<i class="delete fas fa-trash" data-id="{{this._id}}"></i>{{/if}}
+    <canvas></canvas>
+  </a>
+{{/each}}
 
 <script src="//mozilla.github.io/pdf.js/build/pdf.js"></script>
 
 <script type="text/javascript">
-  let deleteLinks = Array.from(document.getElementsByClassName('delete'));
-  deleteLinks.forEach(link => {
-    link.addEventListener('click', () => {
-      if (!confirm("Delete this zine?")) return;
-      const id = link.dataset["id"];
-      const req = new XMLHttpRequest();
-      req.onreadystatechange = function() {
-        if (req.readyState === XMLHttpRequest.DONE) location.reload();
-      };
-      req.open("DELETE", `/zine/${id}`, true);
-      req.send();
-    });
-  });
-
   const pdfjsLib = window['pdfjs-dist/build/pdf'];
 
   pdfjsLib.GlobalWorkerOptions.workerSrc = '//mozilla.github.io/pdf.js/build/pdf.worker.js';

@@ -201,11 +201,15 @@ const start = async function() {
       const featuredArticle = articles[0];
       return h.view('index', {
         articles: articles.slice(1),
-        featuredArticle: featuredArticle
+        featuredArticle: featuredArticle,
+        landing: true,
+        admin: (request.auth.isAuthenticated && (request.auth.credentials.admin === true))
       });
     },
     options: {
-      auth: false
+      auth: {
+        mode: 'try'
+      }
     }
   }, {
     method: 'GET',
@@ -223,7 +227,8 @@ const start = async function() {
       const currentSongData = queue.songData();
       console.log(currentSongData)
       return h.view('radio', {
-        songData: currentSongData
+        songData: currentSongData,
+        radio: true
       });
     },
     options: {
