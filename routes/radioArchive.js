@@ -35,6 +35,20 @@ module.exports = [{
       _id: -1
     }).skip(page * perPage).limit(perPage).toArray();
 
+    radioArchive.forEach(async radio => {
+      let author = await request.mongo.db.collection('authors').findOne({
+        _id: radio.author
+      }, {
+        projection: {
+          name: 1,
+          bio: 1,
+          email: 1,
+          _id: 1
+        }
+      });
+      radio.author = author.name;
+    });
+
     const pages = await request.mongo.db.collection('radio').count({});
 
     return h.view('radioArchive', {
@@ -54,7 +68,7 @@ module.exports = [{
   path: '/radioArchive/{id}',
   handler: async (request, h) => {
     const id = request.params.id;
-    const radio = await request.mongo.db.collection('radio').findOne({
+    let radio = await request.mongo.db.collection('radio').findOne({
       _id: new request.mongo.ObjectID(id),
     }, {
       projection: {
@@ -69,6 +83,18 @@ module.exports = [{
       }
     });
     if (!radio) return h.response('Radio entry not found').code(404);
+
+    let author = await request.mongo.db.collection('authors').findOne({
+      _id: radio.author
+    }, {
+      projection: {
+        name: 1,
+        bio: 1,
+        email: 1,
+        _id: 1
+      }
+    });
+    radio.author = author.name;
     return h.response(radio);
   },
   options: {
@@ -158,7 +184,19 @@ module.exports = [{
     // auth
     if (!request.auth.isAuthenticated || (request.auth.credentials.admin !== true))
       return h.redirect('/');
-    return h.view('radioArchive-new');
+
+    const authors = await request.mongo.db.collection('authors').find({}, {
+      projection: {
+        name: 1,
+        _id: 1
+      }
+    }).sort({
+      id: -1
+    }).toArray();
+
+    return h.view('radioArchive-new', {
+      authors: authors
+    });
   }
 }, {
   method: 'POST',
@@ -187,10 +225,34 @@ module.exports = [{
       value
     } = schema.validate(payload);
 
-    if (error) return h.view('radioArchive-new', {
-      error: error,
-      radioArchive: payload
-    });
+    if (!error) {
+      const author = await request.mongo.db.collection('authors').findOne({
+        _id: new request.mongo.ObjectID(payload.author)
+      }, {
+        projection: {
+          name: 1,
+          _id: 1
+        }
+      });
+      if (!author) error = 'Author does not exist'
+    }
+
+    if (error) {
+      const authors = await request.mongo.db.collection('authors').find({}, {
+        projection: {
+          name: 1,
+          _id: 1
+        }
+      }).sort({
+        id: -1
+      }).toArray();
+
+      return h.view('radioArchive-new', {
+        error: error,
+        radioArchive: payload,
+        authors: authors
+      });
+    }
 
     // File uploads
     const bucket = new request.mongo.lib.GridFSBucket(request.mongo.db);
@@ -218,7 +280,7 @@ module.exports = [{
       title: payload.title,
       blurb: payload.blurb,
       artist: payload.artist,
-      author: payload.author,
+      author: new request.mongo.ObjectID(payload.author),
       published: payload.published,
       song: songID,
       art: artID

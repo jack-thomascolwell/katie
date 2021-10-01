@@ -207,6 +207,7 @@ body::-webkit-scrollbar {
 #nav .logo img {
   height: 100%;
   aspect-ratio: auto;
+  user-select: none;
 }
 #nav .links {
   display: flex;
@@ -311,7 +312,7 @@ body::-webkit-scrollbar {
   line-height: 1.25;
   font-size: 2rem;
   letter-spacing: 1px;
-  text-shadow: 1px 1px green;
+  text-shadow: 1px 1px #b2ffce;
   text-transform: uppercase;
   margin-bottom: 10px;
 }
@@ -347,6 +348,7 @@ body::-webkit-scrollbar {
   object-fit: cover;
   object-position: center;
   overflow: hidden;
+  user-select: none;
 }
 #content .articleCover.featured {
   width: 100%;
@@ -444,6 +446,9 @@ body::-webkit-scrollbar {
   line-height: 1.25;
   font-size: 3.554rem;
   text-align: center;
+}
+#content .titleBlock .heading:last-child:first-child {
+  border-bottom: none;
 }
 #content .titleBlock p {
   font-family: akaju;
@@ -632,6 +637,7 @@ body::-webkit-scrollbar {
   object-position: center;
   overflow: hidden;
   cursor: pointer;
+  user-select: none;
 }
 #content.radio {
   justify-content: space-around;
@@ -639,9 +645,6 @@ body::-webkit-scrollbar {
 #content .article {
   background-color: #F6FFFF;
   color: #181b20;
-  font-family: quicksand;
-  font-weight: 400;
-  line-height: 1.25;
   padding: 10px 40px;
 }
 #content .article img {
@@ -650,12 +653,18 @@ body::-webkit-scrollbar {
   object-fit: cover;
   object-position: center;
   overflow: hidden;
+  user-select: none;
 }
 #content .article a {
   color: #84cc99;
 }
 #content .article a:hover {
   color: #ff78b0;
+}
+#content .article p {
+  font-family: quicksand;
+  font-weight: 400;
+  line-height: 1.25;
 }
 #content .article .byline {
   font-family: akaju;
@@ -771,13 +780,315 @@ body::-webkit-scrollbar {
 #content form {
   width: 86.67%;
   z-index: 2;
+  margin-top: 20px;
   background-color: #181b20;
   color: #84cc99;
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
   justify-content: space-around;
-  align-items: flex-start;
+  align-items: flex-end;
+  padding: 10px 20px;
+  box-sizing: border-box;
+}
+#content form .heading {
+  width: 100%;
+  margin-bottom: 5px;
+  padding-bottom: 5px;
+  border-bottom: 2px solid #495350;
+  font-variant: small-caps;
+  font-family: neuropol;
+  font-weight: 400;
+  line-height: 1.25;
+  font-size: 3.554rem;
+  text-align: center;
+}
+#content form .error {
+  width: 100%;
+  color: #fff20d;
+  font-family: akaju;
+  font-weight: 400;
+  line-height: 1.25;
+  font-size: 2rem;
+  text-align: center;
+  margin-bottom: 5px;
+}
+#content form .form__group {
+  margin-top: 20px;
+  position: relative;
+  font-size: 1.5rem;
+  line-height: 1;
+  height: 2em;
+  margin-left: 5px;
+  margin-right: 5px;
+}
+#content form .form__group.third {
+  width: calc((100% - 30px) / 3);
+}
+#content form .form__group.fourth {
+  width: calc((100% - 40px) / 4);
+}
+#content form .form__group.half {
+  width: calc((100% - 20px) / 2);
+}
+#content form .form__group.full {
+  width: calc(100% - 10px);
+}
+#content form .form__group .form__field {
+  width: 100%;
+  border: 0;
+  border-bottom: 1px solid #495350;
+  outline: none;
+  font-size: 1.5rem;
+  font-family: akaju;
+  font-weight: 400;
+  line-height: 1.25;
+  color: #F6FFFF;
+  background: transparent;
+  transition: border-color 0.2s;
+  position: absolute;
+  bottom: 0;
+}
+#content form .form__group .form__field::placeholder {
+  opacity: 0;
+}
+#content form .form__group .form__field:placeholder-shown ~ .form__label {
+  font-size: 1.5rem;
+  bottom: 0;
+  transform: none;
+  cursor: text;
+}
+#content form .form__group .form__field:invalid, #content form .form__group .form__field:required {
+  box-shadow: none;
+}
+#content form .form__group .form__field:focus {
+  border-color: #84cc99;
+}
+#content form .form__group .form__field:focus ~ .form__label {
+  font-size: 0.75rem;
+  color: #84cc99;
+  bottom: 100%;
+  transform: translateY(100%);
+}
+#content form .form__group .form__label {
+  position: absolute;
+  transition: 0.2s;
+  bottom: 100%;
+  transform: translateY(100%);
+  font-size: 0.75rem;
+  font-family: neuropol;
+  font-weight: 400;
+  line-height: 1.25;
+  color: #495350;
+}
+#content form .form__group__area {
+  margin-top: 20px;
+  position: relative;
+  font-size: 1.5rem;
+  line-height: 1;
+  margin-left: 5px;
+  margin-right: 5px;
+}
+#content form .form__group__area.third {
+  height: 4em;
+  width: calc((100% - 30px) / 3);
+}
+#content form .form__group__area.fourth {
+  height: 6em;
+  width: calc((100% - 40px) / 4);
+}
+#content form .form__group__area.half {
+  height: 8em;
+  width: calc((100% - 20px) / 2);
+}
+#content form .form__group__area.full {
+  height: 10em;
+  width: calc(100% - 10px);
+}
+#content form .form__group__area .form__field {
+  resize: none;
+  width: 100%;
+  border: 0;
+  height: calc(100% - 1em);
+  border-bottom: 1px solid #495350;
+  outline: none;
+  font-size: 1.5rem;
+  font-family: akaju;
+  font-weight: 400;
+  line-height: 1.25;
+  color: #F6FFFF;
+  background: transparent;
+  transition: border-color 0.2s;
+  position: absolute;
+  bottom: 0;
+}
+#content form .form__group__area .form__field::placeholder {
+  opacity: 0;
+}
+#content form .form__group__area .form__field:placeholder-shown ~ .form__label {
+  font-size: 1.5rem;
+  bottom: 0;
+  transform: none;
+  cursor: text;
+}
+#content form .form__group__area .form__field:invalid, #content form .form__group__area .form__field:required {
+  box-shadow: none;
+}
+#content form .form__group__area .form__field:focus {
+  border-color: #84cc99;
+}
+#content form .form__group__area .form__field:focus ~ .form__label {
+  font-size: 0.75rem;
+  color: #84cc99;
+  bottom: 100%;
+  transform: translateY(100%);
+}
+#content form .form__group__area .form__label {
+  position: absolute;
+  transition: 0.2s;
+  bottom: 100%;
+  transform: translateY(100%);
+  font-size: 0.75rem;
+  font-family: neuropol;
+  font-weight: 400;
+  line-height: 1.25;
+  color: #495350;
+}
+#content form .subheading {
+  font-family: neuropol;
+  font-weight: 400;
+  line-height: 1.25;
+  font-size: 2rem;
+  text-align: center;
+  width: 100%;
+  margin-top: 20px;
+  margin-bottom: 10px;
+  border-bottom: 1px solid #495350;
+}
+#content form .oldImage {
+  margin-top: 20px;
+  width: calc((100% - 30px) / 3);
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 1fr auto;
+  cursor: pointer;
+}
+#content form .oldImage.selected {
+  filter: blur(2px) grayscale(50%);
+}
+#content form .oldImage:hover {
+  color: #ff78b0;
+}
+#content form .oldImage img {
+  z-index: 2;
+  grid-column: 1;
+  grid-row: 1/span 2;
+  width: 100%;
+  aspect-ratio: 1;
+  object-fit: cover;
+  object-position: center;
+  overflow: hidden;
+  user-select: none;
+}
+#content form .oldImage .filename {
+  z-index: 3;
+  grid-column: 1;
+  grid-row: 2;
+  background-color: #181b20;
+  font-size: 0.75rem;
+  font-family: akaju;
+  font-weight: 400;
+  line-height: 1.25;
+  width: 100%;
+  text-align: center;
+  padding: 5px;
+  box-sizing: border-box;
+}
+#content form input[type=submit] {
+  margin-top: 20px;
+  width: 100%;
+  background: transparent;
+  color: #84cc99;
+  text-shadow: 1px 1px #b2ffce;
+  font-size: 2rem;
+  font-family: neuropol;
+  font-weight: 400;
+  line-height: 1.25;
+  border: none;
+  outline: none;
+}
+#content form input[type=submit]:active, #content form input[type=submit]:hover {
+  color: #ff78b0;
+}
+#content .authorProfile {
+  overflow: hidden;
+  z-index: 1;
+  box-sizing: border-box;
+  width: 86.67%;
+  height: 160px;
+  min-height: 160px;
+  margin-bottom: 20px;
+  background-color: #181b20;
+  color: #84cc99;
+  display: grid;
+  grid-template-columns: 160px 1fr;
+  grid-template-rows: 1fr auto 1fr;
+  grid-template-areas: "image ." "image text" "image .";
+}
+#content .authorProfile:first-child {
+  margin-top: 20px;
+}
+#content .authorProfile .content {
+  grid-area: text;
+  box-sizing: border-box;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: stretch;
+  overflow-y: scroll;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  padding: 10px 30px 10px 20px;
+}
+#content .authorProfile .content::-webkit-scrollbar {
+  display: none;
+}
+#content .authorProfile .content .name {
+  font-family: neuropol;
+  font-weight: 400;
+  line-height: 1.25;
+  font-size: 2rem;
+  letter-spacing: 1px;
+  text-shadow: 1px 1px #b2ffce;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+#content .authorProfile .content .delete {
+  float: right;
+}
+#content .authorProfile .content .email {
+  font-family: akaju;
+  font-weight: 400;
+  line-height: 1.25;
+  font-size: 1.125rem;
+  margin-bottom: 5px;
+}
+#content .authorProfile .content .bio {
+  font-family: akaju;
+  font-weight: 400;
+  line-height: 1.25;
+  font-size: 1.5rem;
+  text-align: justify;
+}
+#content .authorProfile img {
+  grid-area: image;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  overflow: hidden;
+  user-select: none;
 }
 
 #footer {

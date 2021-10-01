@@ -1,0 +1,11 @@
+<div class="titleBlock noBackground">
+  <div class="heading">Authors</div>
+</div>
+{{#unless authors}}
+  <div class="titleBlock">No authors yet, check back soon!</div>
+{{/unless}}
+{{#each authors}}
+  {{> authorProfile data=this admin=../admin}}
+{{/each}}
+
+{{> pagination maxPage=maxPage page=page }}

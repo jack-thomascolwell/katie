@@ -1,12 +1,23 @@
-<div class="titleBlock">
+<form method="post" id="zineNew" enctype="multipart/form-data">
   <div class="heading">New Zine</div>
   {{#if error}}
-    <p>{{error}}</p>
+    <p class="error">{{error}}</p>
   {{/if}}
-</div>
-<form method="post" id="zineForm" enctype="multipart/form-data">
-  <label>Issue: <input type="number" name="issue" value="{{zine.issue}}" /></label>
-  <label>Published: <input type="date" name="published" value="{{zine.published}}" /></label>
-  <label>pdf: <input type="file" name="pdf" /></label>
-  <input type="submit" value="New">
+
+  <div class="form__group third">
+    <input type="number" class="form__field" placeholder="Issue" name="issue" id="issue" value="{{zine.issue}}" required />
+    <label for="issue" class="form__label">Issue</label>
+  </div>
+
+  <div class="form__group third">
+    <input type="date" class="form__field" placeholder="Published" name="published" id="published" value="{{zine.published}}" required />
+    <label for="published" class="form__label">Published</label>
+  </div>
+
+  <div class="form__group third">
+    <input type="file" class="form__field" placeholder="PDF" name="pdf" id="pdf" />
+    <label for="pdf" class="form__label">PDF</label>
+  </div>
+
+  <input type="submit" value="Submit">
 </form>

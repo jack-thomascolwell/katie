@@ -39,6 +39,7 @@ class StreamQueue {
         _id: 1
       }
     }).toArray();
+
     return radio;
   }
   async _playLoop() {
@@ -46,7 +47,7 @@ class StreamQueue {
       this._songs = await this._getSongs();
     }
     const id = this._songs.pop()._id;
-    this._currentSong = await this._mongo.db.collection('radio').find({
+    this._currentSong = await this._mongo.db.collection('radio').findOne({
       _id: id
     }, {
       projection: {
@@ -58,9 +59,18 @@ class StreamQueue {
         blurb: 1,
         song: 1,
       }
-    }).toArray();
-    if (!this._currentSong || !this._currentSong[0]) return this._playLoop();
-    this._currentSong = this._currentSong[0];
+    });
+    if (!this._currentSong) return this._playLoop();
+    const author = await this._mongo.db.collection('authors').findOne({
+      _id: this._currentSong.author
+    }, {
+      projection: {
+        name: 1,
+        _id: 1
+      }
+    });
+    this._currentSong.author = author.name;
+
     try {
       this._io.emit('newSong', this._currentSong);
     } catch (e) {
@@ -182,6 +192,7 @@ const start = async function() {
   server.route(require('./routes/articles.js'));
   server.route(require('./routes/radioArchive.js'));
   server.route(require('./routes/zine.js'));
+  server.route(require('./routes/author.js'));
 
   server.route([{
     method: 'GET',

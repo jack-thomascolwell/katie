@@ -9,7 +9,7 @@ title: String
 body: String (MD)
 images: [ObjectID] (IMG)
 cover: ObjectID (IMG)
-author: String
+author: ObjectID
 published: Date
 abstract: String
 }
@@ -22,7 +22,7 @@ module.exports = [{
     const page = (parseInt(request.query.page) || 1) - 1;
     const perPage = config.paginate.articles;
 
-    const articles = await request.mongo.db.collection('articles').find({}, {
+    let articles = await request.mongo.db.collection('articles').find({}, {
       projection: {
         title: 1,
         author: 1,
@@ -33,6 +33,20 @@ module.exports = [{
     }).sort({
       _id: -1
     }).skip(page * perPage).limit(perPage).toArray();
+
+    articles.forEach(async article => {
+      let author = await request.mongo.db.collection('authors').findOne({
+        _id: article.author
+      }, {
+        projection: {
+          name: 1,
+          bio: 1,
+          email: 1,
+          _id: 1
+        }
+      });
+      article.author = author;
+    });
 
     const pages = await request.mongo.db.collection('articles').count({});
 
@@ -65,8 +79,21 @@ module.exports = [{
       }
     });
     if (!article) return h.redirect('/articles');
+
+    let author = await request.mongo.db.collection('authors').findOne({
+      _id: article.author
+    }, {
+      projection: {
+        name: 1,
+        bio: 1,
+        email: 1,
+        _id: 1
+      }
+    });
+
     return h.view('article', {
       article: article,
+      author: author,
       admin: (request.auth.isAuthenticated && (request.auth.credentials.admin === true))
     });
   },
@@ -96,7 +123,6 @@ module.exports = [{
       }
     });
     console.log('article')
-    console.log(article)
     if (!article) return h.response('Image not found').code(404);
     const bucket = new request.mongo.lib.GridFSBucket(request.mongo.db);
     const matchingIDs = await bucket.find({
@@ -109,9 +135,6 @@ module.exports = [{
       filename: 1,
       metadata: 1,
     }).toArray();
-    console.log([article.cover, ...article.images])
-    console.log(matchingIDs);
-    console.log(!matchingIDs || !matchingIDs[0])
     if (!matchingIDs || !matchingIDs[0]) return h.response('Image not found').code(404);
     const stream = bucket.openDownloadStream(matchingIDs[0]._id);
     return h.response(stream).header('Content-Disposition', `attachment; filename= ${matchingIDs[0].metadata.originalFilename}`).type(matchingIDs[0].metadata.type);
@@ -132,7 +155,7 @@ module.exports = [{
     if (!request.auth.isAuthenticated || (request.auth.credentials.admin !== true))
       return h.redirect('/');
     const id = request.params.id;
-    const article = await request.mongo.db.collection('articles').findOne({
+    let article = await request.mongo.db.collection('articles').findOne({
       _id: new request.mongo.ObjectID(id),
     }, {
       projection: {
@@ -141,11 +164,35 @@ module.exports = [{
         author: 1,
         published: 1,
         abstract: 1,
+        images: 1,
         _id: 1
       }
     });
+    if (!article) return h.response('Article not found').code(404);
+
+    const authors = await request.mongo.db.collection('authors').find({}, {
+      projection: {
+        name: 1,
+        _id: 1
+      }
+    }).sort({
+      id: -1
+    }).toArray();
+
+    const bucket = new request.mongo.lib.GridFSBucket(request.mongo.db);
+    const matchingImages = await bucket.find({
+      _id: {
+        $in: article.images
+      }
+    }).project({
+      _id: 1,
+      filename: 1,
+      metadata: 1,
+    }).toArray();
+    article.images = matchingImages;
     return h.view('article-edit', {
-      article: article
+      article: article,
+      authors: authors
     });
   },
   options: {
@@ -182,10 +229,12 @@ module.exports = [{
     if (!article) return h.redirect('/articles')
 
     let payload = request.payload;
-    if (!Array.isArray(payload.images) && payload.images.hapi.filename != '') payload.images = [payload.images];
-    else if (!Array.isArray(payload.images) && payload.images.hapi.filename == '') payload.images = undefined;
+    if (!Array.isArray(payload.newImages) && payload.newImages.hapi.filename != '') payload.newImages = [payload.newImages];
+    else if (!Array.isArray(payload.newImages) && payload.newImages.hapi.filename == '') payload.newImages = undefined;
 
     if (payload.cover.hapi.filename == '') payload.cover = undefined;
+
+    if (payload.oldImages) payload.oldImages = JSON.parse(payload.oldImages);
 
     const schema = Joi.object({
       _id: Joi.any().forbidden(),
@@ -193,69 +242,101 @@ module.exports = [{
       published: Joi.date(),
       body: Joi.string(),
       abstract: Joi.string(),
-      author: Joi.string(),
-      images: Joi.array(),
-      cover: Joi.any()
+      author: Joi.any(),
+      newImages: Joi.array(),
+      cover: Joi.any(),
+      oldImages: Joi.array(),
     });
     const {
       error,
       value
     } = schema.validate(payload);
 
-    if (error) return h.view('article-edit', {
-      error: error,
-      article: payload
-    });
+    if (!error) {
+      const author = await request.mongo.db.collection('authors').findOne({
+        _id: new request.mongo.ObjectID(payload.author)
+      }, {
+        projection: {
+          name: 1,
+          _id: 1
+        }
+      });
+      if (!author) error = 'Author does not exist'
+    }
+
+    if (error) {
+      payload.images = article.images;
+
+      const authors = await request.mongo.db.collection('authors').find({}, {
+        projection: {
+          name: 1,
+          _id: 1
+        }
+      }).sort({
+        id: -1
+      }).toArray();
+
+      return h.view('article-edit', {
+        error: error,
+        article: payload,
+        authors: authors
+      });
+    }
 
     const articleUpdate = {
       title: payload.title,
       published: payload.published,
       body: payload.body,
       abstract: payload.abstract,
-      author: payload.author,
+      author: new request.mongo.ObjectID(payload.author),
     };
-    if (payload.cover || payload.images) {
-      // File uploads -> delete and reupload
-      console.log("UPDATING FILES")
-      const bucket = new request.mongo.lib.GridFSBucket(request.mongo.db);
-      if (payload.cover) {
-        console.log("UPDATING COVER")
-        const oldCover = article.cover;
-        const oldCoverDoc = await bucket.find({
-          _id: oldCover
-        });
-        if (oldCover && oldCover[0]) await bucket.delete(oldCover);
-        const newCover = (payload.cover.pipe(bucket.openUploadStream('cover', {
-          chunkSizeBytes: 1048576,
-          metadata: {
-            originalFilename: payload.cover.hapi.filename,
-            type: payload.cover.hapi.headers['content-type']
-          }
-        })).id);
-        articleUpdate.cover = newCover;
-      }
-      if (payload.images) {
-        console.log("UPDATING IMAGES")
-        const oldImages = article.images;
-        oldImages.forEach(async image => {
-          const imageDoc = await bucket.find({
-            _id: image
-          });
-          if (imageDoc && imageDoc[0]) await bucket.delete(image);
-        });
-        const newImages = payload.images.map(image => (image.pipe(bucket.openUploadStream(image.hapi.filename, {
-          chunkSizeBytes: 1048576,
-          metadata: {
-            filename: image.hapi.filename,
-            type: image.hapi.headers['content-type']
-          }
-        })).id));
-        articleUpdate.images = newImages;
-      }
-      console.log("UPDATED FILES")
+
+    let images = article.images;
+
+    const bucket = new request.mongo.lib.GridFSBucket(request.mongo.db);
+    if (payload.cover) {
+      console.log("UPDATING COVER")
+      const oldCover = article.cover;
+      const oldCoverDoc = await bucket.find({
+        _id: oldCover
+      });
+      if (oldCover && oldCover[0]) await bucket.delete(oldCover);
+      const newCover = (payload.cover.pipe(bucket.openUploadStream('cover', {
+        chunkSizeBytes: 1048576,
+        metadata: {
+          originalFilename: payload.cover.hapi.filename,
+          type: payload.cover.hapi.headers['content-type']
+        }
+      })).id);
+      articleUpdate.cover = newCover;
     }
-    console.log(id)
-    console.log(articleUpdate);
+
+    if (payload.oldImages) {
+      console.log("DELETING OLD IMAGES")
+      payload.oldImages.forEach(async image => {
+        const imageID = new request.mongo.ObjectID(id);
+        const imageDoc = await bucket.find({
+          _id: imageID
+        });
+        if (imageDoc && imageDoc[0]) await bucket.delete(image);
+        images = images.splice(article.images.indexOf(imageID), 1);
+      });
+    }
+
+    if (payload.newImages) {
+      console.log("INSERTING NEW IMAGES")
+      const newImages = payload.newImages.map(image => (image.pipe(bucket.openUploadStream(image.hapi.filename, {
+        chunkSizeBytes: 1048576,
+        metadata: {
+          filename: image.hapi.filename,
+          type: image.hapi.headers['content-type']
+        }
+      })).id));
+      images = images.concat(newImages);
+    }
+
+    articleUpdate.images = images;
+
     const status = await request.mongo.db.collection('articles').updateOne({
       _id: new request.mongo.ObjectID(id)
     }, {
@@ -286,7 +367,19 @@ module.exports = [{
     // auth
     if (!request.auth.isAuthenticated || (request.auth.credentials.admin !== true))
       return h.redirect('/');
-    return h.view('article-new');
+
+    const authors = await request.mongo.db.collection('authors').find({}, {
+      projection: {
+        name: 1,
+        _id: 1
+      }
+    }).sort({
+      id: -1
+    }).toArray();
+
+    return h.view('article-new', {
+      authors: authors
+    });
   }
 }, {
   method: 'POST',
@@ -298,7 +391,7 @@ module.exports = [{
     let payload = request.payload;
 
     if (!Array.isArray(payload.images) && payload.images.hapi.filename != '') payload.images = [payload.images];
-    else if (!Array.isArray(payload.images) && payload.images.hapi.filename == '') payload.images = undefined;
+    else if (!Array.isArray(payload.images) && payload.images.hapi.filename == '') payload.images = [];
 
     if (payload.cover.hapi.filename == '') payload.cover = undefined;
 
@@ -318,10 +411,34 @@ module.exports = [{
     } = schema.validate(payload);
 
 
-    if (error) return h.view('article-new', {
-      error: error,
-      article: payload
-    });
+    if (!error) {
+      const author = await request.mongo.db.collection('authors').findOne({
+        _id: new request.mongo.ObjectID(payload.author)
+      }, {
+        projection: {
+          name: 1,
+          _id: 1
+        }
+      });
+      if (!author) error = 'Author does not exist'
+    }
+
+    if (error) {
+      const authors = await request.mongo.db.collection('authors').find({}, {
+        projection: {
+          name: 1,
+          _id: 1
+        }
+      }).sort({
+        id: -1
+      }).toArray();
+
+      return h.view('article-new', {
+        error: error,
+        article: payload,
+        authors: authors
+      });
+    }
 
     // File uploads
     const bucket = new request.mongo.lib.GridFSBucket(request.mongo.db);
@@ -347,7 +464,7 @@ module.exports = [{
       published: payload.published,
       body: payload.body,
       abstract: payload.abstract,
-      author: payload.author,
+      author: new request.mongo.ObjectID(payload.author),
       cover: coverID,
       images: imageIDs
     };

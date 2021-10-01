@@ -1,16 +1,47 @@
-<div class="titleBlock">
+<form method="post" id="articleNew" enctype="multipart/form-data">
   <div class="heading">New article</div>
   {{#if error}}
-    <p>{{error}}</p>
+    <p class="error">{{error}}</p>
   {{/if}}
-</div>
-<form method="post" enctype="multipart/form-data">
-  <label class="textLabel">title: <input type="text" name="title" value="{{article.title}}" /></label>
-  <label class="textAreaLabel">body: <textarea type="text" name="body">{{article.body}}</textarea></label>
-  <label class="textAreaLabel">abstract: <input type="text" name="abstract" value="{{article.abstract}}" /></label>
-  <label class="textLabel">author: <input type="text" name="author" value="{{article.author}}" /></label>
-  <label class="dateLabel">published: <input type="date" name="published" value="{{article.published}}" /></label>
-  <label class="fileLabel">cover: <input type="file" name="cover" /></label>
-  <label class="fileLabel">images: <input type="file" name="images" multiple /></label>
-  <input type="submit" value="New">
+
+  <div class="form__group third">
+    <input type="text" class="form__field" placeholder="Title" name="title" id="title" value="{{article.title}}" required />
+    <label for="title" class="form__label">Title</label>
+  </div>
+
+  <div class="form__group third">
+    <select class="form__field" name="author" id="author" value="{{article.author}}">
+      {{#each authors}}
+      <option value="{{this._id}}">{{this.name}}</option>
+      {{/each}}
+    </select>
+    <label for="author" class="form__label">Author</label>
+  </div>
+
+  <div class="form__group third">
+    <input type="date" class="form__field" placeholder="Published" name="published" id="published" value="{{article.published}}" required />
+    <label for="published" class="form__label">Published</label>
+  </div>
+
+  <div class="form__group__area full">
+    <textarea class="form__field" type="text" name="body" id="body" placeholder="Body">{{article.body}}</textarea>
+    <label for="body" class="form__label">Body</label>
+  </div>
+
+  <div class="form__group__area third">
+    <textarea class="form__field" type="text" name="abstract" id="abstract" placeholder="Abstract">{{article.abstract}}</textarea>
+    <label for="abstract" class="form__label">Abstract</label>
+  </div>
+
+  <div class="form__group third">
+    <input type="file" class="form__field" placeholder="Cover" name="cover" id="cover" />
+    <label for="cover" class="form__label">Cover</label>
+  </div>
+
+  <div class="form__group third">
+    <input type="file" class="form__field" placeholder="Images" name="images" id="images" multiple />
+    <label for="images" class="form__label">Images</label>
+  </div>
+
+  <input type="submit" value="Submit">
 </form>

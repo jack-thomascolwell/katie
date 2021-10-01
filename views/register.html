@@ -1,12 +1,23 @@
-<div class="titleBlock">
+<form method="post" id="register" action="/register">
   <div class="heading">Register</div>
   {{#if error}}
-    <p>{{error}}</p>
+    <p class="error">{{error}}</p>
   {{/if}}
-</div>
-<form method="post" action="/register">
-  <label>Email: <input type="text" name="email" value="{{email}}"></label><br />
-  <label>Password: <input type="password" name="password"></label><br />
-  <label>Repeat Password: <input type="password" name="repeat_password"></label><br />
-  <input type="submit" value="Register">
+
+  <div class="form__group third">
+    <input type="text" class="form__field" placeholder="Email" name="email" id="email" value="{{email}}" required />
+    <label for="email" class="form__label">Email</label>
+  </div>
+
+  <div class="form__group third">
+    <input type="password" class="form__field" placeholder="Password" name="password" id="password" required />
+    <label for="password" class="form__label">Password</label>
+  </div>
+
+  <div class="form__group third">
+    <input type="password" class="form__field" placeholder="Repeat password" name="repeat_password" id="repeat_password" required />
+    <label for="repeat_password" class="form__label">Repeat password</label>
+  </div>
+
+  <input type="submit" value="Submit">
 </form>

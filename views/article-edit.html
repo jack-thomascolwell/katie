@@ -1,14 +1,78 @@
-<h3>Edit article</h3>
-{{#if error}}
-  <p class="error">{{error}}</p>
-{{/if}}
-<form method="post" id="articleForm" enctype="multipart/form-data">
-  <label>title: <input type="text" name="title" value="{{article.title}}" /></label>
-  <label>body: <textarea type="text" name="body">{{article.body}}</textarea></label>
-  <label>abstract: <input type="text" name="abstract" value="{{article.abstract}}" /></label>
-  <label>author: <input type="text" name="author" value="{{article.author}}" /></label>
-  <label>published: <input type="date" name="published" value="{{article.published}}" /></label>
-  <label>cover: <input type="file" name="cover" /></label>
-  <label>images: <input type="file" name="images" multiple /></label>
-  <input type="submit" value="Edit">
+<form method="post" id="articleEdit" enctype="multipart/form-data">
+  <div class="heading">Edit article</div>
+  {{#if error}}
+    <p class="error">{{error}}</p>
+  {{/if}}
+
+  <div class="form__group third">
+    <input type="text" class="form__field" placeholder="Title" name="title" id="title" value="{{article.title}}" required />
+    <label for="title" class="form__label">Title</label>
+  </div>
+
+  <div class="form__group third">
+    <select class="form__field" name="author" id="author" value="{{article.author}}">
+      {{#each authors}}
+      <option value="{{this._id}}">{{this.name}}</option>
+      {{/each}}
+    </select>
+    <label for="author" class="form__label">Author</label>
+  </div>
+
+  <div class="form__group third">
+    <input type="date" class="form__field" placeholder="Published" name="published" id="published" value="{{article.published}}" required />
+    <label for="published" class="form__label">Published</label>
+  </div>
+
+  <div class="form__group__area full">
+    <textarea class="form__field" type="text" name="body" id="body" placeholder="Body">{{article.body}}</textarea>
+    <label for="body" class="form__label">Body</label>
+  </div>
+
+  <div class="form__group__area third">
+    <textarea class="form__field" type="text" name="abstract" id="abstract" placeholder="Abstract">{{article.abstract}}</textarea>
+    <label for="abstract" class="form__label">Abstract</label>
+  </div>
+
+  <div class="form__group third">
+    <input type="file" class="form__field" placeholder="Cover" name="cover" id="cover" />
+    <label for="cover" class="form__label">Cover</label>
+  </div>
+
+  <div class="form__group third">
+    <input type="file" class="form__field" placeholder="New Images" name="newImages" id="newImages" multiple />
+    <label for="newImages" class="form__label">New Images</label>
+  </div>
+
+  <input hidden name="oldImages" id="oldImages" type="text" value="[]"/>
+  {{#if article.images}}
+    <div class="subheading">Old Images</div>
+    {{#each article.images}}
+      <div data-id="{{this._id}}" class="oldImage">
+        <img src="/articles/{{../article._id}}/images/{{this.filename}}" />
+        <span class="filename">{{this.filename}}</span>
+      </div>
+    {{/each}}
+  {{/if}}
+  <input type="submit" value="Submit">
 </form>
+
+<script type="text/javascript">
+  const oldImages = Array.from(document.getElementsByClassName('oldImage'));
+  const oldImagesField = document.getElementById('oldImages');
+  let selectedImages = [];
+  oldImages.forEach(image => {
+    const {id} = image.dataset;
+    image.addEventListener('click', e=> {
+      if (image.classList.contains('selected')) { //deselct
+        image.classList.remove('selected');
+        selectedImages.splice(selectedImages.indexOf(id, 1));
+        oldImagesField.value = JSON.stringify(selectedImages);
+      } else { //select
+        image.classList.add('selected');
+        selectedImages.push(id);
+        oldImagesField.value = JSON.stringify(selectedImages);
+      }
+    });
+  });
+
+</script>

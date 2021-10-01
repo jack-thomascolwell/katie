@@ -1,16 +1,47 @@
-<div class="titleBlock">
-  <div class="heading">New Song</div>
+<form method="post" id="radioNew" enctype="multipart/form-data">
+  <div class="heading">New radio entry</div>
   {{#if error}}
-    <p>{{error}}</p>
+    <p class="error">{{error}}</p>
   {{/if}}
-</div>
-<form method="post" id="archiveForm" enctype="multipart/form-data">
-  <label>title: <input type="text" name="title" value="{{radioArchive.title}}" /></label>
-  <label>blurb: <textarea type="text" name="blurb">{{radioArchive.blurb}}</textarea></label>
-  <label>artist: <input type="text" name="artist" value="{{radioArchive.artist}}" /></label>
-  <label>author: <input type="text" name="author" value="{{radioArchive.author}}" /></label>
-  <label>published: <input type="date" name="published" value="{{radioArchive.published}}" /></label>
-  <label>song: <input type="file" name="song" /></label>
-  <label>art: <input type="file" name="art" /></label>
-  <input type="submit" value="New">
+
+  <div class="form__group fourth">
+    <input type="text" class="form__field" placeholder="Title" name="title" id="title" value="{{radioArchive.title}}" required />
+    <label for="title" class="form__label">Title</label>
+  </div>
+
+  <div class="form__group fourth">
+    <input type="text" class="form__field" placeholder="Artist" name="artist" id="artist" value="{{radioArchive.artist}}" required />
+    <label for="artist" class="form__label">Artist</label>
+  </div>
+
+  <div class="form__group fourth">
+    <select class="form__field" name="author" id="author" value="{{article.author}}">
+      {{#each authors}}
+      <option value="{{this._id}}">{{this.name}}</option>
+      {{/each}}
+    </select>
+    <label for="author" class="form__label">Author</label>
+  </div>
+
+  <div class="form__group fourth">
+    <input type="date" class="form__field" placeholder="Published" name="published" id="published" value="{{radioArchive.published}}" required />
+    <label for="published" class="form__label">Published</label>
+  </div>
+
+  <div class="form__group__area full">
+    <textarea class="form__field" type="text" name="blurb" id="blurb" placeholder="Blurb">{{radioArchive.blurb}}</textarea>
+    <label for="blurb" class="form__label">Blurb</label>
+  </div>
+
+  <div class="form__group half">
+    <input type="file" class="form__field" placeholder="Song" name="song" id="song" />
+    <label for="song" class="form__label">Song</label>
+  </div>
+
+  <div class="form__group half">
+    <input type="file" class="form__field" placeholder="Art" name="art" id="art" />
+    <label for="art" class="form__label">Art</label>
+  </div>
+
+  <input type="submit" value="Submit">
 </form>

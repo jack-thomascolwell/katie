@@ -1,5 +1,11 @@
 <div class="article textBlock">
   <div class="heading">{{ article.title }}</div>
-  <div class="byline"><a href="/FIXME" class="author">{{article.author}}</a><span class="date">{{date article.published}}</span></div>
+  <div class="byline"><span class="author">{{author.name}}</span><span class="date">{{date article.published}}</span></div>
   {{{ markdown article.body article._id }}}
 </div>
+
+{{> authorProfile data=author admin=false}}
+
+{{#if admin}}
+<a href="/articles/{{article._id}}/edit" class="button">Edit</a>
+{{/if}}

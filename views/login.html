@@ -1,11 +1,18 @@
-<div class="titleBlock">
+<form method="post" id="login" action="/login">
   <div class="heading">Log In</div>
   {{#if error}}
-    <p>{{error}}</p>
+    <p class="error">{{error}}</p>
   {{/if}}
-</div>
-<form method="post" action="/login">
-  <label>Email: <input type="text" name="email" value="{{email}}"></label><br />
-  <label>Password: <input type="password" name="password"></label><br />
-  <input type="submit" value="Login">
+
+  <div class="form__group half">
+    <input type="text" class="form__field" placeholder="Email" name="email" id="email" value="{{email}}" required />
+    <label for="email" class="form__label">Email</label>
+  </div>
+
+  <div class="form__group half">
+    <input type="password" class="form__field" placeholder="Password" name="password" id="password" required />
+    <label for="password" class="form__label">Password</label>
+  </div>
+
+  <input type="submit" value="Submit">
 </form>
