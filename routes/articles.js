@@ -1,5 +1,6 @@
 const Joi = require('joi');
 const Stream = require('stream');
+const config = require('../config');
 /*
 Article Schema
 {
@@ -18,6 +19,9 @@ module.exports = [{
   method: 'GET',
   path: '/articles',
   handler: async (request, h) => {
+    const page = (parseInt(request.query.page) || 1) - 1;
+    const perPage = config.paginate.articles;
+
     const articles = await request.mongo.db.collection('articles').find({}, {
       projection: {
         title: 1,
@@ -28,10 +32,15 @@ module.exports = [{
       }
     }).sort({
       _id: -1
-    }).toArray();
+    }).skip(page * perPage).limit(perPage).toArray();
+
+    const pages = await request.mongo.db.collection('articles').count({});
+
     return h.view('articles', {
       articles: articles,
-      admin: (request.auth.isAuthenticated && (request.auth.credentials.admin === true))
+      admin: (request.auth.isAuthenticated && (request.auth.credentials.admin === true)),
+      maxPage: Math.ceil(pages / perPage),
+      page: page
     });
   },
   options: {

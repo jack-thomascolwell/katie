@@ -9,7 +9,7 @@
   {{> radioCover data=this admin=../admin}}
 {{/each}}
 
-{{> pagination}}
+{{> pagination maxPage=maxPage page=page }}
 
 <script type="text/javascript">
   let targets = Array.from(document.getElementsByClassName('radioAudio')).map(e => [e, e.parentElement.getElementsByTagName('img')[0]]);

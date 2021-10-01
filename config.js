@@ -8,5 +8,10 @@ module.exports = {
   },
   auth: {
     cookieName: 'auth'
+  },
+  paginate: {
+    articles: 5,
+    zines: 3,
+    radio: 5
   }
 };

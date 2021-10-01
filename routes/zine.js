@@ -1,5 +1,6 @@
 const Joi = require('joi');
 const Stream = require('stream');
+const config = require('../config');
 /*
 Zine Schema
 {
@@ -14,6 +15,9 @@ module.exports = [{
   method: 'GET',
   path: '/zine',
   handler: async (request, h) => {
+    const page = (parseInt(request.query.page) || 1) - 1;
+    const perPage = config.paginate.articles;
+
     const zines = await request.mongo.db.collection('zine').find({}, {
       projection: {
         issue: 1,
@@ -22,11 +26,15 @@ module.exports = [{
       }
     }).sort({
       _id: -1
-    }).toArray();
-    console.log(zines)
+    }).skip(page * perPage).limit(perPage).toArray();
+
+    const pages = await request.mongo.db.collection('zine').count({});
+
     return h.view('zines', {
       zines: zines,
-      admin: (request.auth.isAuthenticated && (request.auth.credentials.admin === true))
+      admin: (request.auth.isAuthenticated && (request.auth.credentials.admin === true)),
+      maxPage: Math.ceil(pages / perPage),
+      page: page
     });
   },
   options: {

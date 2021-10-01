@@ -1,5 +1,6 @@
 const Joi = require('joi');
 const Stream = require('stream');
+const config = require('../config');
 /*
 Radio Schema
 {
@@ -18,6 +19,9 @@ module.exports = [{
   method: 'GET',
   path: '/radioArchive',
   handler: async (request, h) => {
+    const page = (parseInt(request.query.page) || 1) - 1;
+    const perPage = config.paginate.radio;
+
     const radioArchive = await request.mongo.db.collection('radio').find({}, {
       projection: {
         title: 1,
@@ -29,11 +33,15 @@ module.exports = [{
       }
     }).sort({
       _id: -1
-    }).toArray();
+    }).skip(page * perPage).limit(perPage).toArray();
+
+    const pages = await request.mongo.db.collection('radio').count({});
 
     return h.view('radioArchive', {
       songData: radioArchive,
-      admin: (request.auth.isAuthenticated && (request.auth.credentials.admin === true))
+      admin: (request.auth.isAuthenticated && (request.auth.credentials.admin === true)),
+      maxPage: Math.ceil(pages / perPage),
+      page: page
     });
   },
   options: {
