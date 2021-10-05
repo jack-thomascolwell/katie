@@ -2,7 +2,7 @@
 <a href="/articles/{{featuredArticle._id}}" class="articleCover featured">
   <img src="/articles/{{featuredArticle._id}}/images/cover" />
   <div class="content">
-    <p class="title">{{featuredArticle.title}}</p>
+    <p class="title">{{{markdownInline featuredArticle.title}}}</p>
     <p class="byline"><span class="author">{{featuredArticle.author}}</span><span class="date">{{date featuredArticle.published}}</span></p>
     <p class="abstract">{{featuredArticle.abstract}}</p>
   </div>

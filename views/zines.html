@@ -1,5 +1,7 @@
 {{#unless zines}}
-  <div class="titleBlock">No zines yet, check back soon!</div>
+<div class="titleBlock">
+  <p>No zines yet, check back soon!</p>
+</div>
 {{/unless}}
 {{#each zines}}
   <a href="/zine/{{this._id}}" class="zineCover" data-src="/zine/pdf/{{this._id}}">

@@ -1,9 +1,11 @@
 <div class="titleBlock">
   <div class="heading">Radio Archive</div>
-  <p>Listen and read at your own pace. This archive contains every song and blurb ever in rotation on cat scratch radio.</p>
+  <!--<p>Listen and read at your own pace. This archive contains every song and blurb ever in rotation on cat scratch radio.</p>-->
 </div>
 {{#unless songData}}
-  <div class="titleBlock">No radio entries yet, check back soon!</div>
+<div class="titleBlock">
+  <p>No radio entries yet, check back soon!</p>
+</div>
 {{/unless}}
 {{#each songData}}
   {{> radioCover data=this admin=../admin}}

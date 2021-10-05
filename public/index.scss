@@ -5,7 +5,7 @@ $lightGreen: #b2ffce;
 $pink: #ff78b0;
 $yellow: #fff20d;
 $white: #d6c5cc;
-$altWhite: #F6FFFF;
+$altWhite: #f7f7fc;
 $gray: #495350;
 @font-face {
   font-family: neuropol;
@@ -15,10 +15,35 @@ $gray: #495350;
   font-family: akaju;
   src: url("/public/Akaju_Thin.otf");
 }
+
 @font-face {
-  font-family: quicksand;
-  src: url("/public/quicksand.ttf");
+  font-family: nunito;
+  src: url("Nunito-Regular.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
 }
+
+@font-face {
+  font-family: nunito;
+  src: url("Nunito-Italic.ttf") format("truetype");
+  font-weight: normal;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: nunito;
+  src: url("Nunito-Bold.ttf") format("truetype");
+  font-weight: bold;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: nunito;
+  src: url("Nunito-BoldItalic.ttf") format("truetype");
+  font-weight: bold;
+  font-style: italic;
+}
+
 @mixin textBody {
   font-family: akaju;
   font-weight: 400;
@@ -30,7 +55,7 @@ $gray: #495350;
   line-height: 1.25;
 }
 @mixin textLong {
-  font-family: quicksand;
+  font-family: nunito;
   font-weight: 400;
   line-height: 1.25;
 }
@@ -39,11 +64,14 @@ $gray: #495350;
   justify-content: center;
   align-items: center;
 }
-@mixin textTiny {
+@mixin textSmallest {
   font-size: 0.75rem;
 }
-@mixin textSmall {
+@mixin textSmaller {
   font-size: 1.125rem;
+}
+@mixin textSmall {
+  font-size: 1.25rem;
 }
 @mixin textNormal {
   font-size: 1.5rem;
@@ -70,15 +98,15 @@ html {
 }
 
 em {
-  font-style: italic;
+  font-style: italic !important;
 }
 
 strong {
-  font-weight: bold;
+  font-weight: bold !important;
 }
 
 small {
-  @include textSmall;
+  @include textSmaller;
 }
 
 a {
@@ -89,6 +117,10 @@ a {
   &:hover {
     color: $pink;
   }
+}
+
+.pseudoLink {
+  @extend a;
 }
 
 .delete {
@@ -372,7 +404,7 @@ body {
 
       .byline {
         @include textBody;
-        @include textSmall;
+        @include textSmaller;
         display: flex;
         flex-direction: row;
         justify-content: flex-start;
@@ -415,13 +447,19 @@ body {
       background-color: $black;
       color: $white;
       text-align: center;
+      box-sizing: border-box;
 
       .title {
         @include textBiggest;
+        padding-left: 6.665vw;
+        padding-right: 6.665vw;
       }
 
       .content {
-        padding: 10px 20px;
+        padding-top: 10px;
+        padding-bottom: 10px;
+        padding-left: 6.665vw;
+        padding-right: 6.665vw;
       }
     }
   }
@@ -449,6 +487,10 @@ body {
 
     &.extraPadding {
       padding: 10px 40px;
+    }
+
+    &.doubleSpaced p {
+      margin-bottom: calc(5px + 1em);
     }
 
     .heading {
@@ -633,6 +675,7 @@ body {
             content: "by";
             margin-left: 1ex;
             margin-right: 1ex;
+            text-transform: lowercase;
           }
         }
         margin-bottom: 10px;
@@ -644,7 +687,7 @@ body {
 
       .byline {
         @include textBody;
-        @include textSmall;
+        @include textSmaller;
         display: flex;
         flex-direction: row;
         justify-content: flex-start;
@@ -738,6 +781,11 @@ body {
       @include textLong;
     }
 
+    .heading {
+      margin-bottom: 0.5em;
+      padding-bottom: 0.5em;
+    }
+
     .byline {
       @include textBody;
       @include textSmall;
@@ -747,6 +795,7 @@ body {
       align-items: baseline;
       flex-wrap: nowrap;
       text-transform: capitalize;
+      margin-bottom: 1em;
 
       .date::before {
         content: ", ";
@@ -841,7 +890,7 @@ body {
       background: $black;
       color: $green;
       @include textBody;
-      @include textSmall;
+      @include textSmaller;
       @include flexCentered;
       z-index: 3;
 
@@ -949,7 +998,7 @@ body {
 
         &:focus {
           ~ .form__label {
-            @include textTiny;
+            @include textSmallest;
             color: $green;
             bottom: 100%;
             transform: translateY(100%);
@@ -963,7 +1012,7 @@ body {
         transition: 0.2s;
         bottom: 100%;
         transform: translateY(100%);
-        @include textTiny;
+        @include textSmallest;
         @include textTitle;
         color: $gray;
       }
@@ -1030,7 +1079,7 @@ body {
 
         &:focus {
           ~ .form__label {
-            @include textTiny;
+            @include textSmallest;
             color: $green;
             bottom: 100%;
             transform: translateY(100%);
@@ -1044,7 +1093,7 @@ body {
         transition: 0.2s;
         bottom: 100%;
         transform: translateY(100%);
-        @include textTiny;
+        @include textSmallest;
         @include textTitle;
         color: $gray;
       }
@@ -1093,7 +1142,7 @@ body {
         grid-column: 1;
         grid-row: 2;
         background-color: $black;
-        @include textTiny;
+        @include textSmallest;
         @include textBody;
         width: 100%;
         text-align: center;
@@ -1166,7 +1215,7 @@ body {
 
       .email {
         @include textBody;
-        @include textSmall;
+        @include textSmaller;
         margin-bottom: 5px;
       }
 
@@ -1206,7 +1255,7 @@ body {
   padding-top: 5px;
   padding-bottom: 5px;
   @include textBody;
-  @include textSmall;
+  @include textSmaller;
 
   .socials {
     display: flex;

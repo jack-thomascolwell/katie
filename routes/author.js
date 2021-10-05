@@ -44,10 +44,13 @@ module.exports = [{
       mode: 'try'
     }
   }
-}, /*{
+}, {
   method: 'GET',
   path: '/authors/{id}',
   handler: async (request, h) => {
+    const page = (parseInt(request.query.page) || 1) - 1;
+    const perPage = config.paginate.articles;
+
     const id = request.params.id;
     const author = await request.mongo.db.collection('authors').findOne({
       _id: new request.mongo.ObjectID(id),
@@ -60,9 +63,30 @@ module.exports = [{
       }
     });
     if (!author) return h.redirect('/authors');
+    const articles = await request.mongo.db.collection('articles').find({
+      author: author._id,
+    }, {
+      projection: {
+        title: 1,
+        author: 1,
+        published: 1,
+        abstract: 1,
+        _id: 1
+      }
+    }).sort({
+      _id: -1,
+    }).skip(page * perPage).limit(perPage).toArray();
+
+    const pages = await request.mongo.db.collection('articles').count({
+      author: author._id,
+    });
+
     return h.view('author', {
       author: author,
-      admin: (request.auth.isAuthenticated && (request.auth.credentials.admin === true))
+      admin: (request.auth.isAuthenticated && (request.auth.credentials.admin === true)),
+      articles: articles,
+      maxPage: Math.ceil(pages / perPage),
+      page: page
     });
   },
   options: {
@@ -75,7 +99,7 @@ module.exports = [{
       })
     }
   }
-},*/ {
+}, {
   method: 'GET',
   path: '/authors/profile/{id}',
   handler: async (request, h) => {

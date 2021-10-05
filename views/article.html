@@ -1,6 +1,6 @@
-<div class="article textBlock">
-  <div class="heading">{{ article.title }}</div>
-  <div class="byline"><span class="author">{{author.name}}</span><span class="date">{{date article.published}}</span></div>
+<div class="article textBlock doubleSpaced">
+  <div class="heading">{{{ markdownInline  article.title }}}</div>
+  <div class="byline"><a href="/authors/{{author._id}}" class="author">{{author.name}}</a><span class="date">{{date article.published}}</span></div>
   {{{ markdown article.body article._id }}}
 </div>
 

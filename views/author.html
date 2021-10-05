@@ -1,11 +1,12 @@
+{{> authorProfile data=author admin=admin }}
+
 {{#unless articles}}
-<div class="titleBlock">
-  <p>No articles yet, check back soon!</p>
-</div>
+  <div class="titleBlock">
+    <p>No articles yet, check back soon!</p>
+  </div>
 {{/unless}}
 {{#each articles}}
   {{> articleCover data=this admin=../admin }}
 {{/each}}
-
 
 {{> pagination maxPage=maxPage page=page }}

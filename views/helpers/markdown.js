@@ -1,6 +1,7 @@
-module.exports = function (str, id) {
-  const replacedStr = str.replace(/\!\[([^\]]*)\]\(([^\)]*)\)/g, `![$1](/articles/${id}/images/$2))`);
-
+module.exports = (() => {
   const md = new require('markdown-it')();
-  return md.render(replacedStr);
-};
+  return function(str, id) {
+    const replacedStr = str.replace(/\!\[([^\]]*)\]\(([^\)]*)\)/g, `![$1](/articles/${id}/images/$2))`);
+    return md.render(replacedStr);
+  };
+})();
