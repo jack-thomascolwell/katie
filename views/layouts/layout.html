@@ -10,7 +10,7 @@
   <link rel="icon" href="/public/favicon.ico" />
 </head>
 
-<body {{#if landing}}class="landing"{{/if}}>
+<body {{#if landing}}class="landing" {{/if}}>
   {{#if landing}}
     <div id="landing">
       <img id="header" src="/public/header.png" />
@@ -20,7 +20,7 @@
 
       <div id="video">
         <video autoplay muted disablepictureinpicture loop playsinline preload>
-          <source src="/public/logoVid.mp4" type="video/mp4">
+          <source src="/public/logoVid.mov" type="video/mp4">
           Your browser does not support the video tag.
         </video>
       </div>
@@ -47,7 +47,7 @@
       <a href="/about">About</a>
     </div>
   </nav>
-  <div id="content" {{#if radio}}class="radio"{{/if}}>
+  <div id="content" {{#if radio}}class="radio" {{/if}}>
     {{{content}}}
   </div>
   <div id="footer">

@@ -16,6 +16,7 @@
 <script type="text/javascript">
   let targets = Array.from(document.getElementsByClassName('radioAudio')).map(e => [e, e.parentElement.getElementsByTagName('img')[0]]);
   targets.forEach(([audio, img], i) => {
+    audio.volume = 0.5;
     async function restartAudio(elem) {
       await elem.pause();
       elem.currentTime = 0;

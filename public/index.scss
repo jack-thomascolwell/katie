@@ -12,8 +12,8 @@ $gray: #495350;
   src: url("/public/neuropol.ttf");
 }
 @font-face {
-  font-family: akaju;
-  src: url("/public/Akaju_Thin.otf");
+  font-family: laChata;
+  src: url("/public/La-chata-normal.ttf");
 }
 
 @font-face {
@@ -45,7 +45,7 @@ $gray: #495350;
 }
 
 @mixin textBody {
-  font-family: akaju;
+  font-family: laChata;
   font-weight: 400;
   line-height: 1.25;
 }
@@ -110,12 +110,12 @@ small {
 }
 
 a {
-  color: $lightGreen;
+  color: $pink;
   text-decoration: none;
   cursor: pointer;
 
   &:hover {
-    color: $pink;
+    color: $yellow;
   }
 }
 
@@ -191,6 +191,7 @@ body {
     height: 100%;
     margin-left: auto;
     margin-right: auto;
+    max-width: 100%;
   }
 
   #submit {
@@ -251,7 +252,7 @@ body {
       @include flexCentered;
       @include textTitle;
       @include textBig;
-      color: $lightGreen;
+      color: $pink;
       background-color: $green;
       text-shadow: 1px 1px $black;
       background-color: $black;
@@ -260,9 +261,19 @@ body {
       letter-spacing: 2px;
       transition: padding 0.25s ease-out, transform 0.25s ease-out;
 
+      svg {
+        width: 100%;
+        height: 100%;
+        fill: $pink;
+        foreignObject {
+          width: 100%;
+          height: 100%;
+        }
+      }
+
       &.active,
       &:hover {
-        color: $pink;
+        color: $yellow;
         padding-bottom: 5px;
       }
     }
@@ -312,7 +323,7 @@ body {
       padding-right: calc(1ex + 5px);
       @include textTitle;
       @include textBig;
-      color: $lightGreen;
+      color: $pink;
       background-color: $black;
       text-shadow: 1px 1px $black;
       font-variant: small-caps;
@@ -322,7 +333,7 @@ body {
 
       &.active,
       &:hover {
-        color: $pink;
+        color: $yellow;
         background-color: $gray;
       }
     }
@@ -453,6 +464,7 @@ body {
         @include textBiggest;
         padding-left: 6.665vw;
         padding-right: 6.665vw;
+        text-align: center;
       }
 
       .content {
@@ -460,6 +472,12 @@ body {
         padding-bottom: 10px;
         padding-left: 6.665vw;
         padding-right: 6.665vw;
+        .byline {
+          justify-content: center;
+        }
+        .abstract {
+          text-align: center;
+        }
       }
     }
   }
@@ -759,6 +777,7 @@ body {
     background-color: $altWhite;
     color: $black;
     padding: 10px 40px;
+    padding-bottom: 20px;
 
     img {
       width: 100%;
@@ -770,10 +789,10 @@ body {
     }
 
     a {
-      color: $green;
+      color: $pink;
 
       &:hover {
-        color: $pink;
+        color: $green;
       }
     }
 
