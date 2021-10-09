@@ -4,7 +4,7 @@ module.exports = {
     //host: 'localhost'
   },
   mongodb: {
-    url: 'mongodb+srv://jack-thomascolwell:K2H1cIxbGONkhasE@cluster0.vk82t.mongodb.net/myFirstDatabase?retryWrites=true&w=majority'
+    url: `mongodb+srv://catscratchmagazine:${process.env.password || "<password>"}@catscratch.ejqy0.mongodb.net/catscratch?retryWrites=true&w=majority`
   },
   auth: {
     cookieName: 'auth'
