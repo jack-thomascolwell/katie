@@ -46,6 +46,7 @@ class StreamQueue {
     if (this._songs.length == 0) { // queue is empty
       this._songs = await this._getSongs();
     }
+    if (this._songs.length == 0) return;
     const id = this._songs.pop()._id;
     this._currentSong = await this._mongo.db.collection('radio').findOne({
       _id: id

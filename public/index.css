@@ -30,8 +30,25 @@
   font-weight: bold;
   font-style: italic;
 }
-html {
-  font-size: 87.5%;
+@media only screen and (max-width: 600px) {
+  html {
+    font-size: 26px;
+  }
+}
+@media only screen and (min-width: 600px) and (max-width: calc($medium - 1px)) {
+  html {
+    font-size: 26px;
+  }
+}
+@media only screen and (min-width: 768px) and (max-width: calc($large - 1px)) {
+  html {
+    font-size: 24px;
+  }
+}
+@media only screen and (min-width: 992px) {
+  html {
+    font-size: 87.5%;
+  }
 }
 
 em {
@@ -113,7 +130,7 @@ body::-webkit-scrollbar {
   background-color: #181b20;
   display: grid;
   grid-template-columns: 1fr;
-  grid-template-rows: 30vh 1fr 6rem;
+  grid-template-rows: 30vmin 1fr 15vmin;
   grid-template-areas: "header" "submit" "nav";
   border-bottom: 1rem solid #181b20;
 }
@@ -170,11 +187,20 @@ body::-webkit-scrollbar {
   z-index: 2;
   grid-area: nav;
   width: 100%;
-  display: flex;
   flex-direction: row;
   justify-content: space-around;
   align-items: flex-end;
   flex-wrap: nowrap;
+}
+@media only screen and (max-width: 768px) {
+  #landing nav {
+    display: none;
+  }
+}
+@media only screen and (min-width: 768px) {
+  #landing nav {
+    display: flex;
+  }
 }
 #landing nav a, #landing nav .pseudoLink {
   display: block;
@@ -189,7 +215,7 @@ body::-webkit-scrollbar {
   font-weight: 400;
   line-height: 1.25;
   font-size: 2rem;
-  color: #ff78b0;
+  color: #84cc99;
   background-color: #84cc99;
   text-shadow: 1px 1px #181b20;
   background-color: #181b20;
@@ -208,19 +234,16 @@ body::-webkit-scrollbar {
   height: 100%;
 }
 #landing nav a.active, #landing nav .active.pseudoLink, #landing nav a:hover, #landing nav .pseudoLink:hover {
-  color: #fff20d;
+  color: #ff78b0;
   padding-bottom: 5px;
 }
 
 #nav {
   display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
   grid-area: nav;
   box-sizing: border-box;
   width: 100%;
-  height: 4.8rem;
+  height: 15vmin;
   padding-left: 6.665vw;
   padding-right: 6.665vw;
   z-index: 4;
@@ -228,9 +251,48 @@ body::-webkit-scrollbar {
   color: #84cc99;
   border-bottom: 4px solid #495350;
 }
+@media only screen and (max-width: 768px) {
+  #nav {
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    height: auto;
+  }
+  #nav .logo {
+    height: 15vmin;
+  }
+  #nav .links {
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: stretch;
+    width: 100%;
+    height: auto;
+  }
+  #nav .links #navIcon {
+    display: flex;
+  }
+}
+@media only screen and (min-width: 768px) {
+  #nav {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+  #nav .logo {
+    height: 100%;
+  }
+  #nav .links {
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: stretch;
+    height: 100%;
+  }
+  #nav .links #navIcon {
+    display: none;
+  }
+}
 #nav .logo {
   box-sizing: border-box;
-  height: 100%;
   padding-top: 5px;
   padding-bottom: 5px;
 }
@@ -241,11 +303,7 @@ body::-webkit-scrollbar {
 }
 #nav .links {
   display: flex;
-  flex-direction: row;
-  justify-content: space-around;
-  align-items: stretch;
   flex-wrap: nowrap;
-  height: 100%;
 }
 #nav .links a, #nav .links .pseudoLink {
   box-sizing: border-box;
@@ -255,7 +313,7 @@ body::-webkit-scrollbar {
   font-weight: 400;
   line-height: 1.25;
   font-size: 2rem;
-  color: #ff78b0;
+  color: #84cc99;
   background-color: #181b20;
   text-shadow: 1px 1px #181b20;
   font-variant: small-caps;
@@ -266,7 +324,7 @@ body::-webkit-scrollbar {
   align-items: center;
 }
 #nav .links a.active, #nav .links .active.pseudoLink, #nav .links a:hover, #nav .links .pseudoLink:hover {
-  color: #fff20d;
+  color: #ff78b0;
   background-color: #495350;
 }
 
@@ -402,10 +460,7 @@ body::-webkit-scrollbar {
   text-align: center;
 }
 #content .articleCover.featured .content {
-  padding-top: 10px;
-  padding-bottom: 10px;
-  padding-left: 6.665vw;
-  padding-right: 6.665vw;
+  padding: 10px 6.665vw;
 }
 #content .articleCover.featured .content .byline {
   justify-content: center;
@@ -692,8 +747,7 @@ body::-webkit-scrollbar {
 #content .article {
   background-color: #f7f7fc;
   color: #181b20;
-  padding: 10px 40px;
-  padding-bottom: 20px;
+  padding: 10px 40px 20px;
 }
 #content .article img {
   width: 100%;

@@ -7,6 +7,9 @@ $yellow: #fff20d;
 $white: #d6c5cc;
 $altWhite: #f7f7fc;
 $gray: #495350;
+$small: 600px;
+$medium: 768px;
+$large: 992px;
 @font-face {
   font-family: neuropol;
   src: url("/public/neuropol.ttf");
@@ -15,35 +18,30 @@ $gray: #495350;
   font-family: laChata;
   src: url("/public/La-chata-normal.ttf");
 }
-
 @font-face {
   font-family: nunito;
   src: url("Nunito-Regular.ttf") format("truetype");
   font-weight: normal;
   font-style: normal;
 }
-
 @font-face {
   font-family: nunito;
   src: url("Nunito-Italic.ttf") format("truetype");
   font-weight: normal;
   font-style: italic;
 }
-
 @font-face {
   font-family: nunito;
   src: url("Nunito-Bold.ttf") format("truetype");
   font-weight: bold;
   font-style: normal;
 }
-
 @font-face {
   font-family: nunito;
   src: url("Nunito-BoldItalic.ttf") format("truetype");
   font-weight: bold;
   font-style: italic;
 }
-
 @mixin textBody {
   font-family: laChata;
   font-weight: 400;
@@ -94,7 +92,18 @@ $gray: #495350;
 }
 
 html {
-  font-size: 87.5%;
+  @media only screen and (max-width: $small) {
+    font-size: 26px;
+  }
+  @media only screen and (min-width: $small) and (max-width: calc($medium - 1px)) {
+    font-size: 26px;
+  }
+  @media only screen and (min-width: $medium) and (max-width: calc($large - 1px)) {
+    font-size: 24px;
+  }
+  @media only screen and (min-width: $large) {
+    font-size: 87.5%;
+  }
 }
 
 em {
@@ -180,7 +189,7 @@ body {
   background-color: $black;
   display: grid;
   grid-template-columns: 1fr;
-  grid-template-rows: 30vh 1fr 6rem;
+  grid-template-rows: 30vmin 1fr 15vmin;
   grid-template-areas: 'header' 'submit' 'nav';
   border-bottom: 1rem solid $black;
 
@@ -234,10 +243,15 @@ body {
   }
 
   nav {
+    @media only screen and (max-width: $medium) {
+      display: none;
+    }
+    @media only screen and (min-width: $medium) {
+      display: flex;
+    }
     z-index: 2;
     grid-area: nav;
     width: 100%;
-    display: flex;
     flex-direction: row;
     justify-content: space-around;
     align-items: flex-end;
@@ -252,7 +266,7 @@ body {
       @include flexCentered;
       @include textTitle;
       @include textBig;
-      color: $pink;
+      color: $green;
       background-color: $green;
       text-shadow: 1px 1px $black;
       background-color: $black;
@@ -265,6 +279,7 @@ body {
         width: 100%;
         height: 100%;
         fill: $pink;
+
         foreignObject {
           width: 100%;
           height: 100%;
@@ -273,7 +288,7 @@ body {
 
       &.active,
       &:hover {
-        color: $yellow;
+        color: $pink;
         padding-bottom: 5px;
       }
     }
@@ -282,23 +297,61 @@ body {
 
 #nav {
   display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
   grid-area: nav;
   box-sizing: border-box;
   width: 100%;
-  height: 4.8rem;
+  height: 15vmin;
   padding-left: 6.665vw;
   padding-right: 6.665vw;
   z-index: 4;
   background: $black;
   color: $green;
   border-bottom: 4px solid $gray;
+  @media only screen and (max-width: $medium) {
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    height: auto;
+
+    .logo {
+      height: 15vmin;
+    }
+
+    .links {
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: stretch;
+      width: 100%;
+      height: auto;
+
+      #navIcon {
+        display: flex;
+      }
+    }
+  }
+  @media only screen and (min-width: $medium) {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+
+    .logo {
+      height: 100%;
+    }
+
+    .links {
+      flex-direction: row;
+      justify-content: space-around;
+      align-items: stretch;
+      height: 100%;
+
+      #navIcon {
+        display: none;
+      }
+    }
+  }
 
   .logo {
     box-sizing: border-box;
-    height: 100%;
     padding-top: 5px;
     padding-bottom: 5px;
 
@@ -311,11 +364,7 @@ body {
 
   .links {
     display: flex;
-    flex-direction: row;
-    justify-content: space-around;
-    align-items: stretch;
     flex-wrap: nowrap;
-    height: 100%;
 
     a {
       box-sizing: border-box;
@@ -323,7 +372,7 @@ body {
       padding-right: calc(1ex + 5px);
       @include textTitle;
       @include textBig;
-      color: $pink;
+      color: $green;
       background-color: $black;
       text-shadow: 1px 1px $black;
       font-variant: small-caps;
@@ -333,7 +382,7 @@ body {
 
       &.active,
       &:hover {
-        color: $yellow;
+        color: $pink;
         background-color: $gray;
       }
     }
@@ -468,13 +517,12 @@ body {
       }
 
       .content {
-        padding-top: 10px;
-        padding-bottom: 10px;
-        padding-left: 6.665vw;
-        padding-right: 6.665vw;
+        padding: 10px 6.665vw;
+
         .byline {
           justify-content: center;
         }
+
         .abstract {
           text-align: center;
         }
@@ -566,6 +614,7 @@ body {
       @include textTitle;
       @include textBiggest;
       text-align: center;
+
       &:last-child:first-child {
         border-bottom: none;
       }
@@ -776,8 +825,7 @@ body {
   .article {
     background-color: $altWhite;
     color: $black;
-    padding: 10px 40px;
-    padding-bottom: 20px;
+    padding: 10px 40px 20px;
 
     img {
       width: 100%;
