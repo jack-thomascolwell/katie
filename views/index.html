@@ -1,20 +1,14 @@
 <script src="/public/index.js" type="text/javascript" defer></script>
 {{#if featuredArticle }}
-  <a href="/articles/{{featuredArticle._id}}" class="articleCover featured">
+  <a href="/articles/{{featuredArticle._id}}" class="articleFeature">
     <img src="/articles/{{featuredArticle._id}}/images/cover" />
     <div class="content">
       <p class="title">{{{markdownInline featuredArticle.title}}}</p>
-      <p class="byline"><span class="author">{{featuredArticle.author}}</span><span class="date">{{date featuredArticle.published}}</span></p>
+      <p class="byline"><span class="author">{{featuredArticle.author.name}}</span><span class="date">{{date featuredArticle.published}}</span></p>
       <p class="abstract">{{featuredArticle.abstract}}</p>
     </div>
   </a>
 {{/if}}
-
-{{#unless articles}}
-  <div class="titleBlock" style="margin-top: auto; margin-bottom: auto;">
-    <p>No articles yet, check back soon!</p>
-  </div>
-{{/unless}}
 
 {{#each articles}}
   {{> articleCover data=this admin=../admin }}

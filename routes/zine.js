@@ -16,7 +16,7 @@ module.exports = [{
   path: '/zine',
   handler: async (request, h) => {
     const page = (parseInt(request.query.page) || 1) - 1;
-    const perPage = config.paginate.articles;
+    const perPage = config.paginate.zine;
 
     const zines = await request.mongo.db.collection('zine').find({}, {
       projection: {
@@ -29,12 +29,12 @@ module.exports = [{
     }).skip(page * perPage).limit(perPage).toArray();
 
     const pages = await request.mongo.db.collection('zine').count({});
-
+    console.log([pages, perPage])
     return h.view('zines', {
       zines: zines,
       admin: (request.auth.isAuthenticated && (request.auth.credentials.admin === true)),
       maxPage: Math.ceil(pages / perPage),
-      page: page
+      page: page + 1
     });
   },
   options: {

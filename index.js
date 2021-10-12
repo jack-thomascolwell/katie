@@ -210,6 +210,22 @@ const start = async function() {
       }).sort({
         _id: -1
       }).limit(6).toArray();
+
+      for (let i in articles) {
+        let author = await request.mongo.db.collection('authors').findOne({
+          _id: articles[i].author
+        }, {
+          projection: {
+            name: 1,
+            bio: 1,
+            email: 1,
+            _id: 1
+          }
+        });
+        articles[i].author = author;
+      }
+      console.log(articles)
+
       const featuredArticle = articles[0];
       return h.view('index', {
         articles: articles.slice(1),

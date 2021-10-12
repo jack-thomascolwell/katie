@@ -63,7 +63,7 @@ module.exports = [{
       mode: 'try'
     }
   }
-}, {
+}, /*{
   method: 'GET',
   path: '/radioArchive/{id}',
   handler: async (request, h) => {
@@ -107,7 +107,7 @@ module.exports = [{
       })
     }
   }
-}, {
+},*/ {
   method: 'GET',
   path: '/radioArchive/stream/{id}',
   handler: async (request, h) => {
@@ -287,7 +287,7 @@ module.exports = [{
     };
 
     const status = await request.mongo.db.collection('radio').insertOne(radioArchive);
-    if (status.acknowledged === true) return h.redirect(`/radioArchive/${status.insertedId}`);
+    if (status.acknowledged === true) return h.redirect(`/radioArchive`);
     return status.acknowledged;
   },
   options: {

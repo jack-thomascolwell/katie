@@ -14,10 +14,8 @@ paginate.forEach(paginator => {
   const next = paginator.getElementsByClassName('next')[0];
   const current = paginator.getElementsByClassName('current')[0];
 
-  const {
-    maxPage, dPage
-  } = paginator.dataset;
-
+  const maxPage = parseInt(paginator.dataset.maxpage);
+  const dPage = parseInt(paginator.dataset.page);
   const page = parseInt((dPage || qPage));
 
   current.innerHTML = ('' + page).padStart(3, '0');

@@ -36,7 +36,7 @@ module.exports = [{
       authors: authors,
       admin: (request.auth.isAuthenticated && (request.auth.credentials.admin === true)),
       maxPage: Math.ceil(pages / perPage),
-      page: page
+      page: page + 1
     });
   },
   options: {
@@ -86,7 +86,7 @@ module.exports = [{
       admin: (request.auth.isAuthenticated && (request.auth.credentials.admin === true)),
       articles: articles,
       maxPage: Math.ceil(pages / perPage),
-      page: page
+      page: page + 1
     });
   },
   options: {

@@ -112,6 +112,10 @@ em {
 
 strong {
   font-weight: bold !important;
+
+  &.alt {
+    color: $pink;
+  }
 }
 
 small {
@@ -418,6 +422,72 @@ body {
     z-index: 0;
   }
 
+  .articleFeature {
+    z-index: 1;
+    box-sizing: border-box;
+    width: 100%;
+    margin-top: 0;
+    margin-bottom: 35px;
+    background-color: $black;
+    color: $white;
+    text-align: center;
+    box-sizing: border-box;
+
+    .content {
+      padding: 10px 6.665vw;
+      box-sizing: border-box;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: stretch;
+
+      .title {
+        @include textBiggest;
+        @include textTitle;
+        padding-left: 6.665vw;
+        padding-right: 6.665vw;
+        text-align: center;
+        letter-spacing: 1px;
+        text-shadow: 1px 1px $lightGreen;
+        text-transform: uppercase;
+        margin-bottom: 10px;
+      }
+
+      .byline {
+        justify-content: center;
+        @include textBody;
+        @include textSmaller;
+        display: flex;
+        flex-direction: row;
+        align-items: baseline;
+        flex-wrap: nowrap;
+        text-transform: capitalize;
+        margin-bottom: 1ex;
+
+        .date::before {
+          content: ", ";
+        }
+      }
+
+      .abstract {
+        text-align: center;
+        @include textBody;
+        @include textNormal;
+        text-align: justify;
+      }
+    }
+
+    img {
+      width: 100%;
+      height: 70vh;
+      object-fit: cover;
+      object-position: center;
+      overflow: hidden;
+      user-select: none;
+    }
+  }
+
   .articleCover {
     overflow: hidden;
     z-index: 1;
@@ -471,6 +541,7 @@ body {
         align-items: baseline;
         flex-wrap: nowrap;
         text-transform: capitalize;
+        margin-bottom: 1ex;
 
         .date::before {
           content: ", ";
@@ -498,13 +569,12 @@ body {
       width: 100%;
       margin-top: 0;
       margin-bottom: 35px;
-      min-height: 80vh;
-      max-height: 80vh;
-      height: 80vh;
       grid-template-columns: 1fr;
-      grid-template-rows: 1fr auto;
+      grid-template-rows: 70vh 10vh;
       grid-template-areas: 'image' 'text';
       background-color: $black;
+      height: auto;
+      min-height: 80vh;
       color: $white;
       text-align: center;
       box-sizing: border-box;
@@ -630,7 +700,7 @@ body {
   .button {
     @include textTitle;
     @include textBiggest;
-    color: $green;
+    color: $pink;
     text-shadow: 1px 1px $lightGreen;
     z-index: 3;
     cursor: pointer;
@@ -639,7 +709,7 @@ body {
     text-transform: uppercase;
 
     &:hover {
-      color: $pink;
+      color: $yellow;
     }
   }
 
