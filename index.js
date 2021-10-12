@@ -208,6 +208,7 @@ const start = async function() {
           _id: 1
         }
       }).sort({
+        published: -1,
         _id: -1
       }).limit(6).toArray();
 

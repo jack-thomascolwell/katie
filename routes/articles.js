@@ -31,6 +31,7 @@ module.exports = [{
         _id: 1
       }
     }).sort({
+      published: -1,
       _id: -1
     }).skip(page * perPage).limit(perPage).toArray();
 
@@ -176,6 +177,7 @@ module.exports = [{
         _id: 1
       }
     }).sort({
+      name: 1,
       id: -1
     }).toArray();
 
@@ -273,6 +275,7 @@ module.exports = [{
           _id: 1
         }
       }).sort({
+        name: 1,
         id: -1
       }).toArray();
 
@@ -374,6 +377,7 @@ module.exports = [{
         _id: 1
       }
     }).sort({
+      name: 1,
       id: -1
     }).toArray();
 
@@ -430,6 +434,7 @@ module.exports = [{
           _id: 1
         }
       }).sort({
+        name: 1,
         id: -1
       }).toArray();
 

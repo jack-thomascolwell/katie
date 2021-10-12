@@ -25,6 +25,7 @@ module.exports = [{
         _id: 1
       }
     }).sort({
+      published: -1,
       _id: -1
     }).skip(page * perPage).limit(perPage).toArray();
 

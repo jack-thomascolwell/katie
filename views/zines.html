@@ -9,7 +9,7 @@
       <span class="issue">Issue {{this.issue}}</span>
       <span class="published">{{date this.published}}</span>
     </div>
-    {{#if ../admin}}<i class="delete fas fa-trash" data-id="{{this._id}}"></i>{{/if}}
+    {{#if ../admin}}<i class="delete fas fa-trash" data-confirm="Delete Issue No. {{this.issue}}" data-url="/zine/{{this._id}}"></i>{{/if}}
     <canvas></canvas>
   </a>
 {{/each}}

@@ -1,5 +1,6 @@
 const deleteLinks = Array.from(document.getElementsByClassName('delete'));
 deleteLinks.forEach(link => {
+  console.log(link)
   const url = link.dataset["url"];
   const confirmText = link.dataset["confirm"];
   if (!url || !confirmText) return;
