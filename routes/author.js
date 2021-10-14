@@ -31,6 +31,7 @@ module.exports = [{
       _id: -1
     }).skip(page * perPage).limit(perPage).toArray();
 
+
     const pages = await request.mongo.db.collection('authors').count({});
 
     return h.view('authors', {
@@ -64,7 +65,7 @@ module.exports = [{
       }
     });
     if (!author) return h.redirect('/authors');
-    const articles = await request.mongo.db.collection('articles').find({
+    let articles = await request.mongo.db.collection('articles').find({
       author: author._id,
     }, {
       projection: {
@@ -78,6 +79,11 @@ module.exports = [{
       name: 1,
       _id: -1,
     }).skip(page * perPage).limit(perPage).toArray();
+    articles = articles.map(article => {
+      article.author = author;
+      return article;
+    });
+    console.log(articles);
 
     const pages = await request.mongo.db.collection('articles').count({
       author: author._id,

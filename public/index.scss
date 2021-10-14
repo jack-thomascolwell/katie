@@ -92,14 +92,8 @@ $large: 992px;
 }
 
 html {
-  @media only screen and (max-width: $small) {
-    font-size: 26px;
-  }
-  @media only screen and (min-width: $small) and (max-width: calc($medium - 1px)) {
-    font-size: 26px;
-  }
-  @media only screen and (min-width: $medium) and (max-width: calc($large - 1px)) {
-    font-size: 24px;
+  @media only screen and (max-width: $medium) {
+    font-size: 22px;
   }
   @media only screen and (min-width: $large) {
     font-size: 87.5%;
@@ -166,8 +160,8 @@ body {
   height: 100vh;
   display: grid;
   grid-template-columns: 1fr;
-  grid-template-rows: auto 1fr auto;
-  grid-template-areas: 'nav' 'content' 'footer';
+  grid-template-rows: 1fr;
+  grid-template-areas: 'content';
 
   &.landing {
     display: flex;
@@ -179,20 +173,13 @@ body {
     #content {
       overflow-y: auto;
     }
-    @media only screen and (max-width: $medium) {
-      #nav {
-        position: sticky;
-        top: 0;
-      }
-    }
-    @media only screen and (min-width: $medium) {
-      #nav {
-        position: fixed;
-        transition: transform 0.25s ease-out;
 
-        &.hidden {
-          transform: translateY(-100%);
-        }
+    #nav {
+      position: fixed;
+      transition: transform 0.25s ease-out;
+
+      &.hidden {
+        transform: translateY(-100%);
       }
     }
   }
@@ -320,6 +307,7 @@ body {
   grid-area: nav;
   box-sizing: border-box;
   width: 100%;
+  overflow-x: hidden;
   height: 15vmin;
   padding-left: 6.665vw;
   padding-right: 6.665vw;
@@ -327,12 +315,19 @@ body {
   background: $black;
   color: $green;
   border-bottom: 4px solid $gray;
+
+  &.sticky {
+    position: sticky;
+    top: 0;
+  }
+
   @media only screen and (max-width: $medium) {
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
     flex-wrap: wrap;
     height: auto;
+    overflow: visible;
 
     .logo {
       height: 15vmin;
@@ -357,14 +352,11 @@ body {
       width: 100%;
       height: auto;
       display: none;
+      padding-bottom: 5px;
     }
 
     &.expanded .links {
       display: flex;
-    }
-
-    &.hidden {
-      transform: none !important;
     }
   }
   @media only screen and (min-width: $medium) {
@@ -382,10 +374,10 @@ body {
       justify-content: space-around;
       align-items: stretch;
       height: 100%;
+    }
 
-      #navIcon {
-        display: none;
-      }
+    #navIcon {
+      display: none;
     }
   }
 
@@ -456,6 +448,12 @@ body {
     z-index: 0;
   }
 
+  .break {
+    width: 100%;
+    height: 0;
+    margin-bottom: 20px;
+  }
+
   .articleFeature {
     z-index: 1;
     box-sizing: border-box;
@@ -523,28 +521,70 @@ body {
   }
 
   .articleCover {
-    overflow: hidden;
     z-index: 1;
     box-sizing: border-box;
     width: 86.67%;
-    height: 160px;
-    min-height: 160px;
     margin-bottom: 20px;
-
-    &:first-child {
-      margin-top: 20px;
-    }
     background-color: $black;
     color: $green;
+
+    overflow: hidden;
     display: grid;
-    grid-template-columns: 320px 1fr;
-    grid-template-rows: 1fr auto 1fr;
-    grid-template-areas: 'image .' 'image text' 'image .';
+
+    @media only screen and (max-width: $medium) {
+      overflow: visible;
+      grid-template-columns: 1fr;
+      grid-template-rows: 160px auto;
+      grid-template-areas: 'image' 'text';
+
+      .content {
+
+        .title {
+          @include textNormal;
+          word-break: break-all;
+          word-wrap: break-word;
+        }
+
+        .byline {
+          @include textSmallest;
+          word-break: break-all;
+          word-wrap: break-word;
+        }
+
+        .abstract {
+          @include textSmall;
+        }
+      }
+    }
+
+    @media only screen and (min-width: $medium) {
+      height: 160px;
+      min-height: 160px;
+      grid-template-columns: 320px 1fr;
+      grid-template-rows: 1fr auto 1fr;
+      grid-template-areas: 'image .' 'image text' 'image .';
+
+      .content {
+
+        .title {
+          @include textBig;
+        }
+
+        .byline {
+          @include textSmaller;
+        }
+
+        .abstract {
+          @include textNormal;
+        }
+      }
+    }
 
     .content {
       grid-area: text;
-      box-sizing: border-box;
       width: 100%;
+      display: flex;
+      box-sizing: border-box;
       display: flex;
       flex-direction: column;
       justify-content: flex-start;
@@ -555,7 +595,6 @@ body {
 
       .title {
         @include textTitle;
-        @include textBig;
         letter-spacing: 1px;
         text-shadow: 1px 1px $lightGreen;
         text-transform: uppercase;
@@ -568,7 +607,6 @@ body {
 
       .byline {
         @include textBody;
-        @include textSmaller;
         display: flex;
         flex-direction: row;
         justify-content: flex-start;
@@ -584,7 +622,6 @@ body {
 
       .abstract {
         @include textBody;
-        @include textNormal;
         text-align: justify;
       }
     }
@@ -598,48 +635,10 @@ body {
       overflow: hidden;
       user-select: none;
     }
-
-    &.featured {
-      width: 100%;
-      margin-top: 0;
-      margin-bottom: 35px;
-      grid-template-columns: 1fr;
-      grid-template-rows: 70vh 10vh;
-      grid-template-areas: 'image' 'text';
-      background-color: $black;
-      height: auto;
-      min-height: 80vh;
-      color: $white;
-      text-align: center;
-      box-sizing: border-box;
-
-      .title {
-        @include textBiggest;
-        padding-left: 6.665vw;
-        padding-right: 6.665vw;
-        text-align: center;
-      }
-
-      .content {
-        padding: 10px 6.665vw;
-
-        .byline {
-          justify-content: center;
-        }
-
-        .abstract {
-          text-align: center;
-        }
-      }
-    }
   }
 
   .textBlock {
     margin-bottom: 20px;
-
-    &:first-child {
-      margin-top: 20px;
-    }
     box-sizing: border-box;
     width: 86.67%;
     padding: 10px 20px;
@@ -687,10 +686,6 @@ body {
 
   .titleBlock {
     margin-bottom: 20px;
-
-    &:first-child {
-      margin-top: 20px;
-    }
     box-sizing: border-box;
     width: 86.67%;
     padding: 10px 20px;
@@ -983,10 +978,6 @@ body {
     grid-template-columns: auto 1fr;
     margin-bottom: 20px;
 
-    &:first-child {
-      margin-top: 20px;
-    }
-
     canvas {
       grid-column: 1 /span 2;
       grid-row: 1 /span 2;
@@ -1026,10 +1017,6 @@ body {
   .zine {
     z-index: 2;
     margin-bottom: 20px;
-
-    &:first-child {
-      margin-top: 20px;
-    }
     width: 86.67%;
     display: grid;
     grid-template-rows: auto;
@@ -1342,29 +1329,129 @@ body {
   }
 
   .authorProfile {
-    overflow: hidden;
     z-index: 1;
     box-sizing: border-box;
     width: 86.67%;
-    height: 160px;
-    min-height: 160px;
     margin-bottom: 20px;
 
-    &:first-child {
-      margin-top: 20px;
+    @media only screen and (max-width: $medium) {
+      overflow: visible;
+
+      &::after {
+        content: "";
+        display: table;
+        clear: both;
+      }
+
+      .mobile {
+        display: block;
+        width: 100%;
+        box-sizing: border-box;
+        clear: none;
+        padding-left: 20px;
+        padding-right: 20px;
+      }
+
+      .name, .email {
+        word-break: break-all;
+        word-wrap: break-word;
+      }
+
+      .name {
+        @include textNormal;
+      }
+
+      .email {
+        @include textSmallest;
+      }
+
+      .bio {
+        @include textSmaller;
+      }
+      .content {
+        display: none;
+      }
+
+      img {
+        display: inline-block;
+        float: left;
+        width: 160px;
+        height: 160px;
+        margin-right: 20px;
+      }
+    }
+    @media only screen and (min-width: $medium) {
+      overflow: hidden;
+      min-height: 160px;
+      display: grid;
+      grid-template-columns: 160px 1fr;
+      grid-template-rows: 1fr auto 1fr;
+      grid-template-areas: 'image .' 'image text' 'image .';
+      min-height: 160px;
+
+      .mobile {
+        display: none;
+      }
+
+      img {
+        grid-area: image;
+        width: 100%;
+        height: 100%;
+      }
+
+      .content {
+        width: 100%;
+        display: flex;
+        .name {
+          @include textBig;
+        }
+
+        .email {
+          @include textSmaller;
+        }
+
+        .bio {
+          @include textNormal;
+        }
+        .content {
+          display: none;
+        }
+      }
     }
     background-color: $black;
     color: $green;
-    display: grid;
-    grid-template-columns: 160px 1fr;
-    grid-template-rows: 1fr auto 1fr;
-    grid-template-areas: 'image .' 'image text' 'image .';
+
+    img {
+      object-fit: cover;
+      object-position: center;
+      overflow: hidden;
+      user-select: none;
+    }
+
+    .name {
+      z-index: 2;
+      @include textTitle;
+      letter-spacing: 1px;
+      text-shadow: 1px 1px $lightGreen;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+
+    .email {
+      z-index: 2;
+      @include textBody;
+      margin-bottom: 5px;
+    }
+
+    .bio {
+      z-index: 2;
+      @include textBody;
+      text-align: justify;
+    }
 
     .content {
       grid-area: text;
       box-sizing: border-box;
-      width: 100%;
-      display: flex;
       flex-direction: column;
       justify-content: flex-start;
       align-items: stretch;
@@ -1372,49 +1459,18 @@ body {
       @include hideScrollbar;
       padding: 10px 30px 10px 20px;
 
-      .name {
-        @include textTitle;
-        @include textBig;
-        letter-spacing: 1px;
-        text-shadow: 1px 1px $lightGreen;
-        text-transform: uppercase;
-        margin-bottom: 10px;
-      }
-
       .delete {
         float: right;
       }
-
-      .email {
-        @include textBody;
-        @include textSmaller;
-        margin-bottom: 5px;
-      }
-
-      .bio {
-        @include textBody;
-        @include textNormal;
-        text-align: justify;
-      }
-    }
-
-    img {
-      grid-area: image;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      object-position: center;
-      overflow: hidden;
-      user-select: none;
     }
   }
 }
 
 #footer {
-  grid-area: footer;
   z-index: 2;
   box-sizing: border-box;
   width: 100%;
+  margin-top: auto;
   padding-left: 6.665vw;
   padding-right: 6.665vw;
   display: flex;

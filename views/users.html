@@ -1,27 +1,27 @@
 {{> navSticky }}
-<div id="content">
-  {{#each users}}
-    <div class="user">
-      <a class="email" href="mailto://{{this.email}}">{{this.email}}</a>
-      <span class="admin">Admin: {{#if this.admin}}
-          <i class="removeAdmin far fa-check-square" data-email="{{this.email}}" data-id="{{this._id}}"></i>
-        {{else}}
-          <i class="makeAdmin far fa-square" data-email="{{this.email}}" data-id="{{this._id}}"></i>
-        {{/if}}
-      </span>
-      <i class="delete fas fa-trash" data-email="{{this.email}}" data-id="{{this._id}}"></i>
-    </div>
-  {{/each}}
+<div class="break"></div>
+
+{{#each users}}
   <div class="user">
-    <a class="email" href="mailto://{{self.email}}">{{self.email}}</a>
-    <span class="admin">Admin: {{#if self.admin}}
-        <i class="removeAdmin far disabled fa-check-square"></i>
+    <a class="email" href="mailto://{{this.email}}">{{this.email}}</a>
+    <span class="admin">Admin: {{#if this.admin}}
+        <i class="removeAdmin far fa-check-square" data-email="{{this.email}}" data-id="{{this._id}}"></i>
       {{else}}
-        <i class="makeAdmin far disabled fa-square"></i>
+        <i class="makeAdmin far fa-square" data-email="{{this.email}}" data-id="{{this._id}}"></i>
       {{/if}}
     </span>
-    <i class="delete disabled fas fa-trash"></i>
+    <i class="delete fas fa-trash" data-email="{{this.email}}" data-id="{{this._id}}"></i>
   </div>
+{{/each}}
+<div class="user">
+  <a class="email" href="mailto://{{self.email}}">{{self.email}}</a>
+  <span class="admin">Admin: {{#if self.admin}}
+      <i class="removeAdmin far disabled fa-check-square"></i>
+    {{else}}
+      <i class="makeAdmin far disabled fa-square"></i>
+    {{/if}}
+  </span>
+  <i class="delete disabled fas fa-trash"></i>
 </div>
 
 <script type="text/javascript">
@@ -45,7 +45,10 @@
     link.addEventListener('click', e => {
       e.preventDefault();
 
-      const {id, email} = link.dataset;
+      const {
+        id,
+        email
+      } = link.dataset;
       if (!confirm(`Give admin privileges to ${email}?`)) return;
 
       const xhttp = new XMLHttpRequest();
@@ -63,7 +66,10 @@
     link.addEventListener('click', e => {
       e.preventDefault();
 
-      const {id, email} = link.dataset;
+      const {
+        id,
+        email
+      } = link.dataset;
       if (!confirm(`Remove admin privileges from ${email}?`)) return;
 
       const xhttp = new XMLHttpRequest();

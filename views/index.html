@@ -1,4 +1,3 @@
-<script src="/public/index.js" type="text/javascript" defer></script>
 {{#if featuredArticle }}
   <a href="/articles/{{featuredArticle._id}}" class="articleFeature">
     <img src="/articles/{{featuredArticle._id}}/images/cover" />
@@ -8,6 +7,10 @@
       <p class="abstract">{{featuredArticle.abstract}}</p>
     </div>
   </a>
+{{/if}}
+
+{{#if articles}}
+  <div class="break"></div>
 {{/if}}
 
 {{#each articles}}
