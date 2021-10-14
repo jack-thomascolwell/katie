@@ -51,6 +51,14 @@
   }
 }
 
+::selection {
+  background: rgba(255, 242, 13, 0.25);
+}
+
+::-moz-selection {
+  background: rgba(255, 242, 13, 0.25);
+}
+
 em {
   font-style: italic !important;
 }
@@ -113,12 +121,20 @@ body.landing {
 body.landing #content {
   overflow-y: auto;
 }
-body.landing #nav {
-  position: fixed;
-  transition: transform 0.25s ease-out;
+@media only screen and (max-width: 768px) {
+  body.landing #nav {
+    position: sticky;
+    top: 0;
+  }
 }
-body.landing #nav.hidden {
-  transform: translateY(-100%);
+@media only screen and (min-width: 768px) {
+  body.landing #nav {
+    position: fixed;
+    transition: transform 0.25s ease-out;
+  }
+  body.landing #nav.hidden {
+    transform: translateY(-100%);
+  }
 }
 body::-webkit-scrollbar {
   display: none;
@@ -242,6 +258,7 @@ body::-webkit-scrollbar {
 }
 
 #nav {
+  user-select: none;
   display: flex;
   grid-area: nav;
   box-sizing: border-box;
@@ -256,13 +273,26 @@ body::-webkit-scrollbar {
 }
 @media only screen and (max-width: 768px) {
   #nav {
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: flex-start;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
     height: auto;
   }
   #nav .logo {
     height: 15vmin;
+  }
+  #nav #navIcon {
+    font-size: 2rem;
+    color: #84cc99;
+    text-shadow: 1px 1px #b2ffce;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  #nav #navIcon:hover {
+    color: #ff78b0;
   }
   #nav .links {
     flex-direction: column;
@@ -270,9 +300,13 @@ body::-webkit-scrollbar {
     align-items: stretch;
     width: 100%;
     height: auto;
+    display: none;
   }
-  #nav .links #navIcon {
+  #nav.expanded .links {
     display: flex;
+  }
+  #nav.hidden {
+    transform: none !important;
   }
 }
 @media only screen and (min-width: 768px) {
@@ -285,6 +319,7 @@ body::-webkit-scrollbar {
     height: 100%;
   }
   #nav .links {
+    display: flex;
     flex-direction: row;
     justify-content: space-around;
     align-items: stretch;
@@ -305,7 +340,6 @@ body::-webkit-scrollbar {
   user-select: none;
 }
 #nav .links {
-  display: flex;
   flex-wrap: nowrap;
 }
 #nav .links a, #nav .links .pseudoLink {
@@ -760,6 +794,7 @@ body::-webkit-scrollbar {
   align-items: baseline;
   flex-wrap: nowrap;
   text-transform: capitalize;
+  margin-bottom: 1ex;
 }
 #content .radio .content .byline .date::before {
   content: ", ";

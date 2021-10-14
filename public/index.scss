@@ -106,6 +106,14 @@ html {
   }
 }
 
+::selection {
+  background: fade-out($yellow, 0.75);
+}
+
+::-moz-selection {
+  background: fade-out($yellow, 0.75);
+}
+
 em {
   font-style: italic !important;
 }
@@ -171,13 +179,20 @@ body {
     #content {
       overflow-y: auto;
     }
+    @media only screen and (max-width: $medium) {
+      #nav {
+        position: sticky;
+        top: 0;
+      }
+    }
+    @media only screen and (min-width: $medium) {
+      #nav {
+        position: fixed;
+        transition: transform 0.25s ease-out;
 
-    #nav {
-      position: fixed;
-      transition: transform 0.25s ease-out;
-
-      &.hidden {
-        transform: translateY(-100%);
+        &.hidden {
+          transform: translateY(-100%);
+        }
       }
     }
   }
@@ -300,6 +315,7 @@ body {
 }
 
 #nav {
+  user-select: none;
   display: flex;
   grid-area: nav;
   box-sizing: border-box;
@@ -312,13 +328,26 @@ body {
   color: $green;
   border-bottom: 4px solid $gray;
   @media only screen and (max-width: $medium) {
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: flex-start;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
     height: auto;
 
     .logo {
       height: 15vmin;
+    }
+
+    #navIcon {
+      @include textBig;
+      color: $green;
+      text-shadow: 1px 1px $lightGreen;
+      cursor: pointer;
+      @include flexCentered;
+
+      &:hover {
+        color: $pink;
+      }
     }
 
     .links {
@@ -327,10 +356,15 @@ body {
       align-items: stretch;
       width: 100%;
       height: auto;
+      display: none;
+    }
 
-      #navIcon {
-        display: flex;
-      }
+    &.expanded .links {
+      display: flex;
+    }
+
+    &.hidden {
+      transform: none !important;
     }
   }
   @media only screen and (min-width: $medium) {
@@ -343,6 +377,7 @@ body {
     }
 
     .links {
+      display: flex;
       flex-direction: row;
       justify-content: space-around;
       align-items: stretch;
@@ -367,7 +402,6 @@ body {
   }
 
   .links {
-    display: flex;
     flex-wrap: nowrap;
 
     a {
@@ -831,6 +865,7 @@ body {
         align-items: baseline;
         flex-wrap: nowrap;
         text-transform: capitalize;
+        margin-bottom: 1ex;
 
         .date::before {
           content: ", ";

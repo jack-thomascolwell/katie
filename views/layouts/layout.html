@@ -20,7 +20,7 @@
 
       <div id="video">
         <video autoplay muted disablepictureinpicture loop playsinline preload>
-          <source src="/public/logoVid.mov" type="video/mp4">
+          <source src="/public/logoVid.mp4" type="video/mp4">
           Your browser does not support the video tag.
         </video>
       </div>
@@ -40,6 +40,7 @@
   {{/if}}
   <nav id="nav" class="{{#if landing}}hidden{{else}}sticky{{/if}}">
     <a class="logo" href="/"><img src="/public/headerNav.png" /></a>
+    <i id="navIcon" class="fa fa-bars"></i>
     <div class="links">
       <a href="/articles">Articles</a>
       <a href="/radio">Radio</a>
@@ -62,6 +63,7 @@
   <script type="text/javascript" src="/public/delete.js"></script>
   <script type="text/javascript" src="/public/pseudoLink.js"></script>
   <script type="text/javascript" src="/public/paginate.js"></script>
+  <script type="text/javascript" src="/public/nav.js"></script>
 </body>
 
 </html>
