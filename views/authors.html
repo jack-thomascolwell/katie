@@ -3,6 +3,11 @@
 <div class="titleBlock noBackground">
   <div class="heading">Authors</div>
 </div>
+
+{{#if admin}}
+  <a href="/authors/new" class="button">new</a>
+{{/if}}
+
 {{#unless authors}}
   <div class="titleBlock">
     <p>No authors yet, check back soon!</p>

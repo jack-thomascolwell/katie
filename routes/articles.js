@@ -303,7 +303,7 @@ module.exports = [{
       const oldCoverDoc = await bucket.find({
         _id: oldCover
       });
-      if (oldCover && oldCover[0]) await bucket.delete(oldCover);
+      if (oldCoverDoc && oldCoverDoc[0]) await bucket.delete(oldCover);
       const newCover = (payload.cover.pipe(bucket.openUploadStream('cover', {
         chunkSizeBytes: 1048576,
         metadata: {

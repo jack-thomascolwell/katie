@@ -5,6 +5,10 @@
 {{/unless}}-->
 <div class="break"></div>
 
+{{#if admin}}
+<a href="/articles/new" class="button">new</a>
+{{/if}}
+
 {{#each articles}}
   {{> articleCover data=this admin=../admin }}
 {{/each}}

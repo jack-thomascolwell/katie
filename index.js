@@ -313,6 +313,7 @@ const start = async function() {
 
       if (!account || !(await Bcrypt.compare(password, account.password))) {
         return h.view('login', {
+          error: 'Incorrect username or password',
           email: email
         });
       }

@@ -3,6 +3,11 @@
   <div class="heading">Radio Archive</div>
   <!--<p>Listen and read at your own pace. This archive contains every song and blurb ever in rotation on cat scratch radio.</p>-->
 </div>
+
+{{#if admin}}
+<a href="/radioArchive/new" class="button">new</a>
+{{/if}}
+
 {{#unless songData}}
 <div class="titleBlock">
   <p>No radio entries yet, check back soon!</p>
