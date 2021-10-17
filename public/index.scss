@@ -7,7 +7,6 @@ $yellow: #fff20d;
 $white: #d6c5cc;
 $altWhite: #f7f7fc;
 $gray: #495350;
-$small: 600px;
 $medium: 768px;
 $large: 992px;
 @font-face {
@@ -93,9 +92,9 @@ $large: 992px;
 
 html {
   @media only screen and (max-width: $medium) {
-    font-size: 22px;
+    font-size: 26px;
   }
-  @media only screen and (min-width: $large) {
+  @media only screen and (min-width: $medium) {
     font-size: 87.5%;
   }
 }
@@ -136,6 +135,11 @@ a {
 
 .pseudoLink {
   @extend a;
+}
+@media only screen and (max-width: $medium) {
+  .delete {
+    display: none;
+  }
 }
 
 .delete {
@@ -191,6 +195,8 @@ body {
   width: 100vw;
   height: 100vh;
   min-height: 100vh;
+  max-width: 100vw;
+  overflow-x: hidden;
   z-index: 1;
   background-color: $black;
   display: grid;
@@ -321,7 +327,6 @@ body {
     position: sticky;
     top: 0;
   }
-
   @media only screen and (max-width: $medium) {
     flex-direction: row;
     justify-content: space-between;
@@ -421,6 +426,7 @@ body {
 }
 
 #content {
+  overscroll-behavior: none;
   grid-area: content;
   overflow-y: scroll;
   @include hideScrollbar;
@@ -454,6 +460,16 @@ body {
     height: 0;
     margin-bottom: 20px;
   }
+  @media only screen and (max-width: $medium) {
+    .navPlaceholder {
+      margin-bottom: 15vmin;
+    }
+  }
+  @media only screen and (min-width: $medium) {
+    .navPlaceholder {
+      display: none;
+    }
+  }
 
   .articleFeature {
     z-index: 1;
@@ -467,7 +483,6 @@ body {
     box-sizing: border-box;
 
     .content {
-      padding: 10px 6.665vw;
       box-sizing: border-box;
       width: 100%;
       display: flex;
@@ -476,38 +491,74 @@ body {
       align-items: stretch;
 
       .title {
-        @include textBiggest;
         @include textTitle;
-        padding-left: 6.665vw;
-        padding-right: 6.665vw;
         text-align: center;
         letter-spacing: 1px;
         text-shadow: 1px 1px $lightGreen;
         text-transform: uppercase;
         margin-bottom: 10px;
+        word-break: break-all;
       }
 
       .byline {
         justify-content: center;
         @include textBody;
-        @include textSmaller;
         display: flex;
-        flex-direction: row;
-        align-items: baseline;
         flex-wrap: nowrap;
         text-transform: capitalize;
         margin-bottom: 1ex;
-
-        .date::before {
-          content: ", ";
-        }
       }
 
       .abstract {
-        text-align: center;
         @include textBody;
-        @include textNormal;
-        text-align: justify;
+      }
+    }
+    @media only screen and (max-width: $medium) {
+      .content {
+        padding: 10px;
+
+        .title {
+          @include textBigger;
+        }
+
+        .byline {
+          @include textSmallest;
+          flex-direction: column;
+          align-items: center;
+
+          .date {
+            margin-top: 1ex;
+          }
+        }
+
+        .abstract {
+          @include textSmall;
+          text-align: center;
+        }
+      }
+    }
+    @media only screen and (min-width: $medium) {
+      .content {
+        padding: 10px 6.665vw;
+
+        .title {
+          @include textBiggest;
+        }
+
+        .byline {
+          @include textSmaller;
+          flex-direction: row;
+          align-items: baseline;
+
+          .date::before {
+            content: ", ";
+          }
+        }
+
+        .abstract {
+          @include textNormal;
+          text-align: justify;
+        }
       }
     }
 
@@ -528,10 +579,8 @@ body {
     margin-bottom: 20px;
     background-color: $black;
     color: $green;
-
     overflow: hidden;
     display: grid;
-
     @media only screen and (max-width: $medium) {
       overflow: visible;
       grid-template-columns: 1fr;
@@ -539,25 +588,31 @@ body {
       grid-template-areas: 'image' 'text';
 
       .content {
-
         .title {
           @include textNormal;
           word-break: break-all;
           word-wrap: break-word;
+          text-align: center;
         }
 
         .byline {
           @include textSmallest;
           word-break: break-all;
           word-wrap: break-word;
+          flex-direction: column;
+          align-items: center;
+
+          .date {
+            margin-top: 1ex;
+          }
         }
 
         .abstract {
           @include textSmall;
+          text-align: center;
         }
       }
     }
-
     @media only screen and (min-width: $medium) {
       height: 160px;
       min-height: 160px;
@@ -566,17 +621,23 @@ body {
       grid-template-areas: 'image .' 'image text' 'image .';
 
       .content {
-
         .title {
           @include textBig;
         }
 
         .byline {
           @include textSmaller;
+          flex-direction: row;
+          align-items: baseline;
+
+          .date::before {
+            content: ", ";
+          }
         }
 
         .abstract {
           @include textNormal;
+          text-align: justify;
         }
       }
     }
@@ -609,21 +670,14 @@ body {
       .byline {
         @include textBody;
         display: flex;
-        flex-direction: row;
         justify-content: flex-start;
-        align-items: baseline;
         flex-wrap: nowrap;
         text-transform: capitalize;
         margin-bottom: 1ex;
-
-        .date::before {
-          content: ", ";
-        }
       }
 
       .abstract {
         @include textBody;
-        text-align: justify;
       }
     }
 
@@ -780,6 +834,247 @@ body {
     }
   }
 
+  /*.radio {
+    @media only screen and (max-width: $medium) {
+      overflow: visible;
+
+      &::after {
+        content: "";
+        display: table;
+        clear: both;
+      }
+
+      .mobile {
+        display: block;
+        width: 100%;
+        box-sizing: border-box;
+        padding-left: 20px;
+        padding-right: 20px;
+      }
+
+      &#radio {
+        grid-template-columns: 300px 1fr;
+        height: 300px;
+        min-height: 300px;
+
+        ~ .textBlock {
+          display: block;
+          @include textBig;
+          text-align: center;
+        }
+
+        img {
+          width: 320px;
+          height: 320px;
+          margin-right: 20px;
+        }
+        .play {
+          top: 160px;
+          left: 160px;
+        }
+      }
+
+      .titleLine {
+        @include textNormal;
+        word-break: break-all;
+        word-wrap: break-word;
+      }
+
+      .byline {
+        @include textSmallest;
+        word-break: break-all;
+        word-wrap: break-word;
+      }
+
+      .blurb {
+        @include textSmall;
+        text-align: justify;
+      }
+
+      img {
+        display: inline-block;
+        float: left;
+        width: 160px;
+        height: 160px;
+        margin-right: 20px;
+      }
+
+      .content {
+        display: none !important;
+      }
+
+      .play {
+        position: absolute;
+        left: 80px;
+        right: 80px;
+        transform: translate(-50%,-50%);
+      }
+    }
+    @media only screen and (min-width: $medium) {
+      overflow: hidden;
+      display: grid;
+      grid-template-columns: 160px 1fr;
+      grid-template-rows: 1fr auto 1fr;
+      grid-template-areas: 'image .' 'image text' 'image .';
+      height: 160px;
+      min-height: 160px;
+
+      &#radio {
+        grid-template-columns: 300px 1fr;
+        height: 300px;
+        min-height: 300px;
+
+        ~ .textBlock {
+          display: block;
+          @include textBig;
+          text-align: center;
+        }
+      }
+
+      .titleLine {
+        @include textBig;
+      }
+
+      .byline {
+        @include textSmaller;
+      }
+
+      .blurb {
+        @include textNormal;
+        text-align: justify;
+      }
+
+      img {
+        grid-area: image;
+        width: 100%;
+        height: 100%;
+      }
+
+      .mobile {
+        display: none !important;
+      }
+
+      .play {
+        grid-area: image;
+      }
+    }
+    z-index: 1;
+    box-sizing: border-box;
+    width: 86.67%;
+    margin-top: 20px;
+    margin-bottom: 20px;
+
+    &#radio ~ .textBlock {
+      display: block;
+      @include textBig;
+      text-align: center;
+    }
+    background-color: $black;
+    color: $green;
+
+    .content {
+      grid-area: text;
+      box-sizing: border-box;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: stretch;
+      overflow-y: scroll;
+      @include hideScrollbar;
+      padding: 10px 30px 10px 20px;
+    }
+
+    .titleLine {
+      @include textTitle;
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-start;
+      align-items: baseline;
+      flex-wrap: nowrap;
+
+      .title {
+        letter-spacing: 1px;
+        text-shadow: 1px 1px $lightGreen;
+        text-transform: uppercase;
+      }
+
+      .artist {
+        text-transform: capitalize;
+
+        &::before {
+          content: "by";
+          margin-left: 1ex;
+          margin-right: 1ex;
+          text-transform: lowercase;
+        }
+      }
+      margin-bottom: 10px;
+
+      .delete {
+        margin-left: auto;
+      }
+    }
+
+    .byline {
+      @include textBody;
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-start;
+      align-items: baseline;
+      flex-wrap: nowrap;
+      text-transform: capitalize;
+      margin-bottom: 1ex;
+
+      .date::before {
+        content: ", ";
+      }
+    }
+
+    .blurb {
+      @include textBody;
+    }
+
+    &.paused {
+      img {
+        filter: blur(2px) grayscale(50%);
+      }
+    }
+
+    img:hover ~ .play {
+      color: $pink;
+    }
+
+    .play {
+      aspect-ratio: 1;
+      @include textBiggest;
+      background-color: $black;
+      box-sizing: border-box;
+      width: 3ex;
+      height: 3ex;
+      border-radius: 25%;
+      color: $green;
+      text-shadow: 1px 1px $lightGreen;
+      z-index: 3;
+      cursor: pointer;
+      text-align: center;
+      @include flexCentered;
+      margin: auto;
+
+      &:hover {
+        color: $pink;
+      }
+    }
+
+    img {
+      object-fit: cover;
+      object-position: center;
+      overflow: hidden;
+      cursor: pointer;
+      user-select: none;
+    }
+  }*/
+
   .radio {
     overflow: hidden;
     z-index: 1;
@@ -930,7 +1225,50 @@ body {
 
     img {
       width: 100%;
-      aspect-ratio: 1.333;
+
+      &[src*="oneToOne"] {
+        aspect-ratio: 1;
+      }
+
+      &[src*="twoToOne"] {
+        aspect-ratio: 2;
+      }
+
+      &[src*="threeToOne"] {
+        aspect-ratio: 3;
+      }
+
+      &[src*="fourToOne"] {
+        aspect-ratio: 4;
+      }
+
+      &[src*="fiveToOne"] {
+        aspect-ratio: 5;
+      }
+
+      &[src*="sixToOne"] {
+        aspect-ratio: 6;
+      }
+
+      &[src*="oneToTwo"] {
+        aspect-ratio: 0.5;
+      }
+
+      &[src*="twoToThree"] {
+        aspect-ratio: 0.666;
+      }
+
+      &[src*="threeToFour"] {
+        aspect-ratio: 0.75;
+      }
+
+      &[src*="threeToTwo"] {
+        aspect-ratio: 1.5;
+      }
+
+      &[src*="fourToThree"] {
+        aspect-ratio: 1.333;
+      }
       object-fit: cover;
       object-position: center;
       overflow: hidden;
@@ -1334,7 +1672,6 @@ body {
     box-sizing: border-box;
     width: 86.67%;
     margin-bottom: 20px;
-
     @media only screen and (max-width: $medium) {
       overflow: visible;
 
@@ -1353,7 +1690,8 @@ body {
         padding-right: 20px;
       }
 
-      .name, .email {
+      .email,
+      .name {
         word-break: break-all;
         word-wrap: break-word;
       }
@@ -1369,6 +1707,7 @@ body {
       .bio {
         @include textSmaller;
       }
+
       .content {
         display: none;
       }
@@ -1403,6 +1742,7 @@ body {
       .content {
         width: 100%;
         display: flex;
+
         .name {
           @include textBig;
         }
@@ -1414,6 +1754,7 @@ body {
         .bio {
           @include textNormal;
         }
+
         .content {
           display: none;
         }
@@ -1501,6 +1842,20 @@ body {
       &:hover {
         color: $pink;
       }
+    }
+  }
+  @media only screen and (max-width: $medium) {
+    @include textSmallest;
+
+    .socials {
+      @include textNormal;
+    }
+  }
+  @media only screen and (min-width: $medium) {
+    @include textSmaller;
+
+    .socials {
+      @include textBig;
     }
   }
 }

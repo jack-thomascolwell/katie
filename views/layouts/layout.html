@@ -50,6 +50,9 @@
         <a href="/about">About</a>
       </div>
     </nav>
+    {{#unless landing}}
+    <div class="navPlaceholder"></div>
+    {{/unless}}
 
     {{{content}}}
 

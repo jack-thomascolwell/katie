@@ -222,10 +222,11 @@ module.exports = [{
       _id: new request.mongo.ObjectID(id),
     }, {
       projection: {
-        pdf: 1,
+        profile: 1,
         _id: 1
       }
     });
+    console.log(['author',id,author])
     if (!author) return false;
 
     // delete associated images
