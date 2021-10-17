@@ -229,6 +229,15 @@ module.exports = [{
     console.log(['author',id,author])
     if (!author) return false;
 
+    // check for associated records
+    const articles = await request.mongo.db.collection('authors').find({
+      author: author._id
+    }).toArray();
+    const radio = await request.mongo.db.collection('radio').find({
+      author: author._id
+    }).toArray();
+    if (articles.length != 0 || radio.length != 0) return false;
+
     // delete associated images
     const bucket = new request.mongo.lib.GridFSBucket(request.mongo.db);
     await bucket.delete(author.profile);

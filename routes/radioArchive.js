@@ -47,6 +47,7 @@ module.exports = [{
           _id: 1
         }
       });
+      console.log([radio.author, author]);
       radio.author = author.name;
     });
 

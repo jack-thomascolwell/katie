@@ -70,6 +70,7 @@ class StreamQueue {
         _id: 1
       }
     });
+    console.log(author);
     this._currentSong.author = author.name;
 
     try {
@@ -223,6 +224,7 @@ const start = async function() {
             _id: 1
           }
         });
+        console.log([author, articles[i].author]);
         articles[i].author = author;
       }
       console.log(articles)
@@ -254,7 +256,6 @@ const start = async function() {
     path: '/radio',
     handler: async function(request, h) {
       const currentSongData = queue.songData();
-      console.log(currentSongData)
       return h.view('radio', {
         songData: currentSongData,
         radio: true
