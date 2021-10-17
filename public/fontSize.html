@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>cat scratch magazine</title>
+  <link rel="stylesheet" href="/public/reset.css" />
+  <style media="screen">
+    .textSmallest {
+      font-size: 0.75rem;
+    }
+    .textSmaller {
+      font-size: 1.125rem;
+    }
+    .textSmall {
+      font-size: 1.25rem;
+    }
+    .textNormal {
+      font-size: 1.5rem;
+    }
+    .textBig {
+      font-size: 2.000rem;
+    }
+    .textBigger {
+      font-size: 2.666rem;
+    }
+    .textBiggest {
+      font-size: 3.554rem;
+    }
+  </style>
+</head>
+
+<body>
+  <input type="nuber" id="textSize" value="16"/>
+  <p class="textBiggest" >Biggest</p>
+  <p class="textBigger" >Bigger</p>
+  <p class="textBig" >Big</p>
+  <p class="textNormal" >Normal</p>
+  <p class="textSmall" >Small</p>
+  <p class="textSmaller" >Smaller</p>
+  <p class="textSmallest" >Smallest</p>
+
+  <script type="text/javascript">
+    const inputSize = document.getElementById('textSize');
+    function resize() {
+      const size = parseInt(inputSize.value);
+      document.getElementsByTagName('html')[0].style.setProperty('font-size', `${size}px`);
+    }
+    inputSize.addEventListener('change', resize);
+    resize();
+  </script>
+</body>
+
+</html>
