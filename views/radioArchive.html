@@ -5,7 +5,7 @@
 </div>
 
 {{#if admin}}
-<a href="/radioArchive/new" class="button">new</a>
+<a href="/radioArchive/new" class="button new">new</a>
 {{/if}}
 
 {{#unless songData}}
@@ -24,6 +24,7 @@
   targets.forEach(([audio, img], i) => {
     audio.volume = 0.5;
     async function restartAudio(elem) {
+      console.log(['restarting ',elem])
       await elem.pause();
       elem.currentTime = 0;
     }
@@ -32,13 +33,16 @@
     });
     async function playPause() {
       if (img.parentElement.classList.contains('paused')) { //was paused
-        targets.forEach(async ([audio, img], j) => {
-          img.parentElement.classList.add('paused');
-          await restartAudio(audio);
+        console.log(['playing ', img])
+        targets.forEach(async ([newAudio, newImg], j) => {
+          newImg.parentElement.classList.add('paused');
+          await restartAudio(newAudio);
         });
-        await audio.play();
+        console.log('playing now')
         img.parentElement.classList.remove('paused');
+        await audio.play();
       } else { //was playing
+        console.log(['pausing ', img])
         await restartAudio(audio);
         img.parentElement.classList.add('paused');
       }

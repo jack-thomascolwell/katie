@@ -67,6 +67,10 @@ a:hover, .pseudoLink:hover {
     font-size: 11px;
   }
 
+  .new {
+    display: none;
+  }
+
   .delete {
     display: none;
   }
@@ -91,12 +95,8 @@ a:hover, .pseudoLink:hover {
   body::-webkit-scrollbar {
     display: none;
   }
-  body.landing #nav {
-    position: fixed;
-    transition: transform 0.25s ease-out;
-  }
-  body.landing #nav.hidden {
-    transform: translateY(-100%);
+  body.landing #content::before {
+    display: none;
   }
 
   #landing {
@@ -177,7 +177,7 @@ a:hover, .pseudoLink:hover {
   #nav {
     user-select: none;
     display: grid;
-    grid-template-columns: 6.665vw auto 1fr auto 6.665;
+    grid-template-columns: 6.665vw auto 1fr auto 6.665vw;
     grid-template-rows: 15vmin auto;
     grid-template-areas: ". logo . icon ." "links links links links links";
     height: auto;
@@ -190,10 +190,11 @@ a:hover, .pseudoLink:hover {
     background: #181b20;
     color: #84cc99;
     border-bottom: 4px solid #495350;
+    position: fixed;
+    transition: transform 0.25s ease-out;
   }
-  #nav.sticky {
-    position: sticky;
-    top: 0;
+  #nav.hidden {
+    transform: translateY(-100%);
   }
   #nav .logo {
     grid-area: logo;
@@ -279,6 +280,11 @@ a:hover, .pseudoLink:hover {
   }
   #content::-webkit-scrollbar {
     display: none;
+  }
+  #content::before {
+    content: "";
+    width: 100%;
+    margin-bottom: calc(15vmin + 20px);
   }
   #content::after {
     content: "";
@@ -437,6 +443,7 @@ a:hover, .pseudoLink:hover {
   }
 
   .textBlock {
+    overflow-wrap: break-word;
     margin-bottom: 20px;
     box-sizing: border-box;
     width: 86.67%;
@@ -448,7 +455,6 @@ a:hover, .pseudoLink:hover {
     background-color: #181b20;
     color: #84cc99;
     z-index: 2;
-    word-break: break-word;
   }
   .textBlock.noBackground {
     background: none;
@@ -483,6 +489,7 @@ a:hover, .pseudoLink:hover {
   }
 
   .titleBlock {
+    overflow-wrap: break-word;
     margin-bottom: 20px;
     box-sizing: border-box;
     width: 86.67%;
@@ -494,7 +501,6 @@ a:hover, .pseudoLink:hover {
     background-color: #181b20;
     color: #84cc99;
     z-index: 2;
-    word-break: break-word;
   }
   .titleBlock.noBackground {
     background: none;
@@ -994,36 +1000,14 @@ a:hover, .pseudoLink:hover {
     box-sizing: border-box;
     width: 86.67%;
     margin-bottom: 20px;
-    overflow: visible;
     background-color: #181b20;
     color: #84cc99;
-  }
-  .authorProfile::after {
-    content: "";
-    display: table;
-    clear: both;
-  }
-  .authorProfile .mobile {
-    display: block;
-    width: 100%;
-    box-sizing: border-box;
-    clear: none;
-    padding-left: 20px;
-    padding-right: 20px;
-  }
-  .authorProfile .content {
-    display: none;
-  }
-  .authorProfile img {
-    display: inline-block;
-    float: left;
-    width: 160px;
-    height: 160px;
-    margin-right: 20px;
-    object-fit: cover;
-    object-position: center;
     overflow: hidden;
-    user-select: none;
+    display: grid;
+    overflow: visible;
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto;
+    grid-template-areas: "image" "text";
   }
   .authorProfile .name {
     z-index: 2;
@@ -1043,7 +1027,7 @@ a:hover, .pseudoLink:hover {
     font-weight: 400;
     line-height: 1.25;
     font-size: 1.25rem;
-    margin-bottom: 5px;
+    margin-bottom: 1ex;
     word-break: break-word;
   }
   .authorProfile .bio {
@@ -1054,79 +1038,46 @@ a:hover, .pseudoLink:hover {
     font-size: 1.5rem;
     text-align: left;
   }
+  .authorProfile .content {
+    grid-area: text;
+    width: 100%;
+    display: flex;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: stretch;
+    overflow-y: scroll;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+    padding: 10px 30px 10px 20px;
+  }
+  .authorProfile .content::-webkit-scrollbar {
+    display: none;
+  }
+  .authorProfile img {
+    grid-area: image;
+    width: 100%;
+    aspect-ratio: 1;
+    object-fit: cover;
+    object-position: center;
+    overflow: hidden;
+    user-select: none;
+  }
 
   .radio {
     z-index: 1;
     box-sizing: border-box;
     width: 86.67%;
     margin-bottom: 20px;
-    overflow: visible;
     background-color: #181b20;
     color: #84cc99;
-  }
-  .radio::after {
-    content: "";
-    display: table;
-    clear: both;
-  }
-  .radio .mobile {
-    display: block;
-    width: 100%;
-    box-sizing: border-box;
-    clear: none;
-    padding-left: 20px;
-    padding-right: 20px;
-  }
-  .radio .content {
-    display: none;
-  }
-  .radio.paused img {
-    filter: blur(2px) grayscale(50%);
-  }
-  .radio img:hover ~ .play {
-    color: #ff78b0;
-  }
-  .radio img {
-    display: inline-block;
-    float: left;
-    width: 160px;
-    height: 160px;
-    margin-right: 20px;
-    object-fit: cover;
-    object-position: center;
     overflow: hidden;
-    user-select: none;
-    cursor: pointer;
-    position: relative;
-  }
-  .radio img .play {
-    aspect-ratio: 1;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    grid-area: image;
-    font-size: 3.554rem;
-    background-color: #181b20;
-    box-sizing: border-box;
-    width: 3ex;
-    height: 3ex;
-    border-radius: 25%;
-    color: #84cc99;
-    text-shadow: 1px 1px #b2ffce;
-    z-index: 3;
-    cursor: pointer;
-    text-align: center;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin: auto;
-  }
-  .radio img .play:hover {
-    color: #ff78b0;
-  }
-  .radio .play {
-    display: none;
+    display: grid;
+    overflow: visible;
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto;
+    grid-template-areas: "image" "text";
   }
   .radio .titleLine {
     z-index: 2;
@@ -1136,31 +1087,27 @@ a:hover, .pseudoLink:hover {
     letter-spacing: 1px;
     text-shadow: 1px 1px #b2ffce;
     text-transform: uppercase;
-    margin-bottom: 10px;
+    margin-bottom: 1ex;
     font-size: 2rem;
     word-break: break-word;
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     justify-content: flex-start;
-    align-items: baseline;
+    align-items: center;
     flex-wrap: nowrap;
-    margin-bottom: 10px;
   }
   .radio .titleLine .title {
     letter-spacing: 1px;
     text-shadow: 1px 1px #b2ffce;
     text-transform: uppercase;
   }
-  .radio .titleLine .artist::before {
+  .radio .titleLine .title::after {
     content: "by";
     margin-left: 1ex;
-    margin-right: 1ex;
     text-transform: lowercase;
   }
-  .radio .titleLine .delete {
-    margin-left: auto;
-  }
   .radio .byline {
+    word-break: break-word;
     z-index: 2;
     font-family: laChata;
     font-weight: 400;
@@ -1182,6 +1129,61 @@ a:hover, .pseudoLink:hover {
     line-height: 1.25;
     font-size: 1.5rem;
     text-align: left;
+  }
+  .radio .content {
+    grid-area: text;
+    width: 100%;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: stretch;
+    overflow-y: scroll;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+    padding: 10px 30px 10px 20px;
+  }
+  .radio .content::-webkit-scrollbar {
+    display: none;
+  }
+  .radio img {
+    grid-area: image;
+    width: 100%;
+    aspect-ratio: 1;
+    object-fit: cover;
+    object-position: center;
+    overflow: hidden;
+    user-select: none;
+    cursor: pointer;
+  }
+  .radio.paused img {
+    filter: blur(2px) grayscale(50%);
+  }
+  .radio img:hover ~ .play {
+    color: #ff78b0;
+  }
+  .radio .play {
+    grid-area: image;
+    aspect-ratio: 1;
+    grid-area: image;
+    font-size: 3.554rem;
+    background-color: #181b20;
+    box-sizing: border-box;
+    width: 3ex;
+    height: 3ex;
+    border-radius: 25%;
+    color: #84cc99;
+    text-shadow: 1px 1px #b2ffce;
+    z-index: 3;
+    cursor: pointer;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: auto;
+  }
+  .radio .play:hover {
+    color: #ff78b0;
   }
 
   #footer {
@@ -1444,12 +1446,6 @@ a:hover, .pseudoLink:hover {
     color: #ff78b0;
     background-color: #495350;
   }
-  #nav .links a:last-child, #nav .links .pseudoLink:last-child {
-    padding-right: 0;
-  }
-  #nav .links a:first-child, #nav .links .pseudoLink:first-child {
-    padding-left: 0;
-  }
 
   #content {
     overscroll-behavior: none;
@@ -1674,7 +1670,6 @@ a:hover, .pseudoLink:hover {
     font-size: 1.5rem;
     text-align: left;
     margin-bottom: 5px;
-    text-indent: 2ex;
   }
   .textBlock p:last-child {
     margin-bottom: 0;
@@ -2432,6 +2427,49 @@ a:hover, .pseudoLink:hover {
   }
   #footer .socials a:hover, #footer .socials .pseudoLink:hover {
     color: #ff78b0;
+  }
+}
+#loading {
+  width: 100vw;
+  height: 100vh;
+  z-index: 5;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background-color: #181b20;
+}
+#loading .spinner {
+  z-index: 6;
+  position: absolute;
+  left: calc(50% - 60px);
+  top: calc(50% - 60px);
+  width: 120px;
+  height: 120px;
+  box-sizing: border-box;
+  border: 16px solid #84cc99;
+  border-radius: 50%;
+  border-top: 16px solid #ff78b0;
+  -webkit-animation: spin 2s linear infinite;
+  animation: spin 2s linear infinite;
+}
+#loading.hidden {
+  display: none;
+}
+
+@-webkit-keyframes spin {
+  0% {
+    -webkit-transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+  }
+}
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
   }
 }
 
