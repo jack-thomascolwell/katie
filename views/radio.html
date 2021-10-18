@@ -1,14 +1,16 @@
 <div id="radio" class="radio paused">
-  <img src="/radioArchive/art/{{songData._id}}" />
+  <img src="/radioArchive/art/{{songData._id}}">
+  <i class="mobile play fas fa-volume-mute"></i>
+  </img>
   <i class="play fas fa-volume-mute"></i>
   <div class="content">
     <p class="titleLine"><span class="title">{{songData.title}}</span><span class="artist">{{songData.artist}}</span></p>
     <p class="byline"><span class="author">{{songData.author}}</span><span class="date">{{date songData.published}}</span></p>
     <p class="blurb">{{songData.blurb}}</p>
   </div>
-  <!--<p class="titleLine mobile"><span class="title">{{songData.title}}</span><span class="artist">{{songData.artist}}</span></p>
+  <p class="titleLine mobile"><span class="title">{{songData.title}}</span><span class="artist">{{songData.artist}}</span></p>
   <p class="byline mobile"><span class="author">{{songData.author}}</span><span class="date">{{date songData.published}}</span></p>
-  <p class="blurb mobile">{{songData.blurb}}</p>-->
+  <p class="blurb mobile">{{songData.blurb}}</p>
   <audio class="radioAudio" src="stream" muted autoplay></audio>
 </div>
 <div class="textBlock noBackground">
