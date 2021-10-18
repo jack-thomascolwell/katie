@@ -1,5 +1,5 @@
 <div id="radio" class="radio paused">
-  <img src="/radioArchive/art/{{songData._id}}"/>
+  <img src="/radioArchive/art/{{songData._id}}" />
   <i class="play fas fa-volume-mute"></i>
   <div class="content">
     <p class="titleLine"><span class="title">{{songData.title}}</span><span class="artist">{{songData.artist}}</span></p>
@@ -11,17 +11,41 @@
 <div class="textBlock">
   Welcome&nbsp;to&nbsp;the&nbsp;underground&nbsp;!! For&nbsp;archived&nbsp;songs,&nbsp;please&nbsp;click&nbsp;<a href="/radioArchive">here</a>.
 </div>
-<script src="https://cdn.socket.io/socket.io-3.0.5.min.js" type="text/javascript"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js" integrity="sha512-qTXRIMyZIFb8iQcfjXWCO8+M5Tbc38Qi5WzdPOYZHIlZpzBHG3L3by84BBBOiRGiEb7KKtAOAs5qYdUiZiQNNQ==" crossorigin="anonymous" referrerpolicy="no-referrer">
 </script>
 <script type="text/javascript">
-  let radio = document.getElementById('radio');
-  let img = radio.getElementsByTagName('img')[0];
-  let audio = radio.getElementsByTagName('audio')[0];
-  let plays = Array.from(radio.getElementsByClassName('play'));
-  let startTime = new Date();
+  const radio = document.getElementById('radio');
+  const img = radio.getElementsByTagName('img')[0];
+  const audio = radio.getElementsByTagName('audio')[0];
+  const plays = radio.getElementsByClassName('play')[0];
+  const title = radio.getElementsByClassName('title')[0];
+  const artist = radio.getElementsByClassName('artist')[0];
+  const author = radio.getElementsByClassName('author')[0];
+  const date = radio.getElementsByClassName('date')[0];
+  const blurb = radio.getElementsByClassName('blurb')[0];
+  let nextAudio 
 
-  audio.volume = 0.5;
+  const queue = '{{streamQueue}}';
+
+  let nextAudio =
+
+  function loadNextSong() {
+    const nextSong = queue.pop();
+    if (queue.length == 0) {
+      //FIXME refresh queue
+    }
+    const request = new XMLHttpRequest();
+    request.open('GET', `/radioArchive/stream/${}`, true);
+    request.responseType = "blob";
+    request.onload = function() {
+      if (this.status == 200) {
+        var audio = new Audio(URL.createObjectURL(this.response));
+        audio.load();
+        audio.play();
+      }
+    }
+    request.send();
+  }
 
   function muteUnmute() {
     if (audio.paused) {
@@ -49,15 +73,7 @@
     elem.addEventListener('click', muteUnmute);
   });
 
-  const socket = io({
-    path: '/streamMeta'
-  });
 
-  const title = radio.getElementsByClassName('title')[0];
-  const artist = radio.getElementsByClassName('artist')[0];
-  const author = radio.getElementsByClassName('author')[0];
-  const date = radio.getElementsByClassName('date')[0];
-  const blurb = radio.getElementsByClassName('blurb')[0]
 
   socket.on('newSong', function(songData) {
     title.innerText = songData.title;

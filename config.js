@@ -1,7 +1,7 @@
 module.exports = {
   server: {
     port: parseInt(process.env.PORT) || 4000,
-    //host: 'localhost'
+    baseUrl: 'localhost:4000'
   },
   mongodb: {
     url: `mongodb+srv://catscratchmagazine:${process.env.DBPASS || "<password>"}@catscratch.ejqy0.mongodb.net/catscratch?retryWrites=true&w=majority`
