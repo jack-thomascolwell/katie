@@ -1,12 +1,12 @@
 <div id="radio" class="radio paused">
-  <img src="/radioArchive/art/{{songData._id}}" />
+  <img src="/radioArchive/art/{{startSong._id}}" />
   <i class="play fas fa-volume-mute"></i>
   <div class="content">
-    <p class="titleLine"><span class="title">{{songData.title}}</span><span class="artist">{{songData.artist}}</span></p>
-    <p class="byline"><span class="author">{{songData.author}}</span><span class="date">{{date songData.published}}</span></p>
-    <p class="blurb">{{songData.blurb}}</p>
+    <p class="titleLine"><span class="title">{{startSong.title}}</span><span class="artist">{{startSong.artist}}</span></p>
+    <p class="byline"><span class="author">{{startSong.author}}</span><span class="date">{{date startSong.published}}</span></p>
+    <p class="blurb">{{startSong.blurb}}</p>
   </div>
-  <audio class="radioAudio" src="stream" muted autoplay></audio>
+  <audio src="/radioArchive/stream/{{startSong._id}}" preload autoplay></audio>
 </div>
 <div class="textBlock">
   Welcome&nbsp;to&nbsp;the&nbsp;underground&nbsp;!! For&nbsp;archived&nbsp;songs,&nbsp;please&nbsp;click&nbsp;<a href="/radioArchive">here</a>.
@@ -16,72 +16,103 @@
 <script type="text/javascript">
   const radio = document.getElementById('radio');
   const img = radio.getElementsByTagName('img')[0];
-  const audio = radio.getElementsByTagName('audio')[0];
-  const plays = radio.getElementsByClassName('play')[0];
+  const play = radio.getElementsByClassName('play')[0];
   const title = radio.getElementsByClassName('title')[0];
   const artist = radio.getElementsByClassName('artist')[0];
   const author = radio.getElementsByClassName('author')[0];
   const date = radio.getElementsByClassName('date')[0];
   const blurb = radio.getElementsByClassName('blurb')[0];
-  let nextAudio 
+  const startAudio = radio.getElementsByTagName('audio')[0];
 
-  const queue = '{{streamQueue}}';
+  const context = new AudioContext()
+  const gainNode = context.createGain();
+  gainNode.gain.value = 0;
+  gainNode.connect(context.destination);
+  const firstAudioSource = context.createMediaElementSource(startAudio);
+  firstAudioSource.connect(gainNode);
+  startAudio.addEventListener('ended', () => {
+    console.log('ended!')
+    buffer = nextBuffer;
+    song = nextSong;
+    playAudio();
+  });
+  let buffer = null;
+  let nextBuffer = null;
 
-  let nextAudio =
+  const queue = JSON.parse(`{{{streamQueue}}}`);
 
-  function loadNextSong() {
-    const nextSong = queue.pop();
-    if (queue.length == 0) {
-      //FIXME refresh queue
-    }
+  function loadBuffer(url, cb) {
     const request = new XMLHttpRequest();
-    request.open('GET', `/radioArchive/stream/${}`, true);
-    request.responseType = "blob";
-    request.onload = function() {
-      if (this.status == 200) {
-        var audio = new Audio(URL.createObjectURL(this.response));
-        audio.load();
-        audio.play();
-      }
-    }
+    request.open("GET", url, true);
+    request.responseType = "arraybuffer";
+
+    request.onload = () => {
+      context.decodeAudioData(request.response, cb);
+    };
+
     request.send();
   }
 
+  function loadNextSong() {
+    nextSong = queue.pop();
+    if (queue.length == 0) {
+      //FIXME refresh queue
+    }
+
+    loadBuffer(`/radioArchive/stream/${nextSong._id}`, newBuffer => {
+      nextBuffer = newBuffer;
+    });
+  }
+  loadNextSong();
+
+  // LOAD FIRST SONG
+  /*song = queue.pop();
+  loadBuffer(`/radioArchive/stream/${song._id}`, newBuffer => {
+    buffer = newBuffer;
+    playAudio();
+  });*/
+
+  function playAudio() {
+    loadNextSong();
+    const bufferSource = context.createBufferSource();
+    bufferSource.buffer = buffer;
+
+    bufferSource.addEventListener('ended', () => {
+      buffer = nextBuffer;
+      song = nextSong;
+      playAudio();
+    });
+
+    console.log(bufferSource);
+    bufferSource.connect(gainNode);
+    bufferSource.start();
+
+    title.innerText = song.title;
+    artist.innerText = song.artist;
+    author.innerText = song.author;
+    const dateObj = new Date(song.published);
+    date.innerText = moment(dateObj).format("MMM D, YYYY");
+    blurb.innerText = song.blurb;
+    img.setAttribute('src', `/radioArchive/art/${song._id}`);
+  }
+
   function muteUnmute() {
-    if (audio.paused) {
-      audio.play();
-      audio.currentTime = ((new Date()) - startTime) / 1000;
+    if (context.state != 'running') {
+      startAudio.play();
+      context.resume();
     }
     if (radio.classList.contains('paused')) { //was muted
-      audio.muted = false;
+      gainNode.gain.value = 0.5;
       img.parentElement.classList.remove('paused');
-      plays.forEach(elem => {
-        elem.classList.remove('fa-volume-mute');
-        elem.classList.add('fa-volume-up');
-      });
+      play.classList.remove('fa-volume-mute');
+      play.classList.add('fa-volume-up');
     } else { //was playing
-      audio.muted = true;
+      gainNode.gain.value = 0;
       img.parentElement.classList.add('paused');
-      plays.forEach(elem => {
-        elem.classList.add('fa-volume-mute');
-        elem.classList.remove('fa-volume-up');
-      });
+      play.classList.add('fa-volume-mute');
+      play.classList.remove('fa-volume-up');
     }
   }
   img.addEventListener('click', muteUnmute);
-  plays.forEach(elem => {
-    elem.addEventListener('click', muteUnmute);
-  });
-
-
-
-  socket.on('newSong', function(songData) {
-    title.innerText = songData.title;
-    artist.innerText = songData.artist;
-    author.innerText = songData.author;
-    const date = new Date(songData.published);
-    date.innerText = moment(date).format("MMM D, YYYY");
-    blurb.innerText = songData.blurb;
-    img.setAttribute('src', `/radioArchive/art/${songData._id}`);
-  });
+  play.addEventListener('click', muteUnmute);
 </script>

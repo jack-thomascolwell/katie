@@ -12,19 +12,8 @@ author: String,
 published: Date,
 song: ObjectID,
 art: ObjectID,
-spotify: String,
 }
 */
-
-function generateRandomString(length) {
-  let text = '';
-  const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-
-  for (let i = 0; i < length; i++) {
-    text += possible.charAt(Math.floor(Math.random() * possible.length));
-  }
-  return text;
-}
 
 async function getQueue(request) {
   const radio = await request.mongo.db.collection('radio').find({}, {
@@ -378,8 +367,10 @@ module.exports = [{
     path: '/radio',
     handler: async (request, h) => {
       const queue = await getQueue(request);
+      const startSong = queue.pop();
       return h.view('radio', {
-        streamQueue: queue
+        startSong: startSong,
+        streamQueue: JSON.stringify(queue)
       });
     },
     options: {
