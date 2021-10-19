@@ -1911,18 +1911,18 @@ a {
         flex-direction: row;
         justify-content: flex-start;
         align-items: baseline;
-        flex-wrap: nowrap;
+        flex-wrap: wrap;
 
         .title {
           letter-spacing: 1px;
           text-shadow: 1px 1px $lightGreen;
           text-transform: uppercase;
+          margin-right: 1ex;
         }
 
         .artist {
           &::before {
             content: "by";
-            margin-left: 1ex;
             margin-right: 1ex;
             text-transform: lowercase;
           }

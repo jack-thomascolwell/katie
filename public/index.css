@@ -1827,17 +1827,17 @@ a:hover, .pseudoLink:hover {
     flex-direction: row;
     justify-content: flex-start;
     align-items: baseline;
-    flex-wrap: nowrap;
+    flex-wrap: wrap;
     margin-bottom: 10px;
   }
   .radio .content .titleLine .title {
     letter-spacing: 1px;
     text-shadow: 1px 1px #b2ffce;
     text-transform: uppercase;
+    margin-right: 1ex;
   }
   .radio .content .titleLine .artist::before {
     content: "by";
-    margin-left: 1ex;
     margin-right: 1ex;
     text-transform: lowercase;
   }

@@ -57,11 +57,12 @@
   function loadNextSong() {
     nextSong = queue.pop();
     if (queue.length == 0) {
+      const request = new XMLHttpRequest();
       request.open("GET", '/streamQueue', true);
-      request.responseType = "document/json";
+      request.responseType = "json";
 
       request.onload = () => {
-        queue = queue.concat(JSON.parse(request.response));
+        queue = queue.concat(request.response);
       };
 
       request.send();
