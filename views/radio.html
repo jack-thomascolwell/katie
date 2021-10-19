@@ -2,15 +2,16 @@
   <img src="/radioArchive/art/{{startSong._id}}" />
   <i class="play fas fa-volume-mute"></i>
   <div class="content">
-    <p class="titleLine"><span class="title">{{startSong.title}}</span><span class="artist">{{startSong.artist}}</span></p>
-    <p class="byline"><span class="author">{{startSong.author}}</span><span class="date">{{date startSong.published}}</span></p>
-    <p class="blurb">{{startSong.blurb}}</p>
+    <p class="titleLine"><span class="title">{{startSong.title}}</span><span class="artist">{{{markdownInline startSong.artist}}}</span></p>
+    <p class="byline"><span class="author">{{ startSong.author}}</span><span class="date">{{date startSong.published}}</span></p>
+    <p class="blurb">{{{markdownInline startSong.blurb}}}</p>
   </div>
-  <audio src="/radioArchive/stream/{{startSong._id}}" preload autoplay></audio>
+  <audio src="/radioArchive/stream/{{startSong._id}}" preload="auto" autoplay></audio>
 </div>
 <div class="textBlock">
   Welcome&nbsp;to&nbsp;the&nbsp;underground&nbsp;!! For&nbsp;archived&nbsp;songs,&nbsp;please&nbsp;click&nbsp;<a href="/radioArchive">here</a>.
 </div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/markdown-it/11.0.0/markdown-it.min.js" integrity="sha256-3mv+NUxFuBg26MtcnuN2X37WUxuGunWCCiG2YCSBjNc=" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js" integrity="sha512-qTXRIMyZIFb8iQcfjXWCO8+M5Tbc38Qi5WzdPOYZHIlZpzBHG3L3by84BBBOiRGiEb7KKtAOAs5qYdUiZiQNNQ==" crossorigin="anonymous" referrerpolicy="no-referrer">
 </script>
 <script type="text/javascript">
@@ -93,13 +94,14 @@
     console.log(bufferSource);
     bufferSource.connect(gainNode);
     bufferSource.start();
+    const md = new markdownit();
 
     title.innerText = song.title;
-    artist.innerText = song.artist;
     author.innerText = song.author;
+    artist.innerHTML = md.renderInline(song.artist);
     const dateObj = new Date(song.published);
     date.innerText = moment(dateObj).format("MMM D, YYYY");
-    blurb.innerText = song.blurb;
+    blurb.innerHTML = md.renderInline(song.blurb);
     img.setAttribute('src', `/radioArchive/art/${song._id}`);
   }
 

@@ -4,7 +4,7 @@
     <div class="content">
       <p class="title">{{{markdownInline featuredArticle.title}}}</p>
       <p class="byline"><span class="author">{{featuredArticle.author.name}}</span><span class="date">{{date featuredArticle.published}}</span></p>
-      <p class="abstract">{{featuredArticle.abstract}}</p>
+      <p class="abstract">{{markdownInline featuredArticle.abstract}}</p>
     </div>
   </a>
 {{/if}}

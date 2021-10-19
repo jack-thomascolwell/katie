@@ -236,6 +236,7 @@ a {
   }
 
   #nav {
+    @include hideScrollbar;
     user-select: none;
     display: grid;
     grid-template-columns: 6.665vw auto 1fr auto 6.665vw;

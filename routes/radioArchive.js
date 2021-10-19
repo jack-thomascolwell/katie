@@ -70,19 +70,17 @@ module.exports = [{
         _id: -1
       }).skip(page * perPage).limit(perPage).toArray();
 
-      radioArchive.forEach(async radio => {
-        let author = await request.mongo.db.collection('authors').findOne({
-          _id: radio.author
+      for (let i = 0; i<radioArchive.length; i++) {
+        const author = await request.mongo.db.collection('authors').findOne({
+          _id: radioArchive[i].author
         }, {
           projection: {
             name: 1,
-            bio: 1,
-            email: 1,
             _id: 1
           }
         });
-        radio.author = author.name;
-      });
+        radioArchive[i].author = author.name;
+      }
 
       const pages = await request.mongo.db.collection('radio').count({});
 
