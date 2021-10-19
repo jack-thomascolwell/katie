@@ -144,7 +144,6 @@ module.exports = [{
       }
 
       const status = await request.mongo.db.collection('users').insertOne(newUser);
-      console.log(status);
       if (status.acknowledged) return h.redirect('/');
       return status;
     },

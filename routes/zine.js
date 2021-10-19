@@ -30,7 +30,6 @@ module.exports = [{
     }).skip(page * perPage).limit(perPage).toArray();
 
     const pages = await request.mongo.db.collection('zine').count({});
-    console.log([pages, perPage])
     return h.view('zines', {
       zines: zines,
       admin: (request.auth.isAuthenticated && (request.auth.credentials.admin === true)),

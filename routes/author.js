@@ -83,7 +83,6 @@ module.exports = [{
       article.author = author;
       return article;
     });
-    console.log(articles);
 
     const pages = await request.mongo.db.collection('articles').count({
       author: author._id,
@@ -226,7 +225,6 @@ module.exports = [{
         _id: 1
       }
     });
-    console.log(['author',id,author])
     if (!author) return false;
 
     // check for associated records

@@ -27,6 +27,19 @@ async function getQueue(request) {
       spotify: 1,
     }
   }).toArray();
+
+  for (let i = 0; i<radio.length; i++) {
+    const author = await request.mongo.db.collection('authors').findOne({
+      _id: radio[i].author
+    }, {
+      projection: {
+        name: 1,
+        _id: 1
+      }
+    });
+    radio[i].author = author.name;
+  }
+
   for (let i = radio.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
     const temp = radio[i];
@@ -68,7 +81,6 @@ module.exports = [{
             _id: 1
           }
         });
-        console.log([radio.author, author]);
         radio.author = author.name;
       });
 
@@ -329,7 +341,6 @@ module.exports = [{
     method: 'DELETE',
     path: '/radioArchive/{id}',
     handler: async (request, h) => {
-      console.log('deleting')
       // auth
       if (!request.auth.isAuthenticated || (request.auth.credentials.admin !== true))
         return h.redirect('/');
@@ -352,7 +363,6 @@ module.exports = [{
       const status = await request.mongo.db.collection('radio').deleteOne({
         _id: new request.mongo.ObjectID(id)
       });
-      console.log(status);
       return status.acknowledged;
     },
     options: {

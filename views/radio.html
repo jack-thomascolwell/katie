@@ -39,7 +39,7 @@
   let buffer = null;
   let nextBuffer = null;
 
-  const queue = JSON.parse(`{{{streamQueue}}}`);
+  let queue = JSON.parse(`{{{streamQueue}}}`);
 
   function loadBuffer(url, cb) {
     const request = new XMLHttpRequest();
@@ -56,7 +56,14 @@
   function loadNextSong() {
     nextSong = queue.pop();
     if (queue.length == 0) {
-      //FIXME refresh queue
+      request.open("GET", '/streamQueue', true);
+      request.responseType = "document/json";
+
+      request.onload = () => {
+        queue = queue.concat(JSON.parse(request.response));
+      };
+
+      request.send();
     }
 
     loadBuffer(`/radioArchive/stream/${nextSong._id}`, newBuffer => {

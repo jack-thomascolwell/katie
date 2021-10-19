@@ -12,15 +12,17 @@
     }
   });
 
-  const landing = document.getElementById('landing');
-  const scrollCB = () => {
-    const {
-      bottom
-    } = landing.getBoundingClientRect();
-    console.log(bottom);
-    if (bottom >= 0) nav.classList.add('hidden'); //landing visible
-    else nav.classList.remove('hidden'); //landing hidden
-  };
-  scrollCB();
-  document.getElementById('content').addEventListener('scroll', scrollCB);
+  if (document.body.classList.contains('landing')) {
+    const landing = document.getElementById('landing');
+    const scrollCB = () => {
+      const {
+        bottom
+      } = landing.getBoundingClientRect();
+      console.log(bottom);
+      if (bottom >= 0) nav.classList.add('hidden'); //landing visible
+      else nav.classList.remove('hidden'); //landing hidden
+    };
+    scrollCB();
+    document.getElementById('content').addEventListener('scroll', scrollCB);
+  }
 })()

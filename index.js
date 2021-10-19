@@ -121,10 +121,8 @@ const start = async function() {
             _id: 1
           }
         });
-        console.log([author, articles[i].author]);
         articles[i].author = author;
       }
-      console.log(articles)
 
       const featuredArticle = articles[0];
       return h.view('index', {

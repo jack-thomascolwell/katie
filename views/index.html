@@ -16,23 +16,3 @@
 {{#each articles}}
   {{> articleCover data=this admin=../admin }}
 {{/each}}
-
-<script type="text/javascript">
-const submit = document.getElementById('submit');
-const landing = document.getElementById('landing');
-let prevScale = 1;
-const resizeCB = () => {
-  const windowWidth = landing.getBoundingClientRect().width;
-  const submitWidth = submit.getBoundingClientRect().width;
-  if (submitWidth / prevScale > 0.75 * windowWidth) {
-    const newScale = 0.75 * prevScale * windowWidth / submitWidth;
-    prevScale = newScale;
-    submit.style.setProperty('transform', `scaleX(${newScale})`)
-  } else {
-    prevScale = 1;
-    submit.style.setProperty('transform', '');
-  }
-};
-window.addEventListener('resize', resizeCB);
-resizeCB();
-</script>

@@ -309,7 +309,7 @@ a:hover, .pseudoLink:hover {
     width: 100%;
     margin-top: 0;
     background-color: #181b20;
-    color: #d6c5cc;
+    color: #d6c5cc !important;
     text-align: center;
     box-sizing: border-box;
   }
@@ -332,7 +332,7 @@ a:hover, .pseudoLink:hover {
     text-shadow: 1px 1px #b2ffce;
     text-transform: uppercase;
     margin-bottom: 10px;
-    word-break: break-all;
+    overflow-wrap: break-word;
   }
   .articleFeature .content .byline {
     justify-content: center;
@@ -369,7 +369,7 @@ a:hover, .pseudoLink:hover {
     width: 86.67%;
     margin-bottom: 20px;
     background-color: #181b20;
-    color: #84cc99;
+    color: #84cc99 !important;
     overflow: hidden;
     display: grid;
     overflow: visible;
@@ -386,8 +386,7 @@ a:hover, .pseudoLink:hover {
     text-transform: uppercase;
     margin-bottom: 10px;
     font-size: 2rem;
-    word-break: break-all;
-    word-break: break-word;
+    overflow-wrap: break-word;
     text-align: center;
   }
   .articleCover .title .delete {
@@ -403,8 +402,7 @@ a:hover, .pseudoLink:hover {
     text-transform: capitalize;
     margin-bottom: 1ex;
     font-size: 1.25rem;
-    word-break: break-all;
-    word-break: break-word;
+    overflow-wrap: break-word;
     flex-direction: column;
     align-items: center;
   }
@@ -427,7 +425,7 @@ a:hover, .pseudoLink:hover {
     overflow-y: scroll;
     -ms-overflow-style: none;
     scrollbar-width: none;
-    padding: 10px 30px 10px 20px;
+    padding: 10px;
   }
   .articleCover .content::-webkit-scrollbar {
     display: none;
@@ -447,7 +445,7 @@ a:hover, .pseudoLink:hover {
     margin-bottom: 20px;
     box-sizing: border-box;
     width: 86.67%;
-    padding: 10px 20px;
+    padding: 10px 10px;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
@@ -493,7 +491,7 @@ a:hover, .pseudoLink:hover {
     margin-bottom: 20px;
     box-sizing: border-box;
     width: 86.67%;
-    padding: 10px 20px;
+    padding: 10px 10px;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
@@ -587,7 +585,7 @@ a:hover, .pseudoLink:hover {
   .article {
     background-color: #f7f7fc;
     color: #181b20;
-    padding: 10px 40px 20px;
+    padding: 10px;
   }
   .article img {
     width: 100%;
@@ -1019,7 +1017,7 @@ a:hover, .pseudoLink:hover {
     text-transform: uppercase;
     margin-bottom: 10px;
     font-size: 2rem;
-    word-break: break-word;
+    overflow-wrap: break-word;
   }
   .authorProfile .email {
     z-index: 2;
@@ -1028,7 +1026,7 @@ a:hover, .pseudoLink:hover {
     line-height: 1.25;
     font-size: 1.25rem;
     margin-bottom: 1ex;
-    word-break: break-word;
+    overflow-wrap: break-word;
   }
   .authorProfile .bio {
     z-index: 2;
@@ -1050,7 +1048,7 @@ a:hover, .pseudoLink:hover {
     overflow-y: scroll;
     -ms-overflow-style: none;
     scrollbar-width: none;
-    padding: 10px 30px 10px 20px;
+    padding: 10px;
   }
   .authorProfile .content::-webkit-scrollbar {
     display: none;
@@ -1089,7 +1087,7 @@ a:hover, .pseudoLink:hover {
     text-transform: uppercase;
     margin-bottom: 1ex;
     font-size: 2rem;
-    word-break: break-word;
+    overflow-wrap: break-word;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
@@ -1107,13 +1105,12 @@ a:hover, .pseudoLink:hover {
     text-transform: lowercase;
   }
   .radio .byline {
-    word-break: break-word;
+    overflow-wrap: break-word;
     z-index: 2;
     font-family: laChata;
     font-weight: 400;
     line-height: 1.25;
     font-size: 1.25rem;
-    word-break: break-word;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
@@ -1141,7 +1138,7 @@ a:hover, .pseudoLink:hover {
     overflow-y: scroll;
     -ms-overflow-style: none;
     scrollbar-width: none;
-    padding: 10px 30px 10px 20px;
+    padding: 10px;
   }
   .radio .content::-webkit-scrollbar {
     display: none;
@@ -1494,7 +1491,7 @@ a:hover, .pseudoLink:hover {
     width: 100%;
     margin-top: 0;
     background-color: #181b20;
-    color: #d6c5cc;
+    color: #d6c5cc !important;
     text-align: center;
     box-sizing: border-box;
   }
@@ -1517,7 +1514,7 @@ a:hover, .pseudoLink:hover {
     text-shadow: 1px 1px #b2ffce;
     text-transform: uppercase;
     margin-bottom: 10px;
-    word-break: break-all;
+    overflow-wrap: break-word;
   }
   .articleFeature .content .byline {
     justify-content: center;
@@ -1557,7 +1554,7 @@ a:hover, .pseudoLink:hover {
     width: 86.67%;
     margin-bottom: 20px;
     background-color: #181b20;
-    color: #84cc99;
+    color: #84cc99 !important;
     overflow: hidden;
     display: grid;
     height: 160px;
@@ -1641,7 +1638,7 @@ a:hover, .pseudoLink:hover {
     background-color: #181b20;
     color: #84cc99;
     z-index: 2;
-    word-break: break-word;
+    overflow-wrap: break-word;
   }
   .textBlock.noBackground {
     background: none;
@@ -1687,7 +1684,7 @@ a:hover, .pseudoLink:hover {
     background-color: #181b20;
     color: #84cc99;
     z-index: 2;
-    word-break: break-word;
+    overflow-wrap: break-word;
   }
   .titleBlock.noBackground {
     background: none;
@@ -2437,6 +2434,7 @@ a:hover, .pseudoLink:hover {
   top: 0;
   left: 0;
   background-color: #181b20;
+  display: none;
 }
 #loading .spinner {
   z-index: 6;

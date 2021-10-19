@@ -372,7 +372,7 @@ a {
     width: 100%;
     margin-top: 0;
     background-color: $black;
-    color: $white;
+    color: $white !important;
     text-align: center;
     box-sizing: border-box;
 
@@ -393,7 +393,7 @@ a {
         text-shadow: 1px 1px $lightGreen;
         text-transform: uppercase;
         margin-bottom: 10px;
-        word-break: break-all;
+        overflow-wrap: break-word;
       }
 
       .byline {
@@ -431,7 +431,7 @@ a {
     width: 86.67%;
     margin-bottom: 20px;
     background-color: $black;
-    color: $green;
+    color: $green !important;
     overflow: hidden;
     display: grid;
     overflow: visible;
@@ -446,8 +446,7 @@ a {
       text-transform: uppercase;
       margin-bottom: 10px;
       @include textBig;
-      word-break: break-all;
-      word-break: break-word;
+      overflow-wrap: break-word;
       text-align: center;
 
       .delete {
@@ -463,8 +462,7 @@ a {
       text-transform: capitalize;
       margin-bottom: 1ex;
       @include textSmall;
-      word-break: break-all;
-      word-break: break-word;
+      overflow-wrap: break-word;
       flex-direction: column;
       align-items: center;
     }
@@ -486,7 +484,7 @@ a {
       align-items: stretch;
       overflow-y: scroll;
       @include hideScrollbar;
-      padding: 10px 30px 10px 20px;
+      padding: 10px;
     }
 
     img {
@@ -505,7 +503,7 @@ a {
     margin-bottom: 20px;
     box-sizing: border-box;
     width: 86.67%;
-    padding: 10px 20px;
+    padding: 10px 10px;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
@@ -553,7 +551,7 @@ a {
     margin-bottom: 20px;
     box-sizing: border-box;
     width: 86.67%;
-    padding: 10px 20px;
+    padding: 10px 10px;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
@@ -647,7 +645,7 @@ a {
   .article {
     background-color: $altWhite;
     color: $black;
-    padding: 10px 40px 20px;
+    padding: 10px;
 
     img {
       width: 100%;
@@ -1111,7 +1109,7 @@ a {
       text-transform: uppercase;
       margin-bottom: 10px;
       @include textBig;
-      word-break: break-word;
+      overflow-wrap: break-word;
     }
 
     .email {
@@ -1119,7 +1117,7 @@ a {
       @include textBody;
       @include textSmall;
       margin-bottom: 1ex;
-      word-break: break-word;
+      overflow-wrap: break-word;
     }
 
     .bio {
@@ -1140,7 +1138,7 @@ a {
       align-items: stretch;
       overflow-y: scroll;
       @include hideScrollbar;
-      padding: 10px 30px 10px 20px;
+      padding: 10px;
     }
 
     img {
@@ -1176,7 +1174,7 @@ a {
       text-transform: uppercase;
       margin-bottom: 1ex;
       @include textBig;
-      word-break: break-word;
+      overflow-wrap: break-word;
 
       display: flex;
       flex-direction: column;
@@ -1197,11 +1195,10 @@ a {
     }
 
     .byline {
-      word-break: break-word;
+      overflow-wrap: break-word;
       z-index: 2;
       @include textBody;
       @include textSmall;
-      word-break: break-word;
       display: flex;
       flex-direction: column;
       justify-content: flex-start;
@@ -1228,7 +1225,7 @@ a {
       align-items: stretch;
       overflow-y: scroll;
       @include hideScrollbar;
-      padding: 10px 30px 10px 20px;
+      padding: 10px;
     }
 
     img {
@@ -1586,7 +1583,7 @@ a {
     width: 100%;
     margin-top: 0;
     background-color: $black;
-    color: $white;
+    color: $white !important;
     text-align: center;
     box-sizing: border-box;
 
@@ -1607,7 +1604,7 @@ a {
         text-shadow: 1px 1px $lightGreen;
         text-transform: uppercase;
         margin-bottom: 10px;
-        word-break: break-all;
+        overflow-wrap: break-word;
       }
 
       .byline {
@@ -1649,7 +1646,7 @@ a {
     width: 86.67%;
     margin-bottom: 20px;
     background-color: $black;
-    color: $green;
+    color: $green !important;
     overflow: hidden;
     display: grid;
     height: 160px;
@@ -1730,7 +1727,7 @@ a {
     background-color: $black;
     color: $green;
     z-index: 2;
-    word-break: break-word;
+    overflow-wrap: break-word;
 
     &.noBackground {
       background: none;
@@ -1778,7 +1775,7 @@ a {
     background-color: $black;
     color: $green;
     z-index: 2;
-    word-break: break-word;
+    overflow-wrap: break-word;
 
     &.noBackground {
       background: none;
@@ -2570,6 +2567,9 @@ a {
   top: 0;
   left: 0;
   background-color: $black;
+
+  //FIXME
+  display: none;
 
   .spinner {
     z-index: 6;

@@ -123,7 +123,6 @@ module.exports = [{
         _id: 1,
       }
     });
-    console.log('article')
     if (!article) return h.response('Image not found').code(404);
     const bucket = new request.mongo.lib.GridFSBucket(request.mongo.db);
     const matchingIDs = await bucket.find({
@@ -298,7 +297,6 @@ module.exports = [{
 
     const bucket = new request.mongo.lib.GridFSBucket(request.mongo.db);
     if (payload.cover) {
-      console.log("UPDATING COVER")
       const oldCover = article.cover;
       const oldCoverDoc = await bucket.find({
         _id: oldCover
@@ -315,7 +313,6 @@ module.exports = [{
     }
 
     if (payload.oldImages) {
-      console.log("DELETING OLD IMAGES")
       payload.oldImages.forEach(async image => {
         const imageID = new request.mongo.ObjectID(id);
         const imageDoc = await bucket.find({
@@ -327,7 +324,6 @@ module.exports = [{
     }
 
     if (payload.newImages) {
-      console.log("INSERTING NEW IMAGES")
       const newImages = payload.newImages.map(image => (image.pipe(bucket.openUploadStream(image.hapi.filename, {
         chunkSizeBytes: 1048576,
         metadata: {
@@ -345,7 +341,6 @@ module.exports = [{
     }, {
       $set: articleUpdate
     });
-    console.log(status);
     if (status.acknowledged === true) return h.redirect(`/articles/${id}`);
     return status.acknowledged;
 
