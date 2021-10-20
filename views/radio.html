@@ -108,25 +108,30 @@
     img.setAttribute('src', `/radioArchive/art/${song._id}`);
   }
 
+  let hasClicked = false;
+
   function muteUnmute() {
     if (context.state != 'running') {
       startAudio.play();
       context.resume();
     }
-    if (radio.classList.contains('paused')) { //was muted
-      gainNode.gain.value = 0.5;
-      img.parentElement.classList.remove('paused');
-      if (isIOS) {
-        play.remove();
+    if (!hasClicked || !isIOS) {
+      if (radio.classList.contains('paused')) { //was muted
+        gainNode.gain.value = 0.5;
+        img.parentElement.classList.remove('paused');
+        if (isIOS) {
+          play.remove();
+        }
+        play.classList.remove('fa-volume-mute');
+        play.classList.add('fa-volume-up');
+      } else { //was playing
+        gainNode.gain.value = 0;
+        img.parentElement.classList.add('paused');
+        play.classList.add('fa-volume-mute');
+        play.classList.remove('fa-volume-up');
       }
-      play.classList.remove('fa-volume-mute');
-      play.classList.add('fa-volume-up');
-    } else { //was playing
-      gainNode.gain.value = 0;
-      img.parentElement.classList.add('paused');
-      play.classList.add('fa-volume-mute');
-      play.classList.remove('fa-volume-up');
     }
+    hasClicked = true;
   }
   img.addEventListener('click', muteUnmute);
   play.addEventListener('click', muteUnmute);
