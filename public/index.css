@@ -284,7 +284,7 @@ a:hover, .pseudoLink:hover {
   #content::before {
     content: "";
     width: 100%;
-    margin-bottom: calc(15vmin + 20px);
+    margin-bottom: calc(15vmin + 24px);
   }
   #content::after {
     content: "";
