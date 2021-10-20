@@ -1626,7 +1626,7 @@ a {
       .abstract {
         @include textBody;
         @include textNormal;
-        text-align: justify;
+        text-align: left;
       }
     }
 
@@ -1701,7 +1701,7 @@ a {
     .abstract {
       @include textNormal;
       @include textBody;
-      text-align: justify;
+      text-align: left;
     }
 
     img {
@@ -1952,7 +1952,7 @@ a {
       .blurb {
         @include textBody;
         @include textNormal;
-        text-align: justify;
+        text-align: left;
       }
     }
 
@@ -2516,7 +2516,7 @@ a {
       z-index: 2;
       @include textBody;
       @include textNormal;
-      text-align: justify;
+      text-align: left;
     }
   }
 

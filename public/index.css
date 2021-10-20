@@ -1537,7 +1537,7 @@ a:hover, .pseudoLink:hover {
     font-weight: 400;
     line-height: 1.25;
     font-size: 1.5rem;
-    text-align: justify;
+    text-align: left;
   }
   .articleFeature img {
     width: 100%;
@@ -1614,7 +1614,7 @@ a:hover, .pseudoLink:hover {
     font-family: laChata;
     font-weight: 400;
     line-height: 1.25;
-    text-align: justify;
+    text-align: left;
   }
   .articleCover img {
     grid-area: image;
@@ -1860,7 +1860,7 @@ a:hover, .pseudoLink:hover {
     font-weight: 400;
     line-height: 1.25;
     font-size: 1.5rem;
-    text-align: justify;
+    text-align: left;
   }
   .radio.paused img {
     filter: blur(2px) grayscale(50%);
@@ -2386,7 +2386,7 @@ a:hover, .pseudoLink:hover {
     font-weight: 400;
     line-height: 1.25;
     font-size: 1.5rem;
-    text-align: justify;
+    text-align: left;
   }
 
   #footer {
