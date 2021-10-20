@@ -782,8 +782,8 @@ a {
     width: 86.67%;
     display: grid;
     grid-template-rows: auto 20px auto;
-    grid-template-columns: 1fr 50% 1fr;
-    grid-template-areas: '. left .' '.' '. right .';
+    grid-template-columns: 1fr 75% 1fr;
+    grid-template-areas: ". left ." ". . ." ". right .";
 
     .zinePage {
       width: 100%;
@@ -1278,6 +1278,7 @@ a {
   }
 
   #footer {
+    order: 9999;
     z-index: 2;
     box-sizing: border-box;
     width: 100%;
@@ -2148,7 +2149,7 @@ a {
     width: 86.67%;
     display: grid;
     grid-template-rows: auto;
-    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-columns: 1fr 1fr;
     grid-template-areas: 'left right';
 
     .zinePage {
@@ -2529,6 +2530,7 @@ a {
   }
 
   #footer {
+    order: 9999;
     z-index: 2;
     box-sizing: border-box;
     width: 100%;
