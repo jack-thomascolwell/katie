@@ -63,6 +63,10 @@ a:hover, .pseudoLink:hover {
 }
 
 @media only screen and (max-width: 768px) {
+  .green {
+    color: #84cc99 !important;
+  }
+
   html {
     font-size: 11px;
   }
@@ -999,7 +1003,7 @@ a:hover, .pseudoLink:hover {
     width: 86.67%;
     margin-bottom: 20px;
     background-color: #181b20;
-    color: #84cc99;
+    color: #84cc99 !important;
     overflow: hidden;
     display: grid;
     overflow: visible;
@@ -1221,6 +1225,10 @@ a:hover, .pseudoLink:hover {
   }
 }
 @media only screen and (min-width: 768px) {
+  .green {
+    color: #84cc99 !important;
+  }
+
   html {
     font-size: 87.5%;
   }
@@ -2328,7 +2336,7 @@ a:hover, .pseudoLink:hover {
     grid-template-areas: "image ." "image text" "image .";
     height: 160px;
     background-color: #181b20;
-    color: #84cc99;
+    color: #84cc99 !important;
   }
   .authorProfile .mobile {
     display: none;

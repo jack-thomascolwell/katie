@@ -129,6 +129,10 @@ a {
 }
 // MOBILE
 @media only screen and (max-width: $medium) {
+  .green {
+    color: $green !important;
+  }
+
   html {
     font-size: 11px;
   }
@@ -1093,7 +1097,7 @@ a {
     width: 86.67%;
     margin-bottom: 20px;
     background-color: $black;
-    color: $green;
+    color: $green !important;
     overflow: hidden;
     display: grid;
     overflow: visible;
@@ -1313,6 +1317,10 @@ a {
 }
 // DESKTOP
 @media only screen and (min-width: $medium) {
+  .green {
+    color: $green !important;
+  }
+
   html {
     font-size: 87.5%;
   }
@@ -2462,7 +2470,7 @@ a {
     grid-template-areas: 'image .' 'image text' 'image .';
     height: 160px;
     background-color: $black;
-    color: $green;
+    color: $green !important;
 
     .mobile {
       display: none;
