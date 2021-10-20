@@ -175,8 +175,6 @@ a:hover, .pseudoLink:hover {
   }
 
   #nav {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
     user-select: none;
     display: grid;
     grid-template-columns: 6.665vw auto 1fr auto 6.665vw;
@@ -187,16 +185,13 @@ a:hover, .pseudoLink:hover {
     box-sizing: border-box;
     width: 100%;
     overflow-x: hidden;
-    min-height: 15vmin;
+    min-height: calc(15vmin + 4px);
     z-index: 4;
     background: #181b20;
     color: #84cc99;
     border-bottom: 4px solid #495350;
     position: fixed;
     transition: transform 0.25s ease-out;
-  }
-  #nav::-webkit-scrollbar {
-    display: none;
   }
   #nav.hidden {
     transform: translateY(-100%);
@@ -1388,9 +1383,9 @@ a:hover, .pseudoLink:hover {
     box-sizing: border-box;
     width: 100%;
     overflow-x: hidden;
-    height: 15vmin;
-    min-height: 15vmin;
-    max-height: 15vmin;
+    height: calc(15vmin + 4px);
+    min-height: calc(15vmin + 4px);
+    max-height: calc(15vmin + 4px);
     padding-left: 6.665vw;
     padding-right: 6.665vw;
     z-index: 4;

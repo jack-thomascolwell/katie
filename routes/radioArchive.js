@@ -66,6 +66,7 @@ module.exports = [{
           _id: 1
         }
       }).sort({
+        published: -1,
         title: 1,
         _id: -1
       }).skip(page * perPage).limit(perPage).toArray();
@@ -88,7 +89,7 @@ module.exports = [{
         songData: radioArchive,
         admin: (request.auth.isAuthenticated && (request.auth.credentials.admin === true)),
         maxPage: Math.ceil(pages / perPage),
-        page: page
+        page: page + 1
       });
     },
     options: {
