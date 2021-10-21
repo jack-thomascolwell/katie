@@ -41,8 +41,7 @@
   });
   let buffer = null;
   let nextBuffer = null;
-
-  let queue = JSON.parse(`{{{streamQueue}}}`);
+  let queue = {{{streamQueue}}};
 
   function loadBuffer(url, cb) {
     const request = new XMLHttpRequest();
