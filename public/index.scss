@@ -145,6 +145,10 @@ a {
     display: none;
   }
 
+  .edit {
+    display: none;
+  }
+
   body {
     @include textBody;
     @include textNormal;
@@ -1937,8 +1941,16 @@ a {
         }
         margin-bottom: 10px;
 
-        .delete {
+        .edit {
           margin-left: auto;
+          color: $pink;
+          &:hover {
+            color: $yellow;
+          }
+        }
+
+        .delete {
+          margin-left: 1ex;
         }
       }
 

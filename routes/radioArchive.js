@@ -30,7 +30,6 @@ async function getQueue(request) {
       published: 1,
       blurb: 1,
       _id: 1,
-      spotify: 1,
     }
   }).toArray();
 
@@ -267,5 +266,165 @@ module.exports = [{
   },
   options: {
     auth: false
+  }
+}, {
+  method: 'GET',
+  path: '/radioArchive/{id}/edit',
+  handler: async (request, h) => {
+    if (!request.auth.isAuthenticated || (request.auth.credentials.admin !== true))
+      return h.redirect('/');
+    const id = request.params.id;
+    let radio = await request.mongo.db.collection('radio').findOne({
+      _id: new request.mongo.ObjectID(id),
+    }, {
+      projection: {
+        title: 1,
+        blurb: 1,
+        author: 1,
+        published: 1,
+        artist: 1,
+        _id: 1,
+      }
+    });
+    if (!radio) return h.response('Radio entry not found').code(404);
+
+    const authors = await request.mongo.db.collection('authors').find({}, {
+      projection: {
+        name: 1,
+        _id: 1
+      }
+    }).sort({
+      name: 1,
+      id: -1
+    }).toArray();
+
+    return h.view('radioArchive-edit', {
+      radioArchive: radio,
+      authors: authors
+    });
+  },
+  options: {
+    validate: {
+      params: Joi.object({
+        id: Joi.string().required()
+      })
+    }
+  }
+}, {
+  method: 'POST',
+  path: '/radioArchive/{id}/edit',
+  handler: async (request, h) => {
+    //auth
+    if (!request.auth.isAuthenticated || (request.auth.credentials.admin !== true))
+      return h.redirect('/');
+    const id = request.params.id;
+
+    const radio = await request.mongo.db.collection('radio').findOne({
+      _id: new request.mongo.ObjectID(id),
+    }, {
+      projection: {
+        title: 1,
+        blurb: 1,
+        author: 1,
+        published: 1,
+        artist: 1,
+        _id: 1
+      }
+    });
+
+    if (!radio) return h.redirect('/radioArchive')
+
+    let payload = request.payload;
+
+    if (payload.art.hapi.filename == '') payload.art = undefined;
+    if (payload.audio.hapi.filename == '') payload.audio = undefined;
+
+    const schema = Joi.object({
+      _id: Joi.any().forbidden(),
+      title: Joi.string(),
+      published: Joi.date(),
+      body: Joi.string(),
+      abstract: Joi.string(),
+      author: Joi.any(),
+      newImages: Joi.array(),
+      cover: Joi.any(),
+      oldImages: Joi.array(),
+    });
+    const {
+      error,
+      value
+    } = schema.validate(payload);
+
+    if (!error) {
+      const author = await request.mongo.db.collection('authors').findOne({
+        _id: new request.mongo.ObjectID(payload.author)
+      }, {
+        projection: {
+          name: 1,
+          _id: 1
+        }
+      });
+      if (!author) error = 'Author does not exist'
+    }
+
+    if (error) {
+      const authors = await request.mongo.db.collection('authors').find({}, {
+        projection: {
+          name: 1,
+          _id: 1
+        }
+      }).sort({
+        name: 1,
+        id: -1
+      }).toArray();
+
+      return h.view('radioArchive-edit', {
+        error: error,
+        radioArchive: payload,
+        authors: authors
+      });
+    }
+
+    const radioUpdate = {
+      title: payload.title,
+      blurb: payload.blurb,
+      author: new request.mongo.ObjectID(payload.author),
+      published: payload.published,
+      artist: payload.artist
+    };
+
+    if (payload.art) {
+      await deleteFile(`radioArchive/${id}/art`);
+      const artBlobStream = uploadFileStream(`radioArchive/${id}/art`);
+      payload.art.pipe(artBlobStream);
+    }
+
+    if (payload.audio) {
+      await deleteFile(`radioArchive/${id}/audio`);
+      const audioBlobStream = uploadFileStream(`radioArchive/${id}/audio`);
+      payload.audio.pipe(audioBlobStream);
+    }
+
+    const status = await request.mongo.db.collection('radio').updateOne({
+      _id: new request.mongo.ObjectID(id)
+    }, {
+      $set: radioUpdate
+    });
+    if (status.acknowledged === true) return h.redirect(`/radioArchive`);
+    return status.acknowledged;
+
+  },
+  options: {
+    validate: {
+      params: Joi.object({
+        id: Joi.string().required()
+      })
+    },
+    payload: {
+      maxBytes: 500 * 1048576, //500MB
+      output: 'stream',
+      parse: true,
+      multipart: true
+    },
   }
 }];

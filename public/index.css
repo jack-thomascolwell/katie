@@ -79,6 +79,10 @@ a:hover, .pseudoLink:hover {
     display: none;
   }
 
+  .edit {
+    display: none;
+  }
+
   body {
     font-family: laChata;
     font-weight: 400;
@@ -1845,8 +1849,15 @@ a:hover, .pseudoLink:hover {
     margin-right: 1ex;
     text-transform: lowercase;
   }
-  .radio .content .titleLine .delete {
+  .radio .content .titleLine .edit {
     margin-left: auto;
+    color: #ff78b0;
+  }
+  .radio .content .titleLine .edit:hover {
+    color: #fff20d;
+  }
+  .radio .content .titleLine .delete {
+    margin-left: 1ex;
   }
   .radio .content .byline {
     font-family: laChata;
