@@ -2,7 +2,10 @@ const Joi = require('joi');
 const Stream = require('stream');
 const config = require('../config');
 
-const {deleteFile, uploadFileStream } = require('../files');
+const {
+  deleteFile,
+  uploadFileStream
+} = require('../files');
 
 /*
 Radio Schema
@@ -31,7 +34,7 @@ async function getQueue(request) {
     }
   }).toArray();
 
-  for (let i = 0; i<radio.length; i++) {
+  for (let i = 0; i < radio.length; i++) {
     const author = await request.mongo.db.collection('authors').findOne({
       _id: radio[i].author
     }, {
@@ -53,61 +56,115 @@ async function getQueue(request) {
 }
 
 module.exports = [{
-    method: 'GET',
-    path: '/radioArchive',
-    handler: async (request, h) => {
-      const page = (parseInt(request.query.page) || 1) - 1;
-      const perPage = config.paginate.radio;
+  method: 'GET',
+  path: '/radioArchive',
+  handler: async (request, h) => {
+    const page = (parseInt(request.query.page) || 1) - 1;
+    const perPage = config.paginate.radio;
 
-      const radioArchive = await request.mongo.db.collection('radio').find({}, {
+    const radioArchive = await request.mongo.db.collection('radio').find({}, {
+      projection: {
+        title: 1,
+        artist: 1,
+        author: 1,
+        published: 1,
+        blurb: 1,
+        _id: 1
+      }
+    }).sort({
+      published: -1,
+      title: 1,
+      _id: -1
+    }).skip(page * perPage).limit(perPage).toArray();
+
+    for (let i = 0; i < radioArchive.length; i++) {
+      const author = await request.mongo.db.collection('authors').findOne({
+        _id: radioArchive[i].author
+      }, {
         projection: {
-          title: 1,
-          artist: 1,
-          author: 1,
-          published: 1,
-          blurb: 1,
+          name: 1,
           _id: 1
         }
-      }).sort({
-        published: -1,
-        title: 1,
-        _id: -1
-      }).skip(page * perPage).limit(perPage).toArray();
-
-      for (let i = 0; i<radioArchive.length; i++) {
-        const author = await request.mongo.db.collection('authors').findOne({
-          _id: radioArchive[i].author
-        }, {
-          projection: {
-            name: 1,
-            _id: 1
-          }
-        });
-        radioArchive[i].author = author.name;
-      }
-
-      const pages = await request.mongo.db.collection('radio').count({});
-
-      return h.view('radioArchive', {
-        songData: radioArchive,
-        admin: (request.auth.isAuthenticated && (request.auth.credentials.admin === true)),
-        maxPage: Math.ceil(pages / perPage),
-        page: page + 1
       });
-    },
-    options: {
-      auth: {
-        mode: 'try'
-      }
+      radioArchive[i].author = author.name;
     }
-  }, {
-    method: 'GET',
-    path: '/radioArchive/new',
-    handler: async (request, h) => {
-      // auth
-      if (!request.auth.isAuthenticated || (request.auth.credentials.admin !== true))
-        return h.redirect('/');
 
+    const pages = await request.mongo.db.collection('radio').count({});
+
+    return h.view('radioArchive', {
+      songData: radioArchive,
+      admin: (request.auth.isAuthenticated && (request.auth.credentials.admin === true)),
+      maxPage: Math.ceil(pages / perPage),
+      page: page + 1
+    });
+  },
+  options: {
+    auth: {
+      mode: 'try'
+    }
+  }
+}, {
+  method: 'GET',
+  path: '/radioArchive/new',
+  handler: async (request, h) => {
+    // auth
+    if (!request.auth.isAuthenticated || (request.auth.credentials.admin !== true))
+      return h.redirect('/');
+
+    const authors = await request.mongo.db.collection('authors').find({}, {
+      projection: {
+        name: 1,
+        _id: 1
+      }
+    }).sort({
+      name: 1,
+      id: -1
+    }).toArray();
+
+    return h.view('radioArchive-new', {
+      authors: authors
+    });
+  }
+}, {
+  method: 'POST',
+  path: '/radioArchive/new',
+  handler: async (request, h) => {
+    if (!request.auth.isAuthenticated || (request.auth.credentials.admin !== true))
+      return h.redirect('/');
+
+    let payload = request.payload;
+
+    if (payload.song.hapi.filename == '') payload.song = undefined;
+    if (payload.art.hapi.filename == '') payload.art = undefined;
+
+    const schema = Joi.object({
+      _id: Joi.any().forbidden(),
+      title: Joi.string().required(),
+      blurb: Joi.string().required(),
+      artist: Joi.string().required(),
+      author: Joi.string().required(),
+      published: Joi.date().required(),
+      song: Joi.any().required(),
+      art: Joi.any().required()
+    });
+    const {
+      error,
+      value
+    } = schema.validate(payload);
+
+    if (!error) {
+      const author = await request.mongo.db.collection('authors').findOne({
+        _id: new request.mongo.ObjectID(payload.author)
+      }, {
+        projection: {
+          name: 1,
+          _id: 1
+        }
+      });
+      if (!author) error = 'Author does not exist'
+    }
+
+    if (error) {
       const authors = await request.mongo.db.collection('authors').find({}, {
         projection: {
           name: 1,
@@ -119,151 +176,96 @@ module.exports = [{
       }).toArray();
 
       return h.view('radioArchive-new', {
+        error: error,
+        radioArchive: payload,
         authors: authors
       });
     }
-  }, {
-    method: 'POST',
-    path: '/radioArchive/new',
-    handler: async (request, h) => {
-      if (!request.auth.isAuthenticated || (request.auth.credentials.admin !== true))
-        return h.redirect('/');
 
-      let payload = request.payload;
+    const radioArchive = {
+      title: payload.title,
+      blurb: payload.blurb,
+      artist: payload.artist,
+      author: new request.mongo.ObjectID(payload.author),
+      published: payload.published,
+    };
 
-      if (payload.song.hapi.filename == '') payload.song = undefined;
-      if (payload.art.hapi.filename == '') payload.art = undefined;
+    const status = await request.mongo.db.collection('radio').insertOne(radioArchive);
+    if (status.acknowledged !== true) false;
 
-      const schema = Joi.object({
-        _id: Joi.any().forbidden(),
-        title: Joi.string().required(),
-        blurb: Joi.string().required(),
-        artist: Joi.string().required(),
-        author: Joi.string().required(),
-        published: Joi.date().required(),
-        song: Joi.any().required(),
-        art: Joi.any().required()
-      });
-      const {
-        error,
-        value
-      } = schema.validate(payload);
+    // File uploads
+    const songBlobStream = uploadFileStream(`radioArchive/${status.insertedId}/song`);
+    payload.song.pipe(songBlobStream);
 
-      if (!error) {
-        const author = await request.mongo.db.collection('authors').findOne({
-          _id: new request.mongo.ObjectID(payload.author)
-        }, {
-          projection: {
-            name: 1,
-            _id: 1
-          }
-        });
-        if (!author) error = 'Author does not exist'
-      }
+    const artBlobStream = uploadFileStream(`radioArchive/${status.insertedId}/art`);
+    payload.art.pipe(artBlobStream);
 
-      if (error) {
-        const authors = await request.mongo.db.collection('authors').find({}, {
-          projection: {
-            name: 1,
-            _id: 1
-          }
-        }).sort({
-          name: 1,
-          id: -1
-        }).toArray();
-
-        return h.view('radioArchive-new', {
-          error: error,
-          radioArchive: payload,
-          authors: authors
-        });
-      }
-
-      const radioArchive = {
-        title: payload.title,
-        blurb: payload.blurb,
-        artist: payload.artist,
-        author: new request.mongo.ObjectID(payload.author),
-        published: payload.published,
-      };
-
-      const status = await request.mongo.db.collection('radio').insertOne(radioArchive);
-      if (status.acknowledged !== true) false;
-
-      // File uploads
-      const songBlobStream = uploadFileStream(`radioArchive/${status.insertedId}/song`);
-      payload.song.pipe(songBlobStream);
-
-      const artBlobStream = uploadFileStream(`radioArchive/${status.insertedId}/art`);
-      payload.art.pipe(artBlobStream);
-
-      return h.redirect('/radioArchive');
-    },
-    options: {
-      payload: {
-        maxBytes: 500 * 1048576, //500MB
-        output: 'stream',
-        parse: true,
-        multipart: true
-      },
-    }
-  }, {
-    method: 'DELETE',
-    path: '/radioArchive/{id}',
-    handler: async (request, h) => {
-      // auth
-      if (!request.auth.isAuthenticated || (request.auth.credentials.admin !== true))
-        return h.redirect('/');
-      const id = request.params.id;
-      const radio = await request.mongo.db.collection('radio').findOne({
-        _id: new request.mongo.ObjectID(id),
-      }, {
-        projection: {
-          art: 1,
-          song: 1,
-          _id: 1
-        }
-      });
-      if (!radio) return false;
-
-      // delete associated images
-      await deleteFile(`radioArchive/${id}/song`);
-      await deleteFile(`radioArchive/${id}/art`);
-      const status = await request.mongo.db.collection('radio').deleteOne({
-        _id: new request.mongo.ObjectID(id)
-      });
-      return status.acknowledged;
-    },
-    options: {
-      validate: {
-        params: Joi.object({
-          id: Joi.string().required()
-        })
-      }
-    }
-  }, {
-    method: 'GET',
-    path: '/radio',
-    handler: async (request, h) => {
-      const queue = await getQueue(request);
-      const startSong = queue.pop();
-      return h.view('radio', {
-        startSong: startSong,
-        streamQueue: JSON.stringify(queue)
-      });
-    },
-    options: {
-      auth: false
-    }
-  }, {
-    method: 'GET',
-    path: '/streamQueue',
-    handler: async (request, h) => {
-      const queue = await getQueue(request);
-      return queue;
-    },
-    options: {
-      auth: false
-    }
+    return h.redirect('/radioArchive');
   },
-];
+  options: {
+    payload: {
+      maxBytes: 500 * 1048576, //500MB
+      output: 'stream',
+      parse: true,
+      multipart: true
+    },
+  }
+}, {
+  method: 'DELETE',
+  path: '/radioArchive/{id}',
+  handler: async (request, h) => {
+    // auth
+    if (!request.auth.isAuthenticated || (request.auth.credentials.admin !== true))
+      return h.redirect('/');
+    const id = request.params.id;
+    const radio = await request.mongo.db.collection('radio').findOne({
+      _id: new request.mongo.ObjectID(id),
+    }, {
+      projection: {
+        art: 1,
+        song: 1,
+        _id: 1
+      }
+    });
+    if (!radio) return false;
+
+    // delete associated images
+    await deleteFile(`radioArchive/${id}/song`);
+    await deleteFile(`radioArchive/${id}/art`);
+    const status = await request.mongo.db.collection('radio').deleteOne({
+      _id: new request.mongo.ObjectID(id)
+    });
+    return status.acknowledged;
+  },
+  options: {
+    validate: {
+      params: Joi.object({
+        id: Joi.string().required()
+      })
+    }
+  }
+}, {
+  method: 'GET',
+  path: '/radio',
+  handler: async (request, h) => {
+    const queue = await getQueue(request);
+    const startSong = queue.pop();
+    return h.view('radio', {
+      startSong: startSong,
+      streamQueue: JSON.stringify(queue)
+    });
+  },
+  options: {
+    auth: false
+  }
+}, {
+  method: 'GET',
+  path: '/streamQueue',
+  handler: async (request, h) => {
+    const queue = await getQueue(request);
+    return queue;
+  },
+  options: {
+    auth: false
+  }
+}];

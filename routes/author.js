@@ -211,4 +211,112 @@ module.exports = [{
       })
     }
   }
+}, {
+  method: 'GET',
+  path: '/authors/{id}/edit',
+  handler: async (request, h) => {
+    if (!request.auth.isAuthenticated || (request.auth.credentials.admin !== true))
+      return h.redirect('/');
+    const id = request.params.id;
+    let author = await request.mongo.db.collection('authors').findOne({
+      _id: new request.mongo.ObjectID(id),
+    }, {
+      projection: {
+        name: 1,
+        bio: 1,
+        email: 1,
+        _id: 1
+      }
+    });
+    if (!author) return h.response('Author not found').code(404);
+
+    return h.view('author-edit', {
+      author: author,
+    });
+  },
+  options: {
+    validate: {
+      params: Joi.object({
+        id: Joi.string().required()
+      })
+    }
+  }
+}, {
+  method: 'POST',
+  path: '/authors/{id}/edit',
+  handler: async (request, h) => {
+    //auth
+    if (!request.auth.isAuthenticated || (request.auth.credentials.admin !== true))
+      return h.redirect('/');
+    const id = request.params.id;
+
+    let author = await request.mongo.db.collection('authors').findOne({
+      _id: new request.mongo.ObjectID(id),
+    }, {
+      projection: {
+        name: 1,
+        bio: 1,
+        email: 1,
+        _id: 1
+      }
+    });
+
+    if (!author) return h.redirect('/authors')
+
+    let payload = request.payload;
+    if (payload.profile.hapi.filename == '') payload.profile = undefined;
+
+    const schema = Joi.object({
+      _id: Joi.any().forbidden(),
+      bio: Joi.string(),
+      name: Joi.string(),
+      profile: Joi.any(),
+      email: Joi.string()
+    });
+
+    const {
+      error,
+      value
+    } = schema.validate(payload);
+
+    if (error) {
+      return h.view('author-edit', {
+        error: error,
+        author: payload
+      });
+    }
+
+    const authorUpdate = {
+      name: payload.name,
+      bio: payload.bio,
+      email: payload.email,
+    };
+
+    if (payload.profile) {
+      await deleteFile(`authors/${id}/profile`);
+      const blobStream = uploadFileStream(`authors/${id}/profile`);
+      payload.profile.pipe(blobStream);
+    }
+
+    const status = await request.mongo.db.collection('authors').updateOne({
+      _id: new request.mongo.ObjectID(id)
+    }, {
+      $set: authorUpdate
+    });
+    if (status.acknowledged === true) return h.redirect(`/authors/${id}`);
+    return status.acknowledged;
+  },
+  options: {
+    validate: {
+      params: Joi.object({
+        id: Joi.string().required()
+      })
+    },
+    payload: {
+      maxBytes: 500 * 1048576, //500MB
+      output: 'stream',
+      parse: true,
+      multipart: true
+    },
+  }
 }];

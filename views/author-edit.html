@@ -1,0 +1,30 @@
+<div class="break"></div>
+
+<form method="post" id="authorNew" enctype="multipart/form-data">
+  <div class="heading">Edit Author</div>
+  {{#if error}}
+    <p class="error">{{error}}</p>
+  {{/if}}
+
+  <div class="form__group third">
+    <input type="text" class="form__field" placeholder="Name" name="name" id="name" value="{{author.name}}" />
+    <label for="name" class="form__label">Name</label>
+  </div>
+
+  <div class="form__group third">
+    <input type="text" class="form__field" placeholder="Email" name="email" id="email" value="{{author.email}}" />
+    <label for="email" class="form__label">Email</label>
+  </div>
+
+  <div class="form__group third">
+    <input type="file" class="form__field" placeholder="Profile" name="profile" id="profile" />
+    <label for="profile" class="form__label">Profile</label>
+  </div>
+
+  <div class="form__group__area full">
+    <textarea class="form__field" type="text" name="bio" id="bio" placeholder="Bio">{{author.bio}}</textarea>
+    <label for="bio" class="form__label">Bio</label>
+  </div>
+
+  <input type="submit" value="Submit">
+</form>

@@ -152,6 +152,9 @@ module.exports = [{
 
     // delete pdf
     await deleteFile(`zine/${id}/pdf`);
+    const status = await request.mongo.db.collection('zine').deleteOne({
+      _id: new request.mongo.ObjectID(id)
+    });
     return status.acknowledged;
   },
   options: {
@@ -160,5 +163,109 @@ module.exports = [{
         id: Joi.string().required()
       })
     }
+  }
+}, {
+  method: 'GET',
+  path: '/zine/{id}/edit',
+  handler: async (request, h) => {
+    if (!request.auth.isAuthenticated || (request.auth.credentials.admin !== true))
+      return h.redirect('/');
+    const id = request.params.id;
+    let zine = await request.mongo.db.collection('zine').findOne({
+      _id: new request.mongo.ObjectID(id),
+    }, {
+      projection: {
+        issue: 1,
+        published: 1,
+        _id: 1
+      }
+    });
+    if (!zine) return h.response('Zine not found').code(404);
+
+    return h.view('zine-edit', {
+      zine: zine,
+    });
+  },
+  options: {
+    validate: {
+      params: Joi.object({
+        id: Joi.string().required()
+      })
+    }
+  }
+}, {
+  method: 'POST',
+  path: '/zine/{id}/edit',
+  handler: async (request, h) => {
+    //auth
+    if (!request.auth.isAuthenticated || (request.auth.credentials.admin !== true))
+      return h.redirect('/');
+    const id = request.params.id;
+
+    let zine = await request.mongo.db.collection('zine').findOne({
+      _id: new request.mongo.ObjectID(id),
+    }, {
+      projection: {
+        issue: 1,
+        published: 1,
+        _id: 1
+      }
+    });
+
+    if (!zine) return h.redirect('/zine')
+
+    let payload = request.payload;
+    if (payload.pdf.hapi.filename == '') payload.pdf = undefined;
+
+    const schema = Joi.object({
+      _id: Joi.any().forbidden(),
+      issue: Joi.string(),
+      published: Joi.date(),
+      pdf: Joi.any()
+    });
+
+    const {
+      error,
+      value
+    } = schema.validate(payload);
+
+    if (error) {
+      return h.view('zine-edit', {
+        error: error,
+        zine: payload
+      });
+    }
+
+    const zineUpdate = {
+      issue: payload.issue,
+      published: payload.published,
+    };
+
+    if (payload.pdf) {
+      await deleteFile(`zine/${id}/pdf`);
+      const blobStream = uploadFileStream(`zine/${id}/pdf`);
+      payload.pdf.pipe(blobStream);
+    }
+
+    const status = await request.mongo.db.collection('zine').updateOne({
+      _id: new request.mongo.ObjectID(id)
+    }, {
+      $set: zineUpdate
+    });
+    if (status.acknowledged === true) return h.redirect(`/zine/${id}`);
+    return status.acknowledged;
+  },
+  options: {
+    validate: {
+      params: Joi.object({
+        id: Joi.string().required()
+      })
+    },
+    payload: {
+      maxBytes: 500 * 1048576, //500MB
+      output: 'stream',
+      parse: true,
+      multipart: true
+    },
   }
 }];

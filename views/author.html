@@ -11,4 +11,8 @@
   {{> articleCover data=this admin=../admin }}
 {{/each}}
 
+{{#if admin}}
+<a href="/authors/{{author._id}}/edit" class="button">Edit</a>
+{{/if}}
+
 {{> pagination maxPage=maxPage page=page }}
