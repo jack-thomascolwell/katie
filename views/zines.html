@@ -14,7 +14,7 @@
 </div>
 {{/unless}}
 {{#each zines}}
-  <a href="/zine/{{this._id}}" class="zineCover" data-src="/zine/pdf/{{this._id}}">
+  <a href="/zine/{{this._id}}" class="zineCover" data-src="{{gcloud 0}}zine/{{this._id}}/pdf">
     <div class="content">
       <span class="issue">Issue {{this.issue}}</span>
       <span class="published">{{date this.published}}</span>
