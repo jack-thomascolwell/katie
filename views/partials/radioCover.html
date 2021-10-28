@@ -1,6 +1,6 @@
 <div class="paused radio">
-  <img src="/radioArchive/art/{{this.data._id}}" />
-  <audio class="radioAudio" src="/radioArchive/stream/{{this.data._id}}" autoplay preload="auto"></audio>
+  <img src="{{gcloud 0}}radioArchive/{{this.data._id}}/art" />
+  <audio class="radioAudio" src="{{gcloud 0}}radioArchive/{{this.data._id}}/song" autoplay preload="auto"></audio>
   <div class="content">
     <p class="titleLine"><span class="title">{{{markdownInline this.data.title}}}</span><span class="artist">{{{markdownInline this.data.artist}}}</span>{{#if this.admin}}<i class="delete fas fa-trash" data-confirm="Delete {{this.data.title}}?" data-url="/radioArchive/{{this.data._id}}"></i>{{/if}}</p>
     <p class="byline"><span class="author">{{this.data.author}}</span><span class="date">{{date this.data.published}}</span></p>

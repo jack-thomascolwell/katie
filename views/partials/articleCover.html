@@ -1,5 +1,5 @@
 <a href="/articles/{{this.data._id}}" class="articleCover">
-  <img src="/articles/{{this.data._id}}/images/cover" />
+  <img src="{{gcloud 0}}articles/{{this.data._id}}/cover" />
   <div class="content">
     <p class="title">{{{markdownInline this.data.title}}}{{#if this.admin}}<i class="delete fas fa-trash" data-confirm="Delete {{this.data.title}}" data-url="/articles/{{this.data._id}}"></i>{{/if}}</p>
     <p class="byline"><span class="author">{{this.data.author.name}}</span><span class="date">{{date this.data.published}}</span></p>

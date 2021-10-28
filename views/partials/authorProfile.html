@@ -1,5 +1,5 @@
 <a href="/authors/{{this.data._id}}" class="authorProfile">
-  <img src="/authors/profile/{{this.data._id}}" />
+  <img src="{{gcloud 0}}authors/{{this.data._id}}/profile" />
   <div class="content">
     <div class="name">{{{markdownInline this.data.name}}}{{#if this.admin}}<i class="delete fas fa-trash" data-confirm="Delete {{this.data.name}}" data-url="/authors/{{this.data._id}}"></i>{{/if}}</div>
     <div data-href="mailto://{{this.data.email}}" class="email pseudoLink">{{this.data.email}}</div>

@@ -2,7 +2,9 @@
 <script src="//mozilla.github.io/pdf.js/build/pdf.js"></script>
 
 <script type="text/javascript">
-  const url = "/zine/pdf/{{zine._id}}"
+  const baseURL = "{{{gcloud 0}}}";
+  const zineID = "{{{zine._id}}}";
+  const url = `${baseURL}zine/${zineID}/pdf`
   const pdfjsLib = window['pdfjs-dist/build/pdf'];
 
   pdfjsLib.GlobalWorkerOptions.workerSrc = '//mozilla.github.io/pdf.js/build/pdf.worker.js';

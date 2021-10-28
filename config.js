@@ -6,6 +6,11 @@ module.exports = {
   mongodb: {
     url: `mongodb+srv://catscratchmagazine:${process.env.DBPASS || "<password>"}@catscratch.ejqy0.mongodb.net/catscratch?retryWrites=true&w=majority`
   },
+  gcloud: {
+    jsonAuth: process.env.GOOGLE_CLOUD_JSON,
+    jsonPath: process.env.GOOGLE_APPLICATION_CREDENTIALS,
+    bucket: process.env.GCLOUD_STORAGE_BUCKET
+  },
   auth: {
     cookieName: 'auth'
   },

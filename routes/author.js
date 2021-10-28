@@ -1,6 +1,9 @@
 const Joi = require('joi');
 const Stream = require('stream');
 const config = require('../config');
+
+const {deleteFile, uploadFileStream } = require('../files');
+
 /*
 Author Schema
 {
@@ -108,41 +111,6 @@ module.exports = [{
   }
 }, {
   method: 'GET',
-  path: '/authors/profile/{id}',
-  handler: async (request, h) => {
-    const id = request.params.id;
-    const author = await request.mongo.db.collection('authors').findOne({
-      _id: new request.mongo.ObjectID(id),
-    }, {
-      projection: {
-        _id: 1,
-        profile: 1
-      }
-    });
-    if (!author) return h.response('Author not found').code(404);
-
-    const bucket = new request.mongo.lib.GridFSBucket(request.mongo.db);
-    const profileFiles = await bucket.find({
-      _id: author.profile
-    }).project({
-      _id: 1,
-      filename: 1,
-      metadata: 1,
-    }).toArray();
-    if (!profileFiles || !profileFiles[0]) return h.response('Profiile not found').code(404);
-    const stream = bucket.openDownloadStream(profileFiles[0]._id);
-    return h.response(stream).header('Content-Disposition', `attachment; filename= ${profileFiles[0].metadata.originalFilename}`).type(profileFiles[0].metadata.type);
-  },
-  options: {
-    auth: false,
-    validate: {
-      params: Joi.object({
-        id: Joi.string().required()
-      })
-    }
-  }
-}, {
-  method: 'GET',
   path: '/authors/new',
   handler: async (request, h) => {
     // auth
@@ -154,6 +122,7 @@ module.exports = [{
   method: 'POST',
   path: '/authors/new',
   handler: async (request, h) => {
+    console.log('new author')
     if (!request.auth.isAuthenticated || (request.auth.credentials.admin !== true))
       return h.redirect('/');
 
@@ -178,28 +147,20 @@ module.exports = [{
       author: payload
     });
 
-    // File uploads
-    const bucket = new request.mongo.lib.GridFSBucket(request.mongo.db);
-
-    const profileUploadStream = bucket.openUploadStream('profile', {
-      chunkSizeBytes: 1048576,
-      metadata: {
-        originalFilename: payload.profile.hapi.filename,
-        type: payload.profile.hapi.headers['content-type']
-      }
-    });
-    const profileID = new request.mongo.ObjectID(payload.profile.pipe(profileUploadStream).id);
-
     const author = {
       name: payload.name,
       bio: payload.bio,
-      profile: profileID,
       email: payload.email
     };
 
     const status = await request.mongo.db.collection('authors').insertOne(author);
-    if (status.acknowledged === true) return h.redirect(`/authors`);
-    return status.acknowledged;
+    if (status.acknowledged !== true) return false;
+
+    // File uploads
+    const blobStream = uploadFileStream(`authors/${status.insertedId}/profile`);
+    payload.profile.pipe(blobStream);
+
+    return h.redirect(`/authors/${status.insertedId}`);
   },
   options: {
     payload: {
@@ -237,8 +198,7 @@ module.exports = [{
     if (articles.length != 0 || radio.length != 0) return false;
 
     // delete associated images
-    const bucket = new request.mongo.lib.GridFSBucket(request.mongo.db);
-    await bucket.delete(author.profile);
+    await deleteFile(`authors/${id}/profile`);
     const status = await request.mongo.db.collection('authors').deleteOne({
       _id: new request.mongo.ObjectID(id)
     });

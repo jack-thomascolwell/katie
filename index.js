@@ -1,11 +1,26 @@
 'use strict';
 
+require('dotenv').config();
+
 const Bcrypt = require('bcrypt');
 const Hapi = require('@hapi/hapi');
 const Joi = require('joi');
+const fs = require('fs');
 const config = require('./config');
 
 const start = async function() {
+
+  await (new Promise((resolve, reject) => {
+    fs.writeFile(config.gcloud.jsonPath, config.gcloud.jsonAuth, {}, (err) => {
+      if (err) reject(err)
+      else resolve()
+    })
+  }));
+
+  const {
+    Storage
+  } = require('@google-cloud/storage');
+  const storage = new Storage();
 
   const server = Hapi.server({
     port: config.server.port,

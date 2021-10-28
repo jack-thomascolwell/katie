@@ -1,6 +1,9 @@
 const Joi = require('joi');
 const Stream = require('stream');
 const config = require('../config');
+
+const {deleteFile, uploadFileStream } = require('../files');
+
 /*
 Article Schema
 {
@@ -110,46 +113,6 @@ module.exports = [{
   }
 }, {
   method: 'GET',
-  path: '/articles/{id}/images/{imageName}',
-  handler: async (request, h) => {
-    const id = request.params.id;
-    const imageName = request.params.imageName;
-    const article = await request.mongo.db.collection('articles').findOne({
-      _id: new request.mongo.ObjectID(id),
-    }, {
-      projection: {
-        cover: 1,
-        images: 1,
-        _id: 1,
-      }
-    });
-    if (!article) return h.response('Image not found').code(404);
-    const bucket = new request.mongo.lib.GridFSBucket(request.mongo.db);
-    const matchingIDs = await bucket.find({
-      _id: {
-        $in: [article.cover, ...article.images]
-      },
-      filename: imageName
-    }).project({
-      _id: 1,
-      filename: 1,
-      metadata: 1,
-    }).toArray();
-    if (!matchingIDs || !matchingIDs[0]) return h.response('Image not found').code(404);
-    const stream = bucket.openDownloadStream(matchingIDs[0]._id);
-    return h.response(stream).header('Content-Disposition', `attachment; filename= ${matchingIDs[0].metadata.originalFilename}`).type(matchingIDs[0].metadata.type);
-  },
-  options: {
-    auth: false,
-    validate: {
-      params: Joi.object({
-        id: Joi.string().required(),
-        imageName: Joi.string().required()
-      })
-    }
-  }
-}, {
-  method: 'GET',
   path: '/articles/{id}/edit',
   handler: async (request, h) => {
     if (!request.auth.isAuthenticated || (request.auth.credentials.admin !== true))
@@ -180,17 +143,6 @@ module.exports = [{
       id: -1
     }).toArray();
 
-    const bucket = new request.mongo.lib.GridFSBucket(request.mongo.db);
-    const matchingImages = await bucket.find({
-      _id: {
-        $in: article.images
-      }
-    }).project({
-      _id: 1,
-      filename: 1,
-      metadata: 1,
-    }).toArray();
-    article.images = matchingImages;
     return h.view('article-edit', {
       article: article,
       authors: authors
@@ -221,7 +173,6 @@ module.exports = [{
         author: 1,
         published: 1,
         images: 1,
-        cover: 1,
         abstract: 1,
         _id: 1
       }
@@ -295,46 +246,33 @@ module.exports = [{
 
     let images = article.images;
 
-    const bucket = new request.mongo.lib.GridFSBucket(request.mongo.db);
     if (payload.cover) {
-      const oldCover = article.cover;
-      const oldCoverDoc = await bucket.find({
-        _id: oldCover
-      });
-      if (oldCoverDoc && oldCoverDoc[0]) await bucket.delete(oldCover);
-      const newCover = (payload.cover.pipe(bucket.openUploadStream('cover', {
-        chunkSizeBytes: 1048576,
-        metadata: {
-          originalFilename: payload.cover.hapi.filename,
-          type: payload.cover.hapi.headers['content-type']
-        }
-      })).id);
-      articleUpdate.cover = newCover;
+      await deleteFile(`articles/${id}/cover`);
+      const coverBlobStream = uploadFileStream(`articles/${id}/cover`);
+      payload.cover.pipe(coverBlobStream);
     }
 
     if (payload.oldImages) {
-      payload.oldImages.forEach(async image => {
-        const imageID = new request.mongo.ObjectID(id);
-        const imageDoc = await bucket.find({
-          _id: imageID
-        });
-        if (imageDoc && imageDoc[0]) await bucket.delete(image);
-        images = images.splice(article.images.indexOf(imageID), 1);
-      });
+      console.log('old images');
+      console.log(payload.oldImages);
+      for (let image of payload.oldImages) {
+        await deleteFile(`articles/${id}/${image}`);
+        images.splice(images.indexOf(image), 1);
+      }
     }
 
     if (payload.newImages) {
-      const newImages = payload.newImages.map(image => (image.pipe(bucket.openUploadStream(image.hapi.filename, {
-        chunkSizeBytes: 1048576,
-        metadata: {
-          filename: image.hapi.filename,
-          type: image.hapi.headers['content-type']
-        }
-      })).id));
-      images = images.concat(newImages);
+      payload.newImages.forEach(image => {
+        const blobStream = uploadFileStream(`articles/${id}/${image.hapi.filename}`);
+        image.pipe(blobStream);
+      });
+
+      images = images.concat(payload.newImages.map(x => x.hapi.filename));
     }
 
     articleUpdate.images = images;
+
+    console.log(articleUpdate)
 
     const status = await request.mongo.db.collection('articles').updateOne({
       _id: new request.mongo.ObjectID(id)
@@ -440,24 +378,7 @@ module.exports = [{
       });
     }
 
-    // File uploads
-    const bucket = new request.mongo.lib.GridFSBucket(request.mongo.db);
-
-    const coverID = (payload.cover.pipe(bucket.openUploadStream('cover', {
-      chunkSizeBytes: 1048576,
-      metadata: {
-        originalFilename: payload.cover.hapi.filename,
-        type: payload.cover.hapi.headers['content-type']
-      }
-    })).id);
-
-    const imageIDs = payload.images.map(image => (image.pipe(bucket.openUploadStream(image.hapi.filename, {
-      chunkSizeBytes: 1048576,
-      metadata: {
-        originalFilename: image.hapi.filename,
-        type: image.hapi.headers['content-type']
-      }
-    })).id));
+    const images = payload.images.map(image => image.hapi.filename);
 
     const article = {
       title: payload.title,
@@ -465,13 +386,24 @@ module.exports = [{
       body: payload.body,
       abstract: payload.abstract,
       author: new request.mongo.ObjectID(payload.author),
-      cover: coverID,
-      images: imageIDs
+      images: images,
     };
 
+  //if (status.acknowledged === true) return h.redirect(`/articles/${status.insertedId}`);
     const status = await request.mongo.db.collection('articles').insertOne(article);
-    if (status.acknowledged === true) return h.redirect(`/articles/${status.insertedId}`);
-    return status.acknowledged;
+    if (status.acknowledged !== true) return false;
+    //${payload.cover.hapi.filename}
+
+    // File uploads
+    const coverBlobStream = uploadFileStream(`articles/${status.insertedId}/cover`);
+    payload.cover.pipe(coverBlobStream);
+
+    const imageIDs = payload.images.map(image => {
+      const blobStream = uploadFileStream(`articles/${status.insertedId}/${image.hapi.filename}`);
+      image.pipe(blobStream);
+    });
+
+    return h.redirect(`/articles/${status.insertedId}`);
   },
   options: {
     payload: {
@@ -495,7 +427,6 @@ module.exports = [{
     }, {
       projection: {
         images: 1,
-        cover: 1,
         _id: 1
       }
     });
@@ -503,15 +434,16 @@ module.exports = [{
     if (!article) return false;
 
     // delete associated images
-    const bucket = new request.mongo.lib.GridFSBucket(request.mongo.db);
-    bucket.delete(article.cover);
-    article.images.forEach(image => {
-      bucket.delete(image);
-    });
+    await deleteFile(`articles/${id}/cover`);
+
+    article.images.forEach(async image => {
+      await deleteFile(`articles/${id}/${image}`);
+    })
 
     const status = await request.mongo.db.collection('articles').deleteOne({
       _id: new request.mongo.ObjectID(id)
     });
+    console.log(['really done', status])
     return status.acknowledged;
   },
   options: {

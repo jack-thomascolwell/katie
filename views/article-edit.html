@@ -49,9 +49,9 @@
   {{#if article.images}}
     <div class="subheading">Old Images</div>
     {{#each article.images}}
-      <div data-id="{{this._id}}" class="oldImage">
-        <img src="/articles/{{../article._id}}/images/{{this.filename}}" />
-        <span class="filename">{{this.filename}}</span>
+      <div data-id="{{this}}" class="oldImage">
+        <img src="{{gcloud 0}}articles/{{../article._id}}/{{this}}" />
+        <span class="filename">{{this}}</span>
       </div>
     {{/each}}
   {{/if}}

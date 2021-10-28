@@ -1,5 +1,5 @@
 <div id="radio" class="radio paused">
-  <img src="/radioArchive/art/{{startSong._id}}" />
+  <img src="{{gcloud 0}}radioArchive/{{startSong._id}}/art" />
   <i class="play fas fa-volume-mute"></i>
   <div class="content">
     <p class="titleLine"><span class="title">{{startSong.title}}</span><span class="artist">{{{markdownInline startSong.artist}}}</span></p>
@@ -15,6 +15,8 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js" integrity="sha512-qTXRIMyZIFb8iQcfjXWCO8+M5Tbc38Qi5WzdPOYZHIlZpzBHG3L3by84BBBOiRGiEb7KKtAOAs5qYdUiZiQNNQ==" crossorigin="anonymous" referrerpolicy="no-referrer">
 </script>
 <script type="text/javascript">
+  const baseURL = "{{{gcloud 0}}}";
+
   const isIOS = !!navigator.platform && /iPad|iPhone|iPod/.test(navigator.platform);
 
   const radio = document.getElementById('radio');
@@ -55,7 +57,7 @@
     request.send();
   }
   song = {{{stringify startSong}}};
-  loadBuffer(`/radioArchive/stream/${song._id}`, newBuffer=>{
+  loadBuffer(`${baseURL}radioArchive/${song._id}/song`, newBuffer=>{
     buffer = newBuffer;
     playAudio();
   })
@@ -76,14 +78,14 @@
       request.send();
     }
 
-    loadBuffer(`/radioArchive/stream/${nextSong._id}`, newBuffer => {
+    loadBuffer(`${baseURL}radioArchive/${nextSong._id}/song`, newBuffer => {
       nextBuffer = newBuffer;
     });
   }
 
   // LOAD FIRST SONG
   /*song = queue.pop();
-  loadBuffer(`/radioArchive/stream/${song._id}`, newBuffer => {
+  loadBuffer(`${baseURL}radioArchive/${song._id}/song`, newBuffer => {
     buffer = newBuffer;
     playAudio();
   });*/
@@ -110,7 +112,7 @@
     const dateObj = new Date(song.published);
     date.innerText = moment(dateObj).format("MMM D, YYYY");
     blurb.innerHTML = md.renderInline(song.blurb);
-    img.setAttribute('src', `/radioArchive/art/${song._id}`);
+    img.setAttribute('src', `${baseURL}radioArchive/${song._id}/art`);
   }
 
   let hasClicked = false;
