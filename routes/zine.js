@@ -215,7 +215,7 @@ module.exports = [{
     if (!zine) return h.redirect('/zine')
 
     let payload = request.payload;
-    if (payload.pdf.hapi.filename == '') payload.pdf = undefined;
+    if (payload.pdf && payload.pdf.hapi.filename == '') payload.pdf = undefined;
 
     const schema = Joi.object({
       _id: Joi.any().forbidden(),

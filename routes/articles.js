@@ -184,7 +184,7 @@ module.exports = [{
     if (!Array.isArray(payload.newImages) && payload.newImages.hapi.filename != '') payload.newImages = [payload.newImages];
     else if (!Array.isArray(payload.newImages) && payload.newImages.hapi.filename == '') payload.newImages = undefined;
 
-    if (payload.cover.hapi.filename == '') payload.cover = undefined;
+    if (payload.cover && payload.cover.hapi.filename == '') payload.cover = undefined;
 
     if (payload.oldImages) payload.oldImages = JSON.parse(payload.oldImages);
 

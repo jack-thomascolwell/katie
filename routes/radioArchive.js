@@ -336,19 +336,18 @@ module.exports = [{
 
     let payload = request.payload;
 
-    if (payload.art.hapi.filename == '') payload.art = undefined;
-    if (payload.audio.hapi.filename == '') payload.audio = undefined;
+    if (payload.art && payload.art.hapi.filename == '') payload.art = undefined;
+    if (payload.audio && payload.audio.hapi.filename == '') payload.audio = undefined;
 
     const schema = Joi.object({
       _id: Joi.any().forbidden(),
       title: Joi.string(),
+      blurb: Joi.string(),
+      artist: Joi.string(),
+      author: Joi.string(),
       published: Joi.date(),
-      body: Joi.string(),
-      abstract: Joi.string(),
-      author: Joi.any(),
-      newImages: Joi.array(),
-      cover: Joi.any(),
-      oldImages: Joi.array(),
+      song: Joi.any(),
+      art: Joi.any()
     });
     const {
       error,

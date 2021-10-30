@@ -264,7 +264,7 @@ module.exports = [{
     if (!author) return h.redirect('/authors')
 
     let payload = request.payload;
-    if (payload.profile.hapi.filename == '') payload.profile = undefined;
+    if (payload.profile && payload.profile.hapi.filename == '') payload.profile = undefined;
 
     const schema = Joi.object({
       _id: Joi.any().forbidden(),
