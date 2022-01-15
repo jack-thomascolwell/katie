@@ -94,7 +94,9 @@ module.exports = [{
       songData: radioArchive,
       admin: (request.auth.isAuthenticated && (request.auth.credentials.admin === true)),
       maxPage: Math.ceil(pages / perPage),
-      page: page + 1
+      page: page + 1,
+      metatitle: "radio archive",
+      metadesc: "Listen and read at your own pace. This archive contains every song and blurb ever in rotation on cat scratch radio."
     });
   },
   options: {
@@ -251,7 +253,9 @@ module.exports = [{
     const startSong = queue.pop();
     return h.view('radio', {
       startSong: startSong,
-      streamQueue: JSON.stringify(queue)
+      streamQueue: JSON.stringify(queue),
+      metatitle: "radio",
+      metadesc: "Welcome to the underground !!"
     });
   },
   options: {

@@ -37,7 +37,8 @@ module.exports = [{
       zines: zines,
       admin: (request.auth.isAuthenticated && (request.auth.credentials.admin === true)),
       maxPage: Math.ceil(pages / perPage),
-      page: page + 1
+      page: page + 1,
+      metatitle: "zine"
     });
   },
   options: {
@@ -62,7 +63,9 @@ module.exports = [{
     if (!zine) return h.redirect('/zine');
     return h.view('zine', {
       zine: zine,
-      admin: (request.auth.isAuthenticated && (request.auth.credentials.admin === true))
+      admin: (request.auth.isAuthenticated && (request.auth.credentials.admin === true)),
+      metatitle: `issue ${zine.issue}`,
+      metadesc: `cat scratch magazine issue ${zine.issue}`
     });
   },
   options: {

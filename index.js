@@ -144,7 +144,8 @@ const start = async function() {
         articles: articles.slice(1),
         featuredArticle: featuredArticle,
         landing: true,
-        admin: (request.auth.isAuthenticated && (request.auth.credentials.admin === true))
+        admin: (request.auth.isAuthenticated && (request.auth.credentials.admin === true)),
+        metadesc: "cat scratch magazine is a platform for creativity and critical analysis based in the digital underground. Our pieces explore up-and-coming artists through the lens of armchair psychology and literary dramatization, while remaining well-researched and thoughtfully edited. By continuing the literary tradition of zine curation, we hope to educate and excite our readers by allowing a brief glance into the minds of their favorite artists."
       });
     },
     options: {
@@ -156,7 +157,10 @@ const start = async function() {
     method: 'GET',
     path: '/about',
     handler: async function(request, h) {
-      return h.view('about');
+      return h.view('about', {
+        metadesc: "cat scratch magazine is a platform for creativity and critical analysis based in the digital underground. Our pieces explore up-and-coming artists through the lens of armchair psychology and literary dramatization, while remaining well-researched and thoughtfully edited. By continuing the literary tradition of zine curation, we hope to educate and excite our readers by allowing a brief glance into the minds of their favorite artists.",
+        metatitle: "about"
+      });
     },
     options: {
       auth: false

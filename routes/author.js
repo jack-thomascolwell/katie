@@ -41,7 +41,9 @@ module.exports = [{
       authors: authors,
       admin: (request.auth.isAuthenticated && (request.auth.credentials.admin === true)),
       maxPage: Math.ceil(pages / perPage),
-      page: page + 1
+      page: page + 1,
+      metatitle: "authors",
+      metadesc: "cat scratch magazine is a platform for creativity and critical analysis based in the digital underground. Our pieces explore up-and-coming artists through the lens of armchair psychology and literary dramatization, while remaining well-researched and thoughtfully edited. By continuing the literary tradition of zine curation, we hope to educate and excite our readers by allowing a brief glance into the minds of their favorite artists."
     });
   },
   options: {
@@ -96,7 +98,9 @@ module.exports = [{
       admin: (request.auth.isAuthenticated && (request.auth.credentials.admin === true)),
       articles: articles,
       maxPage: Math.ceil(pages / perPage),
-      page: page + 1
+      page: page + 1,
+      metatitle: author.name,
+      metadesc: author.bio
     });
   },
   options: {
