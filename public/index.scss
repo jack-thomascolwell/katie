@@ -129,6 +129,58 @@ a {
 }
 // MOBILE
 @media only screen and (max-width: $medium) {
+  .user {
+    width: 86.67%;
+    padding: 10px 20px;
+    z-index: 1;
+    box-sizing: border-box;
+    margin-bottom: 20px;
+    background-color: $black;
+    color: $green !important;
+    overflow: hidden;
+    display: flex;
+    overflow: visible;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: baseline;
+
+    .email {
+      @include textBody;
+      text-transform: lowercase;
+      margin-right: auto;
+      @include textNormal;
+      text-align: left;
+    }
+
+    .admin {
+      &.disabled {
+        .makeAdmin {
+          cursor: auto;
+        }
+        .removeAdmin {
+          cursor: auto;
+        }
+      }
+      .makeAdmin {
+        cursor: pointer;
+      }
+      .removeAdmin {
+        cursor: pointer;
+      }
+      user-select: none;
+      @include textBody;
+      text-transform: lowercase;
+      margin-right: 1ex;
+      @include textNormal;
+      text-align: right;
+    }
+
+    .delete {
+      user-select: none;
+      @include textNormal;
+    }
+  }
+
   .green {
     color: $green !important;
   }
@@ -899,6 +951,7 @@ a {
         outline: none;
         @include textNormal;
         @include textBody;
+        @include hideScrollbar;
         color: $altWhite;
         background: transparent;
         transition: border-color 0.2s;
@@ -980,6 +1033,7 @@ a {
         outline: none;
         @include textNormal;
         @include textBody;
+        @include hideScrollbar;
         color: $altWhite;
         background: transparent;
         transition: border-color 0.2s;
@@ -1324,6 +1378,51 @@ a {
 @media only screen and (min-width: $medium) {
   .green {
     color: $green !important;
+  }
+
+  .user {
+    width: 86.67%;
+    padding: 10px 20px;
+    z-index: 1;
+    box-sizing: border-box;
+    margin-bottom: 20px;
+    background-color: $black;
+    color: $green !important;
+    overflow: hidden;
+    display: flex;
+    overflow: visible;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: baseline;
+
+    .email {
+      @include textBody;
+      text-transform: lowercase;
+      margin-right: auto;
+      @include textNormal;
+      text-align: left;
+    }
+
+    .admin {
+
+      .makeAdmin {
+        cursor: pointer;
+      }
+      .deleteAdmin {
+        cursor: pointer;
+      }
+      @include textBody;
+      text-transform: lowercase;
+      margin-right: 1ex;
+      @include textNormal;
+      text-align: right;
+      user-select: none;
+    }
+
+    .delete {
+      user-select: none;
+      @include textNormal;
+    }
   }
 
   html {
@@ -2274,6 +2373,7 @@ a {
         outline: none;
         @include textNormal;
         @include textBody;
+        @include hideScrollbar;
         color: $altWhite;
         background: transparent;
         transition: border-color 0.2s;
@@ -2355,6 +2455,7 @@ a {
         outline: none;
         @include textNormal;
         @include textBody;
+        @include hideScrollbar;
         color: $altWhite;
         background: transparent;
         transition: border-color 0.2s;

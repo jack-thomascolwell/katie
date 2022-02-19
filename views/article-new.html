@@ -30,17 +30,22 @@
     <label for="body" class="form__label">Body</label>
   </div>
 
-  <div class="form__group__area third">
+  <div class="form__group__area half">
     <textarea class="form__field" type="text" name="abstract" id="abstract" placeholder="Abstract">{{article.abstract}}</textarea>
     <label for="abstract" class="form__label">Abstract</label>
   </div>
 
-  <div class="form__group third">
+  <div class="form__group__area half">
+    <textarea class="form__field" type="text" name="metadata" id="metadata" placeholder="Metadata">{{article.metadata}}</textarea>
+    <label for="metadata" class="form__label">Metadata</label>
+  </div>
+
+  <div class="form__group half">
     <input type="file" class="form__field" placeholder="Cover" name="cover" id="cover" />
     <label for="cover" class="form__label">Cover</label>
   </div>
 
-  <div class="form__group third">
+  <div class="form__group half">
     <input type="file" class="form__field" placeholder="Images" name="images" id="images" multiple />
     <label for="images" class="form__label">Images</label>
   </div>

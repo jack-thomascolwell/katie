@@ -82,6 +82,7 @@ module.exports = [{
         author: 1,
         published: 1,
         abstract: 1,
+        metadata: 1,
         _id: 1,
       }
     });
@@ -102,7 +103,7 @@ module.exports = [{
       article: article,
       author: author,
       admin: (request.auth.isAuthenticated && (request.auth.credentials.admin === true)),
-      metadesc: article.abstract,
+      metadesc: article.abstract + ' ' + article.metadata,
       metatitle: article.title
     });
   },
@@ -133,6 +134,7 @@ module.exports = [{
         published: 1,
         abstract: 1,
         images: 1,
+        metadata: 1,
         _id: 1
       }
     });
@@ -179,6 +181,7 @@ module.exports = [{
         published: 1,
         images: 1,
         abstract: 1,
+        metadata: 1,
         _id: 1
       }
     });
@@ -203,6 +206,7 @@ module.exports = [{
       newImages: Joi.array(),
       cover: Joi.any(),
       oldImages: Joi.array(),
+      metadata: Joi.string().empty(''),
     });
     const {
       error,
@@ -247,6 +251,7 @@ module.exports = [{
       body: payload.body,
       abstract: payload.abstract,
       author: new request.mongo.ObjectID(payload.author),
+      metadata: payload.metadata
     };
 
     let images = article.images;
@@ -258,8 +263,6 @@ module.exports = [{
     }
 
     if (payload.oldImages) {
-      console.log('old images');
-      console.log(payload.oldImages);
       for (let image of payload.oldImages) {
         await deleteFile(`articles/${id}/${image}`);
         images.splice(images.indexOf(image), 1);
@@ -276,8 +279,6 @@ module.exports = [{
     }
 
     articleUpdate.images = images;
-
-    console.log(articleUpdate)
 
     const status = await request.mongo.db.collection('articles').updateOne({
       _id: new request.mongo.ObjectID(id)
@@ -345,7 +346,8 @@ module.exports = [{
       abstract: Joi.string().required(),
       author: Joi.string().required(),
       images: Joi.array().required(),
-      cover: Joi.any().required()
+      cover: Joi.any().required(),
+      metadata: Joi.string().required()
     });
     const {
       error,
@@ -392,6 +394,7 @@ module.exports = [{
       abstract: payload.abstract,
       author: new request.mongo.ObjectID(payload.author),
       images: images,
+      metadata: payload.metadata
     };
 
   //if (status.acknowledged === true) return h.redirect(`/articles/${status.insertedId}`);
@@ -448,7 +451,6 @@ module.exports = [{
     const status = await request.mongo.db.collection('articles').deleteOne({
       _id: new request.mongo.ObjectID(id)
     });
-    console.log(['really done', status])
     return status.acknowledged;
   },
   options: {

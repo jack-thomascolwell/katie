@@ -63,6 +63,57 @@ a:hover, .pseudoLink:hover {
 }
 
 @media only screen and (max-width: 768px) {
+  .user {
+    width: 86.67%;
+    padding: 10px 20px;
+    z-index: 1;
+    box-sizing: border-box;
+    margin-bottom: 20px;
+    background-color: #181b20;
+    color: #84cc99 !important;
+    overflow: hidden;
+    display: flex;
+    overflow: visible;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: baseline;
+  }
+  .user .email {
+    font-family: laChata;
+    font-weight: 400;
+    line-height: 1.25;
+    text-transform: lowercase;
+    margin-right: auto;
+    font-size: 1.5rem;
+    text-align: left;
+  }
+  .user .admin {
+    user-select: none;
+    font-family: laChata;
+    font-weight: 400;
+    line-height: 1.25;
+    text-transform: lowercase;
+    margin-right: 1ex;
+    font-size: 1.5rem;
+    text-align: right;
+  }
+  .user .admin.disabled .makeAdmin {
+    cursor: auto;
+  }
+  .user .admin.disabled .removeAdmin {
+    cursor: auto;
+  }
+  .user .admin .makeAdmin {
+    cursor: pointer;
+  }
+  .user .admin .removeAdmin {
+    cursor: pointer;
+  }
+  .user .delete {
+    user-select: none;
+    font-size: 1.5rem;
+  }
+
   .green {
     color: #84cc99 !important;
   }
@@ -822,11 +873,16 @@ a:hover, .pseudoLink:hover {
     font-family: laChata;
     font-weight: 400;
     line-height: 1.25;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
     color: #f7f7fc;
     background: transparent;
     transition: border-color 0.2s;
     position: absolute;
     bottom: 0;
+  }
+  form .form__group .form__field::-webkit-scrollbar {
+    display: none;
   }
   form .form__group .form__field::placeholder {
     opacity: 0;
@@ -895,11 +951,16 @@ a:hover, .pseudoLink:hover {
     font-family: laChata;
     font-weight: 400;
     line-height: 1.25;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
     color: #f7f7fc;
     background: transparent;
     transition: border-color 0.2s;
     position: absolute;
     bottom: 0;
+  }
+  form .form__group__area .form__field::-webkit-scrollbar {
+    display: none;
   }
   form .form__group__area .form__field::placeholder {
     opacity: 0;
@@ -1232,6 +1293,51 @@ a:hover, .pseudoLink:hover {
 @media only screen and (min-width: 768px) {
   .green {
     color: #84cc99 !important;
+  }
+
+  .user {
+    width: 86.67%;
+    padding: 10px 20px;
+    z-index: 1;
+    box-sizing: border-box;
+    margin-bottom: 20px;
+    background-color: #181b20;
+    color: #84cc99 !important;
+    overflow: hidden;
+    display: flex;
+    overflow: visible;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: baseline;
+  }
+  .user .email {
+    font-family: laChata;
+    font-weight: 400;
+    line-height: 1.25;
+    text-transform: lowercase;
+    margin-right: auto;
+    font-size: 1.5rem;
+    text-align: left;
+  }
+  .user .admin {
+    font-family: laChata;
+    font-weight: 400;
+    line-height: 1.25;
+    text-transform: lowercase;
+    margin-right: 1ex;
+    font-size: 1.5rem;
+    text-align: right;
+    user-select: none;
+  }
+  .user .admin .makeAdmin {
+    cursor: pointer;
+  }
+  .user .admin .deleteAdmin {
+    cursor: pointer;
+  }
+  .user .delete {
+    user-select: none;
+    font-size: 1.5rem;
   }
 
   html {
@@ -2156,11 +2262,16 @@ a:hover, .pseudoLink:hover {
     font-family: laChata;
     font-weight: 400;
     line-height: 1.25;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
     color: #f7f7fc;
     background: transparent;
     transition: border-color 0.2s;
     position: absolute;
     bottom: 0;
+  }
+  form .form__group .form__field::-webkit-scrollbar {
+    display: none;
   }
   form .form__group .form__field::placeholder {
     opacity: 0;
@@ -2229,11 +2340,16 @@ a:hover, .pseudoLink:hover {
     font-family: laChata;
     font-weight: 400;
     line-height: 1.25;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
     color: #f7f7fc;
     background: transparent;
     transition: border-color 0.2s;
     position: absolute;
     bottom: 0;
+  }
+  form .form__group__area .form__field::-webkit-scrollbar {
+    display: none;
   }
   form .form__group__area .form__field::placeholder {
     opacity: 0;

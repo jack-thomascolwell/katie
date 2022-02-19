@@ -1,4 +1,3 @@
-{{> navSticky }}
 <div class="break"></div>
 
 {{#each users}}
@@ -10,7 +9,7 @@
         <i class="makeAdmin far fa-square" data-email="{{this.email}}" data-id="{{this._id}}"></i>
       {{/if}}
     </span>
-    <i class="delete fas fa-trash" data-email="{{this.email}}" data-id="{{this._id}}"></i>
+    <i class="delete fas fa-trash" data-confirm="Delete {{this.email}}" data-url="/users/{{this._id}}"></i>
   </div>
 {{/each}}
 <div class="user">
@@ -25,21 +24,6 @@
 </div>
 
 <script type="text/javascript">
-  let deleteLinks = Array.from(document.getElementsByClassName('delete')).filter(link => !link.classList.contains('disabled'))
-  deleteLinks.forEach(link => {
-    link.addEventListener('click', e => {
-      e.preventDefault();
-      if (!confirm(`Delete ${link.dataset['email']}?`)) return;
-      const id = link.dataset["id"];
-      const req = new XMLHttpRequest();
-      req.onreadystatechange = function() {
-        if (req.readyState === XMLHttpRequest.DONE) location.reload();
-      };
-      req.open("DELETE", `/users/${id}`, true);
-      req.send();
-    });
-  });
-
   let makeAdminLinks = Array.from(document.getElementsByClassName('makeAdmin')).filter(link => !link.classList.contains('disabled'));
   makeAdminLinks.forEach(link => {
     link.addEventListener('click', e => {
